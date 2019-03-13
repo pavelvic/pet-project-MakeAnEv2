@@ -28,6 +28,7 @@ public class ViewUserServlet extends HttpServlet {
             request.setAttribute("user", user); //передаем объект на страницу для настройки view
             request.getRequestDispatcher("/viewuser.jsp").forward(request, response); //открываем страницу view
         } catch (SQLException | NamingException | NumberFormatException ex) {
+            //TODO: специфицировать проверку на наличие пользователя?
             errorString = "Ошибка! " + ex.getMessage(); //информация об ошибке
                         
             request.setAttribute("resultString", errorString);

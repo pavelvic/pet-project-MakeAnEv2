@@ -15,6 +15,7 @@
     <body>
         <jsp:include page="_menu.jsp"></jsp:include>
         <h1>ADD USER HERE</h1>
+        <h4>${resultString}</h4>
         <form method="POST" action="">
            <table border="0">
             <tr>
@@ -46,8 +47,8 @@
                <td><input type="text" name="comment" value=""></td>
             </tr>
             <tr>
-               <td colspan="2"><input type="submit" value="Submit">
-               <a href="${pageContext.request.contextPath}">Cancel</a></td>
+               <td colspan="2"><input type="submit" value="Сохранить">
+               <a href="${pageContext.request.contextPath}">Назад</a></td>
             </tr>
            </table>
         </form>
