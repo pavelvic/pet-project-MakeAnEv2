@@ -56,7 +56,7 @@ public class DbQuery {
         return list;
     }
 
-    public static User selectUser(Connection con, String id_userStr) throws SQLException, NumberFormatException {
+    public static User selectUser(Connection con, String id_userStr) throws SQLException {
         /*перегруженный метод, возвращающий одного пользователя по id*/
         String sql = "SELECT id_user, username, email, phone, name, surname, comment FROM user WHERE id_user = ?";
         
@@ -79,7 +79,6 @@ public class DbQuery {
         String comment = rs.getString("comment");
 
         //создаем экземпляр User с выбранными из БД параметрами
-        //TODO разобраться с null ниже
         User user = new User(id_user, username, email, phone, name, surname, comment);
         return user;
     }

@@ -24,7 +24,7 @@ public class AddUserServlet extends HttpServlet {
         //request по умолчению в ISO-8859-1 ???, БД - в UTF-8. 
         //Заранее ставим правильну кодировку, иначе в БД пишет в ISO из за чего проблема с кириллицей
         request.setCharacterEncoding("UTF-8");
-
+        User user = null;
         try {
             Connection con = DbConnection.getConnection();
 
@@ -36,27 +36,27 @@ public class AddUserServlet extends HttpServlet {
             String surname = (String) request.getParameter("surname");
             String comment = (String) request.getParameter("comment");
 
-            User user = new User(0, username, password, email, phone, name, surname, comment);
-            
-            //TODO: продумать логику проверок, может проверки обернуть в исключения при создании экземпляра?? и выдать здесь
+            user = new User(0, username, password, email, phone, name, surname, comment);
 
-            if (("".equals(username)) | ("".equals(email)) | ("".equals(password))) {
-                resultString = "Не заполнены обязательные* поля, помеченные звездочкой!";
-            }
-            if (resultString == null) {
+            //выполняем проверки значений с генерацией исключений UserException
+            user.checkUsername();
+            user.checkEmail();
+            user.checkPhone();
+            user.checkPassword();
 
-                DbQuery.insertUser(con, user);
-                con.close();
-                resultString = "Пользователь добавлен";
-            }
+            //добавляем запись в БД и устанавливаем сообщение об успехе
+            DbQuery.insertUser(con, user);
+            con.close();
+            resultString = "Пользователь добавлен";
+            user = null; //обнуляем экземпляр, чтобы на старнице вывелись пустые поля
 
-        } catch (SQLException | NamingException ex) { //Недосутпно соединение или ошмбка драйвера
+        } catch (SQLException | NamingException | UserException ex) { //Недосутпно соединение или ошмбка драйвера или не прошли проверку введеных значений
 
-            resultString = "Ошибка соединения с базой данных! " + ex.getMessage();
+            resultString = "Ошибка! " + ex.toString();
 
         } finally {
-            //TODO: специфицировать resultString и размещать подсказкой при вводе
             request.setAttribute("resultString", resultString);
+            request.setAttribute("user", user);
             request.getRequestDispatcher("/adduser.jsp").forward(request, response);
         }
 

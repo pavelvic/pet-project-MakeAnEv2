@@ -48,7 +48,8 @@ public class EditUserServlet extends HttpServlet {
         String resultString = null;
         try {
             Connection con = DbConnection.getConnection();
-
+            
+            //TODO есть смысл сделать формирование в конструкторе USER (передаем request)
             String id_user = (String) request.getParameter("id_user"); //параметры только строки
             String username = (String) request.getParameter("username");
             String email = (String) request.getParameter("email");
@@ -57,23 +58,23 @@ public class EditUserServlet extends HttpServlet {
             String surname = (String) request.getParameter("surname");
             String comment = (String) request.getParameter("comment");
 
-            if (("".equals(username)) | ("".equals(email))) {
-                resultString = "Пользователь не отредактирован! Не заполнены обязательные* поля!";
-                user = new User(Integer.parseInt(id_user), username, email, phone, name, surname,comment); //сохранить что ввел пользователь, чтобы отобразить после перезагрузки страницы
-            }
+            user = new User(Integer.parseInt(id_user), username, email, phone, name, surname,comment);
+            
+            user.checkUsername();
+            user.checkEmail();
+            user.checkPhone();
+            
+            DbQuery.updateUser(con, user);
+            con.close();
+            resultString = "Изменения внесены";
 
-            if (resultString == null) {
-                user = new User(Integer.parseInt(id_user), username, email, phone, name, surname,comment);
-                DbQuery.updateUser(con, user);
-                con.close();
-                resultString = "Изменения внесены";
-            }
-        } catch (SQLException | NamingException | NumberFormatException ex) {
-            resultString = "Ошибка ! " + ex.getMessage();
+
+        } catch (SQLException | NamingException | UserException ex) {
+            resultString = "Ошибка ! " + ex.toString();
         } finally {
-            request.setAttribute("resultString", resultString);
-            request.setAttribute("user", user);
-            request.getRequestDispatcher("/edituser.jsp").forward(request, response);
+            request.setAttribute("resultString", resultString); //передали результат действия
+            request.setAttribute("user", user); //сохранили что ввели и передали на страницу для отображения
+            request.getRequestDispatcher("/edituser.jsp").forward(request, response); //показали страницу
         }
     }
 }
