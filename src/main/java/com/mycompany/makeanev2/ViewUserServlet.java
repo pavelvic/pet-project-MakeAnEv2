@@ -14,8 +14,7 @@ public class ViewUserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8"); //на всякий случай ставим правильную кодировку
-
+        
         String errorString; // строка с возможными ошибками
         User user; //сюда помещаем результат запроса
 

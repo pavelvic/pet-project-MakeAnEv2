@@ -9,6 +9,24 @@ import java.util.List;
 
 public class DbQuery {
 
+    public static User findUser(Connection con, String username, String password) throws SQLException {
+        String sql = "SELECT id_user, username, password, email, phone, name, surname, comment FROM user "
+                + "WHERE username = ? and password = ?";
+
+        PreparedStatement pstm = con.prepareStatement(sql);
+
+        pstm.setString(1, username);
+        int hashPassword = password.hashCode();
+        pstm.setInt(2, hashPassword);
+
+        ResultSet rs = pstm.executeQuery();
+
+        if (rs.next()) {
+            return new User(rs);
+        }
+        return null;
+    }
+
     public static void insertUser(Connection con, User user) throws SQLException {
         /*метод для добавления записи в таблиц пользователей, передаем соединение и пользователя, метод записывает данные в таблицу по соединению*/
 
@@ -28,7 +46,7 @@ public class DbQuery {
 
     public static List<User> selectUser(Connection con) throws SQLException {
         /*метод для получения атрибутов пользователя из БД*/
-        String sql = "SELECT id_user, username, email, phone, name, surname, comment FROM user";
+        String sql = "SELECT id_user, username, password, email, phone, name, surname, comment FROM user";
 
         PreparedStatement pstm = con.prepareStatement(sql);
 
@@ -36,22 +54,7 @@ public class DbQuery {
         List<User> list = new ArrayList<>();
 
         while (rs.next()) {
-            //раскладываем значения из запроса по переменным
-            int id_user = rs.getInt("id_user");
-            String username = rs.getString("username");
-            String email = rs.getString("email");
-            String phone = rs.getString("phone");
-            String name = rs.getString("name");
-            String surname = rs.getString("surname");
-            String comment = rs.getString("comment");
-            
-
-            //создаем экземпляр User с выбранными из БД параметрами
-            
-            User user = new User(id_user, username, 0, email, phone, name, surname, comment);
-
-            //добавляем объект в List для будущего использования на странице вывода списка пользователей
-            list.add(user);
+            list.add(new User(rs));
         }
         return list;
     }
@@ -59,31 +62,19 @@ public class DbQuery {
     public static User selectUser(Connection con, String id_userStr) throws SQLException {
         /*перегруженный метод, возвращающий одного пользователя по id*/
         String sql = "SELECT id_user, username, password, email, phone, name, surname, comment FROM user WHERE id_user = ?";
-        
+
         PreparedStatement ptsm = con.prepareStatement(sql);
 
         ptsm.setString(1, id_userStr);
 
         ResultSet rs = ptsm.executeQuery();
-        rs.next(); //помещаем курсор ResultSet на первую строку для разбора по переменным
-        
-        //делаем преобразование в int для id_user
-        int id_user = Integer.parseInt(id_userStr);
-        
-        //раскладываем значения из запроса по переменным
-        String username = rs.getString("username");
-        int password = rs.getInt("password");
-        String email = rs.getString("email");
-        String phone = rs.getString("phone");
-        String name = rs.getString("name");
-        String surname = rs.getString("surname");
-        String comment = rs.getString("comment");
+        //rs.next(); //помещаем курсор ResultSet на первую строку для разбора по переменным
 
-        //создаем экземпляр User с выбранными из БД параметрами
-        User user = new User(id_user, username, password, email, phone, name, surname, comment);
-        return user;
+        if (rs.next()) {
+            return new User(rs);
+        }
+        return null;
     }
-
 
     public static void updateUser(Connection con, User user) throws SQLException {
         /*обновляем информацию о пользователе в БД*/
@@ -101,41 +92,41 @@ public class DbQuery {
 
         ptsm.executeUpdate();
     }
-    
+
     public static void updateUserPassword(Connection con, User user) throws SQLException {
         /*обновляем пароль для пользователя*/
         String sql = "UPDATE user SET password = ? WHERE id_user = ?";
-        
+
         PreparedStatement ptsm = con.prepareStatement(sql);
-        
+
         ptsm.setInt(1, user.getPassword());
         ptsm.setInt(2, user.getId_user());
-        
+
         ptsm.executeUpdate();
-    
+
     }
-    
+
     public static void updateUserPassword(Connection con, String id_user) throws SQLException {
         /*обновляем пароль для пользователя*/
         String sql = "UPDATE user SET password = ? WHERE id_user = ?";
         String pass = "0";
         PreparedStatement ptsm = con.prepareStatement(sql);
-        
+
         ptsm.setInt(1, pass.hashCode());
-        ptsm.setString (2, id_user);
-        
+        ptsm.setString(2, id_user);
+
         ptsm.executeUpdate();
-    
+
     }
-    
-    public static void deleteUser (Connection con, String id_user) throws SQLException, NumberFormatException {
+
+    public static void deleteUser(Connection con, String id_user) throws SQLException, NumberFormatException {
         /*Удаляем запись пользователя*/
         String sql = "DELETE FROM user WHERE id_user=?";
-        
+
         PreparedStatement ptsm = con.prepareStatement(sql);
-        
+
         ptsm.setInt(1, Integer.parseInt(id_user));
-        
+
         ptsm.executeUpdate();
     }
 

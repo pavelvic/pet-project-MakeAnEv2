@@ -1,5 +1,8 @@
 package com.mycompany.makeanev2;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class User {
 
     /*класс для работы с объектом пользователь, формируется из данных в БД*/
@@ -24,6 +27,18 @@ public class User {
         this.name = name;
         this.surname = surname;
         this.comment = comment;
+    }
+    
+    public User(ResultSet rs) throws SQLException {
+        this.id_user = rs.getInt("id_user");
+        this.username = rs.getString("username");
+        this.password = rs.getInt("password");
+        this.passwordStr = "";
+        this.email = rs.getString("email");
+        this.phone = rs.getString("phone");
+        this.name = rs.getString("name");
+        this.surname = rs.getString("surname");
+        this.comment = rs.getString("comment");
     }
     
     public User(int id_user, String username, int password, String email, String phone, String name, String surname, String comment) {

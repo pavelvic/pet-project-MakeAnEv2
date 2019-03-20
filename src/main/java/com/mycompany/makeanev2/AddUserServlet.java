@@ -23,7 +23,7 @@ public class AddUserServlet extends HttpServlet {
         String resultString = null;
         //request по умолчению в ISO-8859-1 ???, БД - в UTF-8. 
         //Заранее ставим правильну кодировку, иначе в БД пишет в ISO из за чего проблема с кириллицей
-        request.setCharacterEncoding("UTF-8");
+        
         User user = null;
         try {
             Connection con = DbConnection.getConnection();

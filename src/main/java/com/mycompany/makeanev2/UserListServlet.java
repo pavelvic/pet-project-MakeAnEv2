@@ -15,7 +15,7 @@ public class UserListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8"); //на всякий случай ставим правильную кодировку
+        
 
         String errorString; // строка с возможными ошибками
         List<User> list; //сюда помещаем результат запроса
