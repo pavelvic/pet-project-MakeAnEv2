@@ -5,8 +5,8 @@ public class User {
     /*класс для работы с объектом пользователь, формируется из данных в БД*/
     private final int id_user;
     private final String username;
-    private final int password;
-    private final String passwordStr;
+    private int password;
+    private String passwordStr;
     private final String email;
     private final String phone;
     private final String name;
@@ -25,18 +25,19 @@ public class User {
         this.surname = surname;
         this.comment = comment;
     }
-
-    public User(int id_user, String username, String email, String phone, String name, String surname, String comment) {
+    
+    public User(int id_user, String username, int password, String email, String phone, String name, String surname, String comment) {
         this.id_user = id_user;
         this.username = username;
-        this.password = 0;
-        this.passwordStr = ""; //???
+        this.password = password;
+        this.passwordStr = "";
         this.email = email;
         this.phone = phone;
         this.name = name;
         this.surname = surname;
         this.comment = comment;
     }
+
 
     //геттеры сеттеры
     public int getId_user() {
@@ -55,6 +56,12 @@ public class User {
         return password;
     }
 
+    public void setPassword(String password) {
+    this.password = password.hashCode();
+    this.passwordStr = password;
+    }
+    
+    
     public String getEmail() {
         return email;
     }
@@ -74,6 +81,7 @@ public class User {
     public String getComment() {
         return comment;
     }
+    
 
     //проверка значений
     public void checkUsername() throws UserException {

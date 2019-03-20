@@ -51,6 +51,7 @@
             </tr>
            </table>
         </form>
-        <h3>Сбросить пароль</h3>
+        <h3><a href = "editpass?id_user=${user.id_user}">Изменить пароль</a></h3>
+        <h3><a href = "resetpass?id_user=${user.id_user}">Сбросить пароль</a></h3>
     </body>
 </html>

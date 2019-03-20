@@ -27,7 +27,7 @@ public class AddUserServlet extends HttpServlet {
         User user = null;
         try {
             Connection con = DbConnection.getConnection();
-
+             
             String username = (String) request.getParameter("username");
             String password = (String) request.getParameter("password");
             String email = (String) request.getParameter("email");
@@ -36,7 +36,7 @@ public class AddUserServlet extends HttpServlet {
             String surname = (String) request.getParameter("surname");
             String comment = (String) request.getParameter("comment");
 
-            user = new User(0, username, password, email, phone, name, surname, comment);
+          user = new User(0, username, password, email, phone, name, surname, comment);
 
             //выполняем проверки значений с генерацией исключений UserException
             user.checkUsername();

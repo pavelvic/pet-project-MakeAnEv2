@@ -24,6 +24,14 @@
         <servlet-name>DeleteUserServlet</servlet-name>
         <servlet-class>com.mycompany.makeanev2.DeleteUserServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EditPasswordServlet</servlet-name>
+        <servlet-class>com.mycompany.makeanev2.EditPasswordServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ResetPasswordServlet</servlet-name>
+        <servlet-class>com.mycompany.makeanev2.ResetPasswordServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>UserListServlet</servlet-name>
         <url-pattern>/userlist</url-pattern>
@@ -47,6 +55,15 @@
     <servlet-mapping>
         <servlet-name>DeleteUserServlet</servlet-name>
         <url-pattern>/deleteuser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditPasswordServlet</servlet-name>
+        <url-pattern>/editpass</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ResetPasswordServlet</servlet-name>
+        <url-pattern>/resetpass</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

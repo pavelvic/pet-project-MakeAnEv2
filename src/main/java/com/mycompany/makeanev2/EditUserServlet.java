@@ -50,15 +50,18 @@ public class EditUserServlet extends HttpServlet {
             Connection con = DbConnection.getConnection();
             
             //TODO есть смысл сделать формирование в конструкторе USER (передаем request)
+            
+            
             String id_user = (String) request.getParameter("id_user"); //параметры только строки
             String username = (String) request.getParameter("username");
+            String password = (String) request.getParameter("password");
             String email = (String) request.getParameter("email");
             String phone = (String) request.getParameter("phone");
             String name = (String) request.getParameter("name");
             String surname = (String) request.getParameter("surname");
             String comment = (String) request.getParameter("comment");
 
-            user = new User(Integer.parseInt(id_user), username, email, phone, name, surname,comment);
+            user = new User(Integer.parseInt(id_user), username, 0, email, phone, name, surname,comment);
             
             user.checkUsername();
             user.checkEmail();
