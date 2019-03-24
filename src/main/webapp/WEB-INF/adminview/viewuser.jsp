@@ -12,8 +12,8 @@
         <title>Посмотреть пользователя</title>
     </head>
     <body>
-        <jsp:include page="_menu.jsp"></jsp:include>
-        <h1>Подробная информация о пользователе</h1>
+        <jsp:include page="/_menu.jsp"></jsp:include>
+        <h1>Подробная информация о пользователе КАК ПОЛЬЗОВАТЕЛЬ!!!</h1>
         <table border="0">
             <tr>
                <td>ID</td>

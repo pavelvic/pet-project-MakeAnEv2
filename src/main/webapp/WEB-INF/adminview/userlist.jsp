@@ -13,7 +13,7 @@
         <title>Список пользователей</title>
     </head>
     <body>
-        <jsp:include page="_menu.jsp"></jsp:include>
+        <jsp:include page="/_menu.jsp"></jsp:include>
             <h1>Список пользователей</h1>
         <table border = "1" cellpadding="5" cellspacing="1">
             <tr>

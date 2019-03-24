@@ -1,5 +1,8 @@
-package com.mycompany.makeanev2;
+package com.mycompany.makeanev2.Servlets;
 
+import com.mycompany.makeanev2.User;
+import com.mycompany.makeanev2.Utils.DbQuery;
+import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -25,7 +28,8 @@ public class ViewUserServlet extends HttpServlet {
             user = DbQuery.selectUser(con, id_user); //может передавать NumberFormatException поскольку в методе есть ParsInt
             con.close(); 
             request.setAttribute("user", user); //передаем объект на страницу для настройки view
-            request.getRequestDispatcher("/viewuser.jsp").forward(request, response); //открываем страницу view
+            request.getRequestDispatcher("/WEB-INF/userview/viewuser.jsp").forward(request, response); //открываем страницу view
+            
         } catch (SQLException | NamingException | NumberFormatException ex) {
             //TODO: специфицировать проверку на наличие пользователя?
             errorString = "Ошибка! " + ex.getMessage(); //информация об ошибке

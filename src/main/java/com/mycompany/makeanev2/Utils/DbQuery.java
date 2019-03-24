@@ -1,5 +1,6 @@
-package com.mycompany.makeanev2;
+package com.mycompany.makeanev2.Utils;
 
+import com.mycompany.makeanev2.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +19,22 @@ public class DbQuery {
         pstm.setString(1, username);
         int hashPassword = password.hashCode();
         pstm.setInt(2, hashPassword);
+
+        ResultSet rs = pstm.executeQuery();
+
+        if (rs.next()) {
+            return new User(rs);
+        }
+        return null;
+    }
+
+    public static User findUser(Connection con, String username) throws SQLException {
+        String sql = "SELECT id_user, username, password, email, phone, name, surname, comment FROM user "
+                + "WHERE username = ?";
+
+        PreparedStatement pstm = con.prepareStatement(sql);
+
+        pstm.setString(1, username);
 
         ResultSet rs = pstm.executeQuery();
 

@@ -11,5 +11,7 @@
    <a href="${pageContext.request.contextPath}/userlist">Список пользователей</a>
    |
    <a href="${pageContext.request.contextPath}/adduser">Добавить пользователя</a>
+   |
+   HELLO, ${loginedUser.username}
 
 </div>

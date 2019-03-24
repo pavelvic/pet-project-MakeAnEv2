@@ -1,4 +1,4 @@
-package com.mycompany.makeanev2;
+package com.mycompany.makeanev2.Utils;
 
 import java.sql.*;
 import javax.naming.*;

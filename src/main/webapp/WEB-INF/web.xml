@@ -2,43 +2,71 @@
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <filter>
         <filter-name>EncodingFilter</filter-name>
-        <filter-class>com.mycompany.makeanev2.EncodingFilter</filter-class>
+        <filter-class>com.mycompany.makeanev2.Filters.EncodingFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>ViewUserFilter</filter-name>
+        <filter-class>com.mycompany.makeanev2.Filters.ViewUserFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>CookieFilter</filter-name>
+        <filter-class>com.mycompany.makeanev2.Filters.CookieFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>EncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    <filter-mapping>
+        <filter-name>CookieFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ViewUserFilter</filter-name>
+        <servlet-name>ViewUserServlet</servlet-name>
+    </filter-mapping>
     <servlet>
         <servlet-name>UserListServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.UserListServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.UserListServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AddUserServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.AddUserServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.AddUserServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ViewUserServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.ViewUserServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.ViewUserServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ResultServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.ResultServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.ResultServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>EditUserServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.EditUserServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.EditUserServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DeleteUserServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.DeleteUserServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.DeleteUserServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>EditPasswordServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.EditPasswordServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.EditPasswordServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ResetPasswordServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.ResetPasswordServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.ResetPasswordServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>com.mycompany.makeanev2.Servlets.LoginServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>HomeServlet</servlet-name>
+        <servlet-class>com.mycompany.makeanev2.Servlets.HomeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>com.mycompany.makeanev2.Servlets.LogoutServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserListServlet</servlet-name>
@@ -71,6 +99,18 @@
     <servlet-mapping>
         <servlet-name>ResetPasswordServlet</servlet-name>
         <url-pattern>/resetpass</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HomeServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/logout</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

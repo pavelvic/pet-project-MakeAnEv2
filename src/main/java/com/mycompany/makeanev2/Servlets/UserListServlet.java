@@ -1,5 +1,8 @@
-package com.mycompany.makeanev2;
+package com.mycompany.makeanev2.Servlets;
 
+import com.mycompany.makeanev2.User;
+import com.mycompany.makeanev2.Utils.DbQuery;
+import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -25,7 +28,7 @@ public class UserListServlet extends HttpServlet {
             list = DbQuery.selectUser(con);
             con.close(); //закрываем соединение сразу после получения данных
             request.setAttribute("userList", list); //передаем объект на страницу для настройки view
-            request.getRequestDispatcher("/userlist.jsp").forward(request, response); //открываем страницу view
+            request.getRequestDispatcher("/WEB-INF/adminview/userlist.jsp").forward(request, response); //открываем страницу view
         } catch (SQLException | NamingException ex) {
             errorString = "Ошибка соединения с базой данных! "+ex.getMessage(); //информация об ошибке
             request.setAttribute("resultString", errorString);

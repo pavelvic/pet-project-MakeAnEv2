@@ -1,5 +1,5 @@
 
-package com.mycompany.makeanev2;
+package com.mycompany.makeanev2.Filters;
 
 import java.io.IOException;
 import javax.servlet.Filter;

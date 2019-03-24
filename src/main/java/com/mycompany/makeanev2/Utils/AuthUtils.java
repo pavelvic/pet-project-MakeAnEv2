@@ -1,5 +1,6 @@
-package com.mycompany.makeanev2;
+package com.mycompany.makeanev2.Utils;
 
+import com.mycompany.makeanev2.User;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,7 +10,11 @@ public class AuthUtils {
     private static final String ATT_NAME_USER_NAME_COOKIE = "UserNameCookieAttribute";
     //сохранить пользователя в сессию
     public static void storeLoginedUser(HttpSession session, User loginedUser) {
-        session.setAttribute("logineUser", loginedUser);
+        session.setAttribute("loginedUser", loginedUser);
+    }
+    
+    public static void deleteLoginedUser(HttpSession session) {
+        session.removeAttribute("loginedUser");
     }
 
     //получить пользователя из сессии
