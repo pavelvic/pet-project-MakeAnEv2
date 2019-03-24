@@ -43,6 +43,7 @@ public class EditPasswordServlet extends HttpServlet {
                 user.checkPassword();
 
                 DbQuery.updateUserPassword(con, user);
+                con.close();
                 resultString = "Пароль изменён";
             } else {
                 resultString = "Пароль не совпадает. Введите правильный пароль";

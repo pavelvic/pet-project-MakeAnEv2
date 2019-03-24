@@ -54,7 +54,7 @@ public class LoginServlet extends HttpServlet {
             } else {
                 Connection con = DbConnection.getConnection();
                 user = DbQuery.findUser(con, username, password);
-
+                con.close();
                 if (user == null) {
 
                     errorString = "Имя пользователя или пароль не корректны";
