@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class CookieFilter implements Filter {
-//Заранее ставим правильну кодировку, иначе в БД пишет в ISO из за чего проблема с кириллицей
+
 
     @Override
     public void init(FilterConfig fConfig) throws ServletException {
@@ -58,8 +58,8 @@ public class CookieFilter implements Filter {
             chain.doFilter(request, response);
 
         } catch (SQLException | NamingException ex) {
-            request.setAttribute("resultString", "Ошибка: " + ex.toString());
-            request.setAttribute("redirect", "/"); //указываем откуда мы идем на страницу результата для настройки маршрутизации
+            request.setAttribute("resultString", "Ошибка! : " + ex.toString());
+            request.setAttribute("redirect", "/"); //СѓРєР°Р·С‹РІР°РµРј РѕС‚РєСѓРґР° РјС‹ РёРґРµРј РЅР° СЃС‚СЂР°РЅРёС†Сѓ СЂРµР·СѓР»СЊС‚Р°С‚Р° РґР»СЏ РЅР°СЃС‚СЂРѕР№РєРё РјР°СЂС€СЂСѓС‚РёР·Р°С†РёРё
             request.getRequestDispatcher("/resultpage.jsp").forward(request, response);
         }
     }

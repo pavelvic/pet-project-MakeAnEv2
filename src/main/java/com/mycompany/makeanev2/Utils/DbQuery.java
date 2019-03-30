@@ -12,8 +12,9 @@ import java.util.List;
 public class DbQuery {
 
     public static User findUser(Connection con, String username, String password) throws SQLException {
-        String sql = "SELECT id_user, username, password, email, phone, name, surname, comment FROM user "
-                + "WHERE username = ? and password = ?";
+        String sql = "SELECT u.id_user, u.group_id, g.Name, u.username, u.password, u.email, u.phone, u.name, u.surname, u.comment FROM `user` u, `usergroups` g "
+                + "WHERE g.id_group = u.group_id "
+                + "AND u.username = ? AND u.password = ?";
 
         PreparedStatement pstm = con.prepareStatement(sql);
 
@@ -30,8 +31,9 @@ public class DbQuery {
     }
 
     public static User findUser(Connection con, String username) throws SQLException {
-        String sql = "SELECT id_user, username, password, email, phone, name, surname, comment FROM user "
-                + "WHERE username = ?";
+        String sql = "SELECT u.id_user, u.group_id, g.Name, u.username, u.password, u.email, u.phone, u.name, u.surname, u.comment FROM `user` u, `usergroups` g "
+                + "WHERE g.id_group = u.group_id "
+                + "AND u.username = ?";
 
         PreparedStatement pstm = con.prepareStatement(sql);
 
@@ -59,16 +61,6 @@ public class DbQuery {
         return list;
     }
 
-//    public static String selectUserGroup(Connection con, int group_id) throws SQLException {
-//        String sql = "SELECT Name FROM usergroups WHERE id_group = ?";
-//
-//        PreparedStatement pstm = con.prepareStatement(sql);
-//        pstm.setInt(1, group_id);
-//
-//        ResultSet rs = pstm.executeQuery();
-//        rs.next();
-//        return rs.getString(1);
-//    }
 
     public static void insertUser(Connection con, User user) throws SQLException {
         /*метод для добавления записи в таблиц пользователей, передаем соединение и пользователя, метод записывает данные в таблицу по соединению*/
