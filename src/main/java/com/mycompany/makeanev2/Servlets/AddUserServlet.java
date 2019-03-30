@@ -40,7 +40,8 @@ public class AddUserServlet extends HttpServlet {
             String surname = (String) request.getParameter("surname");
             String comment = (String) request.getParameter("comment");
 
-          user = new User(0, username, password, email, phone, name, surname, comment);
+            //по дефолту при регистрации указывает группу пользователей 4 - Пользователь
+            user = new User(0, 4, "Пользователь", username, password, email, phone, name, surname, comment);
 
             //выполняем проверки значений с генерацией исключений UserException
             user.checkUsername();

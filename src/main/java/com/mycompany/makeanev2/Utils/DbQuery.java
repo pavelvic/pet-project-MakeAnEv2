@@ -1,6 +1,7 @@
 package com.mycompany.makeanev2.Utils;
 
 import com.mycompany.makeanev2.User;
+import com.mycompany.makeanev2.UserGroup;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,26 +45,54 @@ public class DbQuery {
         return null;
     }
 
+    public static List<UserGroup> selectUserGroup(Connection con) throws SQLException {
+        String sql = "SELECT id_group, Name FROM usergroups ORDER BY id_group ASC";
+
+        PreparedStatement pstm = con.prepareStatement(sql);
+
+        ResultSet rs = pstm.executeQuery();
+        List<UserGroup> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new UserGroup(rs));
+        }
+        return list;
+    }
+
+//    public static String selectUserGroup(Connection con, int group_id) throws SQLException {
+//        String sql = "SELECT Name FROM usergroups WHERE id_group = ?";
+//
+//        PreparedStatement pstm = con.prepareStatement(sql);
+//        pstm.setInt(1, group_id);
+//
+//        ResultSet rs = pstm.executeQuery();
+//        rs.next();
+//        return rs.getString(1);
+//    }
+
     public static void insertUser(Connection con, User user) throws SQLException {
         /*метод для добавления записи в таблиц пользователей, передаем соединение и пользователя, метод записывает данные в таблицу по соединению*/
 
-        String sql = "INSERT INTO user(username, password, email, phone, name, surname, comment) VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO user(group_id, username,  password, email, phone, name, surname, comment) VALUES (?,?,?,?,?,?,?,?)";
         PreparedStatement ps = con.prepareStatement(sql);
 
-        ps.setString(1, user.getUsername());
-        ps.setInt(2, user.getPassword());
-        ps.setString(3, user.getEmail());
-        ps.setString(4, user.getPhone());
-        ps.setString(5, user.getName());
-        ps.setString(6, user.getSurname());
-        ps.setString(7, user.getComment());
+        ps.setInt(1, user.getGroup_id());
+        ps.setString(2, user.getUsername());
+        ps.setInt(3, user.getPassword());
+        ps.setString(4, user.getEmail());
+        ps.setString(5, user.getPhone());
+        ps.setString(6, user.getName());
+        ps.setString(7, user.getSurname());
+        ps.setString(8, user.getComment());
 
         ps.executeUpdate();
     }
 
     public static List<User> selectUser(Connection con) throws SQLException {
         /*метод для получения атрибутов пользователя из БД*/
-        String sql = "SELECT id_user, username, password, email, phone, name, surname, comment FROM user";
+        String sql = "SELECT u.id_user, u.group_id, g.Name, u.username, u.password, u.email, u.phone, u.name, u.surname, u.comment "
+                + "FROM `user` u, `usergroups` g "
+                + "WHERE g.id_group = u.group_id";
 
         PreparedStatement pstm = con.prepareStatement(sql);
 
@@ -78,14 +107,16 @@ public class DbQuery {
 
     public static User selectUser(Connection con, String id_userStr) throws SQLException {
         /*перегруженный метод, возвращающий одного пользователя по id*/
-        String sql = "SELECT id_user, username, password, email, phone, name, surname, comment FROM user WHERE id_user = ?";
+        String sql = "SELECT u.id_user, u.group_id, g.Name, u.username, u.password, u.email, u.phone, u.name, u.surname, u.comment "
+                + "FROM `user` u, `usergroups` g "
+                + "WHERE g.id_group = u.group_id "
+                + "AND u.id_user = ?";
 
         PreparedStatement ptsm = con.prepareStatement(sql);
 
         ptsm.setString(1, id_userStr);
 
         ResultSet rs = ptsm.executeQuery();
-        //rs.next(); //помещаем курсор ResultSet на первую строку для разбора по переменным
 
         if (rs.next()) {
             return new User(rs);
@@ -95,17 +126,18 @@ public class DbQuery {
 
     public static void updateUser(Connection con, User user) throws SQLException {
         /*обновляем информацию о пользователе в БД*/
-        String sql = "UPDATE user SET username=?, email=?, phone=?, name=?, surname=?, comment=? WHERE id_user =?"; //? - параметр, подставляем из экземпляра
+        String sql = "UPDATE user SET group_id = ?, username = ?, email = ?, phone = ?, name = ?, surname = ?, comment = ? WHERE id_user = ?"; //? - параметр, подставляем из экземпляра
 
         PreparedStatement ptsm = con.prepareStatement(sql);
 
-        ptsm.setString(1, user.getUsername()); //первый параметр в SQL-запросе (?)
-        ptsm.setString(2, user.getEmail()); //второй и так далее
-        ptsm.setString(3, user.getPhone());
-        ptsm.setString(4, user.getName());
-        ptsm.setString(5, user.getSurname());
-        ptsm.setString(6, user.getComment());
-        ptsm.setInt(7, user.getId_user());
+        ptsm.setInt(1, user.getGroup_id());
+        ptsm.setString(2, user.getUsername()); //первый параметр в SQL-запросе (?)
+        ptsm.setString(3, user.getEmail()); //второй и так далее
+        ptsm.setString(4, user.getPhone());
+        ptsm.setString(5, user.getName());
+        ptsm.setString(6, user.getSurname());
+        ptsm.setString(7, user.getComment());
+        ptsm.setInt(8, user.getId_user());
 
         ptsm.executeUpdate();
     }

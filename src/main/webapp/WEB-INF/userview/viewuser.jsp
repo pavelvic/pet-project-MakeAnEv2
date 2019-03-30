@@ -13,7 +13,7 @@
     </head>
     <body>
         <jsp:include page="/_menu.jsp"></jsp:include>
-        <h1>Подробная информация о пользователе КАК АДМИН!!!</h1>
+        <h1>Подробная информация о пользователе КАК ПОЛЬЗОВАТЕЛЬ!!!</h1>
         <table border="0">
             <tr>
                <td>ID</td>
@@ -26,6 +26,10 @@
             <tr>
                <td>E-mail</td>
                <td>${user.email}</td>
+            </tr>
+            <tr>
+               <td>Группа пользователей</td>
+               <td>${user.groupname}</td>
             </tr>
             <tr>
                <td>Телефон</td>

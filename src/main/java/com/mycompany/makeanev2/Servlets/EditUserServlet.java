@@ -15,7 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 
 public class EditUserServlet extends HttpServlet {
 
-   User user;
+   private User user;
+    //все существующие в БД группы для формирования списка на странице
    /*использование этого экземпляра user: doGet - получаем объект по id, 
    в doPost экземпляр создается по ЛЮБЫМ введенным данным (даже в случае не успеха UPDATE в БД),
    что необходимо для передачи в finally метода doPost этого объекта на страницу editsuer
@@ -26,15 +27,17 @@ public class EditUserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String resultString = null;
+        String resultString;
         
         try {
             Connection con = DbConnection.getConnection();
 
             String id_user = (String) request.getParameter("id_user"); //параметры только строки
             user = DbQuery.selectUser(con, id_user);
+            //List<UserGroup> userGroups = DbQuery.selectUserGroup(con);
             con.close(); //закрываем соединение сразу после получения данных
             request.setAttribute("user", user); //передаем объект на страницу для настройки view
+            //request.setAttribute("usergroups", userGroups);
 
             request.getRequestDispatcher("/edituser.jsp").forward(request, response);
         } catch (SQLException | NamingException | NumberFormatException ex) {
@@ -53,19 +56,26 @@ public class EditUserServlet extends HttpServlet {
         try {
             Connection con = DbConnection.getConnection();
             
-            //TODO есть смысл сделать формирование в конструкторе USER (передаем request)
+            
             
             
             String id_user = (String) request.getParameter("id_user"); //параметры только строки
+            String idnamegroup = (String) request.getParameter("idnamegroup");
             String username = (String) request.getParameter("username");
-            String password = (String) request.getParameter("password");
             String email = (String) request.getParameter("email");
             String phone = (String) request.getParameter("phone");
             String name = (String) request.getParameter("name");
             String surname = (String) request.getParameter("surname");
             String comment = (String) request.getParameter("comment");
-
-            user = new User(Integer.parseInt(id_user), username, 0, email, phone, name, surname,comment);
+            
+            
+            
+            //отделим id_group и Name от параметра на странице idnamegroup (паттерн: [id_group]:[название группы])
+            String splitidname[] = idnamegroup.split(":"); //полученный массив используем для создания user
+            
+            
+            user = new User(Integer.parseInt(id_user), Integer.parseInt(splitidname[0]),
+                    splitidname[1], username, 0, email, phone, name, surname, comment);
             
             user.checkUsername();
             user.checkEmail();

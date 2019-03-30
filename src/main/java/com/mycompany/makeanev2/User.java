@@ -7,6 +7,8 @@ public class User {
 
     /*класс для работы с объектом пользователь, формируется из данных в БД*/
     private final int id_user;
+    private final int group_id;
+    private final String groupname;
     private final String username;
     private int password;
     private String passwordStr;
@@ -17,8 +19,10 @@ public class User {
     private final String comment;
 
     //TODO: подумать над оптимизацией конструкторов - в частности сделать в конструкторе параметр - httpservletreques и разбирать его там
-    public User(int id_user, String username, String password, String email, String phone, String name, String surname, String comment) {
+    public User(int id_user, int group_id, String groupname, String username, String password, String email, String phone, String name, String surname, String comment) {
         this.id_user = id_user;
+        this.group_id = group_id;
+        this.groupname = groupname;
         this.username = username;
         this.password = password.hashCode();
         this.passwordStr = password;
@@ -30,19 +34,23 @@ public class User {
     }
     
     public User(ResultSet rs) throws SQLException {
-        this.id_user = rs.getInt("id_user");
-        this.username = rs.getString("username");
-        this.password = rs.getInt("password");
+        this.id_user = rs.getInt(1);
+        this.group_id = rs.getInt(2);
+        this.groupname = rs.getString(3);
+        this.username = rs.getString(4);
+        this.password = rs.getInt(5);
         this.passwordStr = "";
-        this.email = rs.getString("email");
-        this.phone = rs.getString("phone");
-        this.name = rs.getString("name");
-        this.surname = rs.getString("surname");
-        this.comment = rs.getString("comment");
+        this.email = rs.getString(6);
+        this.phone = rs.getString(7);
+        this.name = rs.getString(8);
+        this.surname = rs.getString(9);
+        this.comment = rs.getString(10);
     }
     
-    public User(int id_user, String username, int password, String email, String phone, String name, String surname, String comment) {
+    public User(int id_user, int group_id, String groupname, String username, int password, String email, String phone, String name, String surname, String comment) {
         this.id_user = id_user;
+        this.group_id = group_id;
+        this.groupname = groupname;
         this.username = username;
         this.password = password;
         this.passwordStr = "";
@@ -59,6 +67,14 @@ public class User {
         return id_user;
     }
 
+    public int getGroup_id() {
+        return group_id;
+    }
+
+    public String getGroupname() {
+        return groupname;
+    }
+    
     public String getPasswordStr() {
         return passwordStr;
     }
@@ -115,8 +131,8 @@ public class User {
     }
 
     public void checkPassword() throws UserException {
-        String PassPattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
-        if (!passwordStr.matches(PassPattern)) {
+        String passPattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
+        if (!passwordStr.matches(passPattern)) {
             throw new UserException("Пароль не удовлетовряет условиям: не менее 8 символов, cодержит хотя бы одну цифру, "
                     + "содерижт хотя бы одну букву в верхнеи и нижнем регистре, "
                     + "содержит хотя бы один спеццсимвол(@#%$^ и т.д.), "

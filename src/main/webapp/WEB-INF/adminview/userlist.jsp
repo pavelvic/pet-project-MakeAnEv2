@@ -20,21 +20,17 @@
                 <th>ID</th>
                 <th>Логин</th>
                 <th>E-mail</th>
-                <th>Тел.</th>
-                <th>Имя</th>
-                <th>Фамилия</th>
+                <th>Группа польз.</th>
+
                 <th>Подробно</th>
-                <th>Комментарий</th>
             </tr>
         <c:forEach items = "${userList}" var = "user">
             <tr>
                 <td>${user.id_user}</td>
                 <td>${user.username}</td>
                 <td>${user.email}</td>
-                <td>${user.phone}</td>
-                <td>${user.name}</td>
-                <td>${user.surname}</td>
-                <td>${user.comment}</td>
+                <td>${user.groupname}</td>
+
                 <td><a href = "viewuser?id_user=${user.id_user}">Подробно...</a></td>
             </tr>
         </c:forEach>
