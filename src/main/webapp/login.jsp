@@ -9,10 +9,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Страница входа</title>
     </head>
     <body>
-        <h1>Login Page HERE</h1>
+        <h1>Введите имя пользователя и пароль</h1>
         <h4>${errorString}</h4>
         <form method="POST" action="">
            <table border="0">

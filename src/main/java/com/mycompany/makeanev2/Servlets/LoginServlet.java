@@ -42,7 +42,6 @@ public class LoginServlet extends HttpServlet {
         boolean remember = "Y".equals(request.getParameter("rememberMe"));
 
         User user = null;
-        //boolean err = false;
         String redirectString;
         String errorString = null;
 
@@ -74,7 +73,6 @@ public class LoginServlet extends HttpServlet {
             errorString = "Ошибка! " + ex.toString();
         } finally {
             request.setAttribute("errorString", errorString);
-            //request.setAttribute("user", user);
             request.getRequestDispatcher(redirectString).forward(request, response);
         }
     }

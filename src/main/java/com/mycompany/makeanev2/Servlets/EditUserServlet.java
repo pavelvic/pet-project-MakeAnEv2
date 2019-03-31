@@ -1,7 +1,7 @@
 package com.mycompany.makeanev2.Servlets;
 
 import com.mycompany.makeanev2.User;
-import com.mycompany.makeanev2.UserException;
+import com.mycompany.makeanev2.Exceptions.UserException;
 import com.mycompany.makeanev2.Utils.DbQuery;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class EditUserServlet extends HttpServlet {
 
             String id_user = (String) request.getParameter("id_user"); //параметры только строки
             user = DbQuery.selectUser(con, id_user);
-            //List<UserGroup> userGroups = DbQuery.selectUserGroup(con);
+            
             con.close(); //закрываем соединение сразу после получения данных
             request.setAttribute("user", user); //передаем объект на страницу для настройки view
             //request.setAttribute("usergroups", userGroups);
@@ -84,6 +84,8 @@ public class EditUserServlet extends HttpServlet {
             DbQuery.updateUser(con, user);
             con.close();
             resultString = "Изменения внесены";
+            
+            //TODO если обновляем своего пользователя, надо обновить его данные в session и куках
 
 
         } catch (SQLException | NamingException | UserException ex) {

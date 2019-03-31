@@ -59,7 +59,7 @@ public class CookieFilter implements Filter {
 
         } catch (SQLException | NamingException ex) {
             request.setAttribute("resultString", "Ошибка! : " + ex.toString());
-            request.setAttribute("redirect", "/"); //СѓРєР°Р·С‹РІР°РµРј РѕС‚РєСѓРґР° РјС‹ РёРґРµРј РЅР° СЃС‚СЂР°РЅРёС†Сѓ СЂРµР·СѓР»СЊС‚Р°С‚Р° РґР»СЏ РЅР°СЃС‚СЂРѕР№РєРё РјР°СЂС€СЂСѓС‚РёР·Р°С†РёРё
+            request.setAttribute("redirect", "/"); 
             request.getRequestDispatcher("/resultpage.jsp").forward(request, response);
         }
     }

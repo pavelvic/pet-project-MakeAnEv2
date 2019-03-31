@@ -33,9 +33,9 @@ public class EditUserFilter implements Filter {
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
           throws IOException, ServletException {
       //подготовить список групп пользователей для формирования списка на странице
-      Connection con;
+      
       try {
-          con = DbConnection.getConnection();
+          Connection con = DbConnection.getConnection();
           List<UserGroup> userGroups = DbQuery.selectUserGroup(con);
           request.setAttribute("usergroups", userGroups);
           

@@ -34,7 +34,6 @@
             <tr>
                <td>Группа*</td>
                <td>
-            
                 <select name ="idnamegroup" size="1">
                     <option selected value=${user.group_id}:${user.groupname}><b>${user.groupname}</b></option>
                     <c:forEach items = "${usergroups}" var = "usergroups">
@@ -42,12 +41,8 @@
                             <option value=${usergroups.id_group}:${usergroups.name}>${usergroups.name}</option>
                         </c:if>
                     </c:forEach> 
-                </select>
-              
                </td>
             </tr>
-            
-            
             <tr>
                <td>Телефон</td>
                <td><input type="text" name="phone" value=${user.phone}></td>

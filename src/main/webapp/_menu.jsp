@@ -12,6 +12,6 @@
    |
    <a href="${pageContext.request.contextPath}/adduser">Добавить пользователя</a>
    |
-   HELLO, ${loginedUser.username}
+   HELLO, ${loginedUser.username} (${loginedUser.groupname})
 
 </div>

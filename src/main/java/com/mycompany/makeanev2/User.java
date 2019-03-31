@@ -1,5 +1,6 @@
 package com.mycompany.makeanev2;
 
+import com.mycompany.makeanev2.Exceptions.UserException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -135,7 +136,7 @@ public class User {
         if (!passwordStr.matches(passPattern)) {
             throw new UserException("Пароль не удовлетовряет условиям: не менее 8 символов, cодержит хотя бы одну цифру, "
                     + "содерижт хотя бы одну букву в верхнеи и нижнем регистре, "
-                    + "содержит хотя бы один спеццсимвол(@#%$^ и т.д.), "
+                    + "содержит хотя бы один спецсимвол(@#%$^ и т.д.), "
                     + "не содержит пробелов");
         }
     }

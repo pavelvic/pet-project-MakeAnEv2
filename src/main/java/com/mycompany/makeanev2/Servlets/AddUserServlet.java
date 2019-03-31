@@ -1,7 +1,7 @@
 package com.mycompany.makeanev2.Servlets;
 
 import com.mycompany.makeanev2.User;
-import com.mycompany.makeanev2.UserException;
+import com.mycompany.makeanev2.Exceptions.UserException;
 import com.mycompany.makeanev2.Utils.DbQuery;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;

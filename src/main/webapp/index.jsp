@@ -13,7 +13,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <div>HELLO, ${loginedUser.username}</div>
+        <div>HELLO, ${loginedUser.username} (${loginedUser.groupname})</div>
         <div><a href="/MakeAnEv2/userlist">Список пользователей</a></div>
         <div><a href="/MakeAnEv2/adduser">Добавить пользователя</a></div>
         <div><a href="/MakeAnEv2/login">Войти</a></div>
