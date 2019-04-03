@@ -13,7 +13,7 @@
         <title>Редактирование пользователя</title>
     </head>
     <body>
-        <jsp:include page="_menu.jsp"></jsp:include>
+        <jsp:include page="/_menu.jsp"></jsp:include>
         <h1>EDIT USER HERE</h1>
         <h4>${resultString}</h4>
         <form method="POST" action="">

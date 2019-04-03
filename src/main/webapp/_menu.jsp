@@ -12,6 +12,10 @@
    |
    <a href="${pageContext.request.contextPath}/adduser">Добавить пользователя</a>
    |
+   <a href = "${pageContext.request.contextPath}/login">Войти</a>
+   |
+   <a href = "${pageContext.request.contextPath}/logout">Выйти</a>
+   |
    HELLO, ${loginedUser.username} (${loginedUser.groupname})
 
 </div>

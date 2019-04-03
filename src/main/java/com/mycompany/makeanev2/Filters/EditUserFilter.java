@@ -1,6 +1,8 @@
 package com.mycompany.makeanev2.Filters;
 
+import com.mycompany.makeanev2.Exceptions.UserException;
 import com.mycompany.makeanev2.UserGroup;
+import com.mycompany.makeanev2.Utils.CheckPermission;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import com.mycompany.makeanev2.Utils.DbQuery;
 import java.io.IOException;
@@ -32,20 +34,28 @@ public class EditUserFilter implements Filter {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
           throws IOException, ServletException {
-      //подготовить список групп пользователей для формирования списка на странице
       
       try {
           Connection con = DbConnection.getConnection();
+          //подготовить список групп пользователей для формирования списка на странице
           List<UserGroup> userGroups = DbQuery.selectUserGroup(con);
+          con.close();
           request.setAttribute("usergroups", userGroups);
+          String test = (String) request.getParameter("id_user");
+          //направить в нужную область сайти в зависимости от роли
+//          String redirect = CheckPermission.getUsergroupRedirect(request,"editprofile.jsp");
+//          request.setAttribute("redirUsergroup", redirect);
+          chain.doFilter(request, response);
           
-      } catch (SQLException | NamingException ex) {
-         String resultString = "Ошибка! " + ex.getMessage();
+      } catch (SQLException | NamingException  ex) {
+         String resultString = "Ошибка! " + ex.toString();
          request.setAttribute("resultString", resultString);
       }
       
+      //маршрутизация: в зависимости от группы пользователей у залогинившегося пользователя отправляев в соотв область сайта
       
       
-      chain.doFilter(request, response);
+      
+
   }
 }

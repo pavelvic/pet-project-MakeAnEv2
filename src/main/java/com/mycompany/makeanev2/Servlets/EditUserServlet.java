@@ -2,6 +2,8 @@ package com.mycompany.makeanev2.Servlets;
 
 import com.mycompany.makeanev2.User;
 import com.mycompany.makeanev2.Exceptions.UserException;
+import com.mycompany.makeanev2.Utils.AuthUtils;
+import com.mycompany.makeanev2.Utils.CheckPermission;
 import com.mycompany.makeanev2.Utils.DbQuery;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
@@ -28,20 +30,24 @@ public class EditUserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String resultString;
-        
+        User userInSession; //сюда помещаем залогинившегося пользователя
         try {
             Connection con = DbConnection.getConnection();
 
             String id_user = (String) request.getParameter("id_user"); //параметры только строки
             user = DbQuery.selectUser(con, id_user);
-            
             con.close(); //закрываем соединение сразу после получения данных
+            
+            userInSession = AuthUtils.getLoginedUser(request.getSession());
+            //CheckPermission.checkEditUserAccess(userInSession, user); //проверим возможносто доступа
+            //направим на правильную страницу
+            String redirect = CheckPermission.getEditUserRedirect(userInSession, user);
+            
             request.setAttribute("user", user); //передаем объект на страницу для настройки view
-            //request.setAttribute("usergroups", userGroups);
-
-            request.getRequestDispatcher("/edituser.jsp").forward(request, response);
-        } catch (SQLException | NamingException | NumberFormatException ex) {
-            resultString = "Ошибка! " + ex.getMessage(); //информация об ошибке
+           
+            request.getRequestDispatcher(redirect).forward(request, response); //открываем страницу 
+        } catch (SQLException | NamingException | NumberFormatException | UserException ex) {
+            resultString = "Ошибка! " + ex.toString(); //информация об ошибке
             request.setAttribute("resultString", resultString);
             request.setAttribute("redirect", "/userlist"); //указываем чтобы маршрутизация с resultpage была на userlist
             request.getRequestDispatcher("/resultpage.jsp").forward(request, response); //идем на страницу с ошибкой
@@ -56,9 +62,6 @@ public class EditUserServlet extends HttpServlet {
         try {
             Connection con = DbConnection.getConnection();
             
-            
-            
-            
             String id_user = (String) request.getParameter("id_user"); //параметры только строки
             String idnamegroup = (String) request.getParameter("idnamegroup");
             String username = (String) request.getParameter("username");
@@ -67,8 +70,6 @@ public class EditUserServlet extends HttpServlet {
             String name = (String) request.getParameter("name");
             String surname = (String) request.getParameter("surname");
             String comment = (String) request.getParameter("comment");
-            
-            
             
             //отделим id_group и Name от параметра на странице idnamegroup (паттерн: [id_group]:[название группы])
             String splitidname[] = idnamegroup.split(":"); //полученный массив используем для создания user
@@ -93,7 +94,8 @@ public class EditUserServlet extends HttpServlet {
         } finally {
             request.setAttribute("resultString", resultString); //передали результат действия
             request.setAttribute("user", user); //сохранили что ввели и передали на страницу для отображения
-            request.getRequestDispatcher("/edituser.jsp").forward(request, response); //показали страницу
+            String redirect = (String) request.getAttribute("redirUsergroup");
+            request.getRequestDispatcher(redirect).forward(request, response); //показали страницу
         }
     }
 }

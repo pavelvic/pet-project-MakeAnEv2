@@ -1,7 +1,9 @@
 package com.mycompany.makeanev2.Servlets;
 
+import com.mycompany.makeanev2.Exceptions.UserException;
 import com.mycompany.makeanev2.User;
 import com.mycompany.makeanev2.Utils.AuthUtils;
+import com.mycompany.makeanev2.Utils.CheckPermission;
 import com.mycompany.makeanev2.Utils.DbQuery;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
@@ -20,18 +22,8 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //проверка вошел пользователь или нет
-        //если не вошел - редирект на страницу логина
-        //если вошел, открываем главную страницу залогированную
 
-        User loginedUser = AuthUtils.getLoginedUser(request.getSession());
-        if (loginedUser == null) {
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
-        } else {
-            request.setAttribute("resultString", "Вы уже вошли на сайт как "+loginedUser.getUsername());
-            request.setAttribute("redirect", "/");
-            request.getRequestDispatcher("/resultpage.jsp").forward(request, response);
-        }
+        request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 
     @Override
@@ -54,10 +46,12 @@ public class LoginServlet extends HttpServlet {
                 Connection con = DbConnection.getConnection();
                 user = DbQuery.findUser(con, username, password);
                 con.close();
+                CheckPermission.checkBlockUser(user); //проверим блокирован ли пользователь, который пытается войти
                 if (user == null) {
 
                     errorString = "Имя пользователя или пароль не корректны";
                 } else {
+
                     HttpSession session = request.getSession();
                     AuthUtils.storeLoginedUser(session, user);
                     redirectString = "/";
@@ -69,7 +63,7 @@ public class LoginServlet extends HttpServlet {
                     }
                 }
             }
-        } catch (SQLException | NamingException ex) {
+        } catch (SQLException | NamingException | UserException ex) {
             errorString = "Ошибка! " + ex.toString();
         } finally {
             request.setAttribute("errorString", errorString);
