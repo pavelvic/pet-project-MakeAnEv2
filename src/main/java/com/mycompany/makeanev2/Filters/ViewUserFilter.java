@@ -9,8 +9,6 @@ import com.mycompany.makeanev2.Utils.DbQuery;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -53,10 +51,10 @@ public class ViewUserFilter implements Filter {
             //проверяем есть ли доступ до данному запросу
             CheckPermission.checkViewUserAccess(userInSession, userToAccess);
 
-            //сохраняем в сессию пользователя для дальнейшего исопльзования
+            //сохраняем в запрос самого пользователя для дальнейшего исопльзования
             request.setAttribute("user", userToAccess);
 
-            //если все хорошо и исключений мы не получили, делаем переход
+            //если все хорошо и исключений мы не получили, устанавливаем диспетчера для перехода в сервлете
             switch (userInSession.getGroup_id()) {
                 case 1:
                     request.setAttribute("dispatcher", request.getRequestDispatcher("/WEB-INF/ownerview/viewuser.jsp"));

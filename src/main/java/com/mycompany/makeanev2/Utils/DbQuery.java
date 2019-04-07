@@ -115,6 +115,8 @@ public class DbQuery {
         }
         return null;
     }
+    
+    
 
     public static void updateUser(Connection con, User user) throws SQLException {
         /*обновляем информацию о пользователе в БД*/

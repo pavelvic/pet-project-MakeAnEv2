@@ -3,21 +3,22 @@ package com.mycompany.makeanev2;
 import com.mycompany.makeanev2.Exceptions.UserException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 
 public class User {
 
     /*класс для работы с объектом пользователь, формируется из данных в БД*/
-    private final int id_user;
-    private final int group_id;
-    private final String groupname;
-    private final String username;
+    private int id_user;
+    private int group_id;
+    private String groupname;
+    private String username;
     private int password;
     private String passwordStr;
-    private final String email;
-    private final String phone;
-    private final String name;
-    private final String surname;
-    private final String comment;
+    private String email;
+    private String phone;
+    private String name;
+    private String surname;
+    private String comment;
 
     //TODO: подумать над оптимизацией конструкторов - в частности сделать в конструкторе параметр - httpservletreques и разбирать его там
     public User(int id_user, int group_id, String groupname, String username, String password, String email, String phone, String name, String surname, String comment) {
@@ -33,7 +34,7 @@ public class User {
         this.surname = surname;
         this.comment = comment;
     }
-    
+
     public User(ResultSet rs) throws SQLException {
         this.id_user = rs.getInt(1);
         this.group_id = rs.getInt(2);
@@ -47,7 +48,7 @@ public class User {
         this.surname = rs.getString(9);
         this.comment = rs.getString(10);
     }
-    
+
     public User(int id_user, int group_id, String groupname, String username, int password, String email, String phone, String name, String surname, String comment) {
         this.id_user = id_user;
         this.group_id = group_id;
@@ -62,7 +63,6 @@ public class User {
         this.comment = comment;
     }
 
-
     //геттеры сеттеры
     public int getId_user() {
         return id_user;
@@ -75,7 +75,7 @@ public class User {
     public String getGroupname() {
         return groupname;
     }
-    
+
     public String getPasswordStr() {
         return passwordStr;
     }
@@ -89,11 +89,10 @@ public class User {
     }
 
     public void setPassword(String password) {
-    this.password = password.hashCode();
-    this.passwordStr = password;
+        this.password = password.hashCode();
+        this.passwordStr = password;
     }
-    
-    
+
     public String getEmail() {
         return email;
     }
@@ -113,7 +112,54 @@ public class User {
     public String getComment() {
         return comment;
     }
-    
+
+    public void applyChanges(Map updateMap) {
+
+        if (updateMap.get("id_user") != null) {
+            id_user = Integer.parseInt((String) updateMap.get("id_user"));
+        }
+
+        if (updateMap.get("group_id") != null) {
+            group_id = Integer.parseInt((String) updateMap.get("group_id"));
+        }
+
+        if (updateMap.get("groupname") != null) {
+            groupname = (String) updateMap.get("groupname");
+        }
+
+        if (updateMap.get("username") != null) {
+            username = (String) updateMap.get("username");
+        }
+
+        if (updateMap.get("password") != null) {
+            password = Integer.parseInt((String) updateMap.get("password"));
+        }
+
+        if (updateMap.get("passwordStr") != null) {
+            passwordStr = (String) updateMap.get("passwordStr");
+        }
+
+        if (updateMap.get("email") != null) {
+            email = (String) updateMap.get("email");
+        }
+
+        if (updateMap.get("phone") != null) {
+            phone = (String) updateMap.get("phone");
+        }
+
+        if (updateMap.get("name") != null) {
+            name = (String) updateMap.get("name");
+        }
+
+        if (updateMap.get("surname") != null) {
+            surname = (String) updateMap.get("surname");
+        }
+
+        if (updateMap.get("comment") != null) {
+            comment = (String) updateMap.get("comment");
+        }
+
+    }
 
     //проверка значений
     public void checkUsername() throws UserException {
@@ -121,6 +167,7 @@ public class User {
         if (!username.matches(usernamePattern)) {
             throw new UserException("Имя пользователя не заполнено или не соответсвует требованиям: от 2 до 20 символов из латинских букв и цифр, первый символ обязательно буква");
         }
+        
     }
 
     public void checkEmail() throws UserException {
