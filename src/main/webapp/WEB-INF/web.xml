@@ -20,6 +20,14 @@
         <filter-name>LoginFilter</filter-name>
         <filter-class>com.mycompany.makeanev2.Filters.LoginFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>UserListFilter</filter-name>
+        <filter-class>com.mycompany.makeanev2.Filters.UserListFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>UserListFilter</filter-name>
+        <servlet-name>UserListServlet</servlet-name>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>LoginFilter</filter-name>
         <servlet-name>LoginServlet</servlet-name>

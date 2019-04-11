@@ -40,7 +40,7 @@ public class EditPasswordServlet extends HttpServlet {
 
             if (actualPassword.hashCode() == user.getPassword()) {
                 user.setPassword(newPassword);
-                user.checkPassword();
+                user.checkPasswordPattern();
 
                 DbQuery.updateUserPassword(con, user);
                 con.close();

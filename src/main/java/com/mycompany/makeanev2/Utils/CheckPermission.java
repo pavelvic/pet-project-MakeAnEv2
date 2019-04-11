@@ -2,9 +2,6 @@ package com.mycompany.makeanev2.Utils;
 
 import com.mycompany.makeanev2.Exceptions.UserException;
 import com.mycompany.makeanev2.User;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 public class CheckPermission {
 
@@ -49,35 +46,6 @@ public class CheckPermission {
     }
     
     
-//    public static String getEditUserRedirect (User userInSession, User userToAccess) throws UserException {
-//                //проверим логин
-//        checkNotLogin(userInSession);
-//
-//        //проверим заблокирован ли пользователь
-//        checkBlockUser(userInSession);
-//        
-//        
-//        if (userInSession != null) {
-//        switch (userInSession.getGroup_id()) {
-//            case 1: return "/WEB-INF/ownerview/editprofile.jsp";
-//            case 2: if (userInSession.getId_user() == userToAccess.getId_user()) {
-//                    return "/WEB-INF/adminview/editprofile.jsp";
-//                    } else {
-//                    return "/WEB-INF/adminview/editusergroup.jsp";
-//                    } 
-//            case 3: return "/WEB-INF/managerview/editprofile.jsp";
-//            case 4: return "/WEB-INF/userview/editprofile.jsp";
-//            case 5: throw new UserException("Доступ запрещен. Пользователь заблокирован");
-//        }
-//        } else {
-//            throw new UserException("Доступ запрещен. Залогиньтесь");    
-//        }
-//        return "/login.jsp";
-//     
-//    }
-    
-    //метод для просмотра
-
     //метод проверки при открытии страницы логина
     public static void checkLoginAccess(User userInSession) throws UserException {
 
@@ -102,37 +70,5 @@ public class CheckPermission {
         }
     }
 
-    //общий метод для редиректов на разные области сайтов в завсисмости от группы пользователя
-//    public static String getUsergroupRedirect(ServletRequest request, String page)
-//            throws UserException {
-//
-//        HttpServletRequest req = (HttpServletRequest) request;
-//        HttpSession session = req.getSession();
-//        User userInSession = AuthUtils.getLoginedUser(session);
-//
-//        String redirect = "/index.jsp";
-//        if (userInSession != null) {
-//            switch (userInSession.getGroup_id()) {
-//                case 1:
-//                    ///WEB-INF/ownerview
-//                    return "/WEB-INF/ownerview/" + page;
-//                case 2:
-//                    ///WEB-INF/adminview
-//                    
-//                    
-//                    return "/WEB-INF/adminview/" + page;
-//                case 3:
-//                    ///WEB-INF/managerview
-//                    return "/WEB-INF/managerview/" + page;
-//                case 4:
-//                    ///WEB-INF/userview
-//                    return "/WEB-INF/userview/" + page;
-//                case 5:
-//                    throw new UserException("Доступ запрещен. Пользователь заблокирован"); //Обработка блокировки
-//            }
-//        } else {
-//            throw new UserException("Доступ запрещен. Залогиньтесь");
-//        }
-//        return "/index.jsp"; //по дефолту идем на главную страницу
-//    }
+
 }

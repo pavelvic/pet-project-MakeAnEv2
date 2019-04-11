@@ -96,6 +96,23 @@ public class DbQuery {
         }
         return list;
     }
+    
+        public static List<User> selectUserExcept(Connection con, String id_userStr) throws SQLException {
+        /*метод для получения атрибутов пользователя из БД*/
+        String sql = "SELECT u.id_user, u.group_id, g.Name, u.username, u.password, u.email, u.phone, u.name, u.surname, u.comment "
+                + "FROM `user` u, `usergroups` g "
+                + "WHERE g.id_group = u.group_id";
+
+        PreparedStatement pstm = con.prepareStatement(sql);
+
+        ResultSet rs = pstm.executeQuery();
+        List<User> list = new ArrayList<>();
+
+        while (rs.next()) {
+            if (rs.getInt(1)!=Integer.parseInt(id_userStr)) list.add(new User(rs));
+        }
+        return list;
+    }
 
     public static User selectUser(Connection con, String id_userStr) throws SQLException {
         /*перегруженный метод, возвращающий одного пользователя по id*/
@@ -115,7 +132,6 @@ public class DbQuery {
         }
         return null;
     }
-    
     
 
     public static void updateUser(Connection con, User user) throws SQLException {

@@ -7,6 +7,7 @@ import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -41,13 +42,16 @@ public class AddUserServlet extends HttpServlet {
             String comment = (String) request.getParameter("comment");
 
             //по дефолту при регистрации указывает группу пользователей 4 - Пользователь
-            user = new User(0, 4, "Пользователь", username, password, email, phone, name, surname, comment);
+            user = new User(0, 4, "Пользователь",username, password.hashCode(), password, email, phone, name, surname, comment);
 
             //выполняем проверки значений с генерацией исключений UserException
-            user.checkUsername();
-            user.checkEmail();
-            user.checkPhone();
-            user.checkPassword();
+            user.checkUsernamePattern();
+            user.checkEmailPattern();
+            user.checkPhonePattern();
+            user.checkPasswordPattern();
+            
+            List<User> allUsers = DbQuery.selectUser(con);
+            user.checkUniqueUser(allUsers);//проверка на уникальность пользователя (username, e-mail, phone - не должны совпадать с существующими)
 
             //добавляем запись в БД и устанавливаем сообщение об успехе
             DbQuery.insertUser(con, user);
