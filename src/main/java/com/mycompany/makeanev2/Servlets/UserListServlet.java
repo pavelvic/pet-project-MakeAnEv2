@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import javax.naming.NamingException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +29,10 @@ public class UserListServlet extends HttpServlet {
             list = DbQuery.selectUser(con);
             con.close(); //закрываем соединение сразу после получения данных
             request.setAttribute("userList", list); //передаем объект на страницу для настройки view
-            request.getRequestDispatcher("/WEB-INF/adminview/userlist.jsp").forward(request, response); //открываем страницу view
+            
+            RequestDispatcher dispatcher = (RequestDispatcher) request.getAttribute("dispatcher");
+            dispatcher.forward(request, response); //открываем страницу
+            
         } catch (SQLException | NamingException ex) {
             errorString = "Ошибка соединения с базой данных! "+ex.getMessage(); //информация об ошибке
             request.setAttribute("resultString", errorString);

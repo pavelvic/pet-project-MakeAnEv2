@@ -56,13 +56,17 @@ public class EditUserServlet extends HttpServlet {
             String comment = (String) request.getParameter("comment");
             
             //отделим id_group и Name от параметра на странице idnamegroup (паттерн: [id_group]:[название группы])
-            String splitidname[] = idnamegroup.split(":"); //полученный массив используем для создания user
+            String group_id = null;
+            String groupname = null;
+            String splitidname[];
+            if (idnamegroup != null) splitidname = idnamegroup.split(":"); //полученный массив используем для создания user
             
+            //HashMap с изменениями
             Map<String,String> updateUser = new HashMap<>();
             
             updateUser.put("id_user", id_user);
-            updateUser.put("group_id", splitidname[0]);
-            updateUser.put("groupname", splitidname[1]);
+            updateUser.put("group_id", group_id);
+            updateUser.put("groupname", groupname);
             updateUser.put("username", username);
             updateUser.put("password", null);
             updateUser.put("passwordStr", null);
@@ -72,6 +76,7 @@ public class EditUserServlet extends HttpServlet {
             updateUser.put("surname", surname);
             updateUser.put("comment", comment);
             
+            //применяем
             userToUpdate.applyChanges(updateUser);
             
             userToUpdate.checkUsernamePattern(); //проверка формата e-mail

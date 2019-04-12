@@ -26,14 +26,14 @@ public class CheckPermission {
             }
         }
     }
-    
-    public static void checkEditUserAccess (User userInSession, User userToAccess) throws UserException {
-            //проверим логин
+
+    public static void checkEditUserAccess(User userInSession, User userToAccess) throws UserException {
+        //проверим логин
         checkNotLogin(userInSession);
 
         //проверим заблокирован ли пользователь
         checkBlockUser(userInSession);
-        
+
         if (userInSession.getId_user() != userToAccess.getId_user()) {
 
             switch (userInSession.getGroup_id()) {
@@ -44,8 +44,28 @@ public class CheckPermission {
             }
         }
     }
-    
-    
+
+    public static void checkUserListAccess(User userInSession) throws UserException {
+        //проверим логин
+        checkNotLogin(userInSession);
+
+        //проверим заблокирован ли пользователь
+        checkBlockUser(userInSession);
+
+        switch (userInSession.getGroup_id()) {
+//            case 1:
+//            case 2:
+            case 3:
+                throw new UserException("Доступ запрещён.");
+            case 4:
+                throw new UserException("Доступ запрещён.");
+            case 5:
+                throw new UserException("Доступ запрещён.");
+
+        }
+
+    }
+
     //метод проверки при открытии страницы логина
     public static void checkLoginAccess(User userInSession) throws UserException {
 
@@ -69,6 +89,5 @@ public class CheckPermission {
             throw new UserException("Доступ запрещен. Войдите на сайт");
         }
     }
-
 
 }

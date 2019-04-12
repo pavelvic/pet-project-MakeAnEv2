@@ -22,19 +22,6 @@ public class User {
     private String comment;
 
     //TODO: подумать над оптимизацией конструкторов - в частности сделать в конструкторе параметр - httpservletreques и разбирать его там
-//    public User(int id_user, int group_id, String groupname, String username, String password, String email, String phone, String name, String surname, String comment) {
-//        this.id_user = id_user;
-//        this.group_id = group_id;
-//        this.groupname = groupname;
-//        this.username = username;
-//        this.password = password.hashCode();
-//        this.passwordStr = password;
-//        this.email = email;
-//        this.phone = phone;
-//        this.name = name;
-//        this.surname = surname;
-//        this.comment = comment;
-//    }
     
     public User(int id_user, int group_id, String groupname, String username,int hashpassword, String password, String email, String phone, String name, String surname, String comment) {
         this.id_user = id_user;
@@ -64,19 +51,6 @@ public class User {
         this.comment = rs.getString(10);
     }
 
-//    public User(int id_user, int group_id, String groupname, String username, int password, String email, String phone, String name, String surname, String comment) {
-//        this.id_user = id_user;
-//        this.group_id = group_id;
-//        this.groupname = groupname;
-//        this.username = username;
-//        this.password = password;
-//        this.passwordStr = "";
-//        this.email = email;
-//        this.phone = phone;
-//        this.name = name;
-//        this.surname = surname;
-//        this.comment = comment;
-//    }
 
     //геттеры сеттеры
     public int getId_user() {

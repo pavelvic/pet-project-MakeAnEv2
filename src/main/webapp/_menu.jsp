@@ -16,6 +16,6 @@
    |
    <a href = "${pageContext.request.contextPath}/logout">Выйти</a>
    |
-   HELLO, ${loginedUser.username} (${loginedUser.groupname})
+   HELLO, ${loginedUser.username} (${loginedUser.groupname}) <a href="/MakeAnEv2/viewuser?id_user=${loginedUser.id_user}">[Мои данные]</a>
 
 </div>
