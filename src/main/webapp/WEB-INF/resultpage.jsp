@@ -12,7 +12,7 @@
         <title>Инфо</title>
     </head>
     <body>
-        <jsp:include page="_menu.jsp"></jsp:include>
+        <jsp:include page="/_menu.jsp"></jsp:include>
         <h1>${resultString}</h1>
         <h3><a href = "${pageContext.request.contextPath}${redirect}">Ok</a></h3>
     </body>

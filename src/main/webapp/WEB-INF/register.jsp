@@ -13,8 +13,8 @@
         <title>Добавить пользователя</title>
     </head>
     <body>
-        <jsp:include page="_menu.jsp"></jsp:include>
-        <h1>ADD USER HERE</h1>
+        <jsp:include page="/_menu.jsp"></jsp:include>
+        <h1>REGISTER HERE</h1>
         <h4>${resultString}</h4>
         <form method="POST" action="">
            <table border="0">

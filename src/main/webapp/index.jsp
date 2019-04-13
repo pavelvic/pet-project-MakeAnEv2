@@ -15,7 +15,7 @@
     <body>
         <div>HELLO, ${loginedUser.username} (${loginedUser.groupname}), <a href="/MakeAnEv2/viewuser?id_user=${loginedUser.id_user}">[Мои данные]</a></div>
         <div><a href="/MakeAnEv2/userlist">Список пользователей</a></div>
-        <div><a href="/MakeAnEv2/adduser">Добавить пользователя</a></div>
+        <div><a href="/MakeAnEv2/register">Регистрация</a></div>
         <div><a href="/MakeAnEv2/login">Войти</a></div>
         <div><a href="/MakeAnEv2/logout">Выйти</a></div>
         

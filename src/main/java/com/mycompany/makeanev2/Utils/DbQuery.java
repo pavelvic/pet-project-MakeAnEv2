@@ -178,13 +178,13 @@ public class DbQuery {
 
     }
 
-    public static void deleteUser(Connection con, String id_user) throws SQLException, NumberFormatException {
+    public static void deleteUser(Connection con, User user) throws SQLException, NumberFormatException {
         /*Удаляем запись пользователя*/
         String sql = "DELETE FROM user WHERE id_user=?";
 
         PreparedStatement ptsm = con.prepareStatement(sql);
 
-        ptsm.setInt(1, Integer.parseInt(id_user));
+        ptsm.setInt(1, user.getId_user());
 
         ptsm.executeUpdate();
     }

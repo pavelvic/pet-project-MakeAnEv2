@@ -19,7 +19,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-public class ViewUserFilter implements Filter {
+public class EditPasswordFilter implements Filter {
 
     @Override
     public void init(FilterConfig fConfig) throws ServletException {
@@ -34,39 +34,41 @@ public class ViewUserFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        //в фильтре делаем редирект на правильную область сайта в зависимости от роли
+
+        //определяем залогинишвегося
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpSession session = req.getSession();
+        User userInSession = AuthUtils.getLoginedUser(session);
+        
 
         try {
-            //получаем пользователя к которому хотим получить доступ
+            
+            //получаем пользователя к которому запрашивается доступ
             Connection con = DbConnection.getConnection();
             String id_user = (String) request.getParameter("id_user"); //параметры Object, приводим к String
             User userToAccess = DbQuery.selectUser(con, id_user);
             con.close();
-
-            //определяем залогинишвегося
-            HttpServletRequest req = (HttpServletRequest) request;
-            HttpSession session = req.getSession();
-            User userInSession = AuthUtils.getLoginedUser(session);
-
-            //проверяем есть ли доступ до данному запросу
-            CheckPermission.checkViewUserAccess(userInSession, userToAccess);
-
-            //сохраняем в запрос самого пользователя для дальнейшего исопльзования
+            
+            //проверяем полномочия
+            CheckPermission.checkEditPassword(userInSession, userToAccess);
+            
+            //сохраняем в запрос пользоваеля
             request.setAttribute("user", userToAccess);
-
-            //если все хорошо и исключений мы не получили, устанавливаем диспетчера для перехода в сервлете
+            
+            //делаем маршрутизацию (себе менять пароль можно (для чего нужно ввести старый пароль, супер пользователь может менять любые пароли, ему не нужно знать старые пароли))
+            
             switch (userInSession.getGroup_id()) {
                 case 1:
-                    request.setAttribute("dispatcher", request.getRequestDispatcher("/WEB-INF/ownerview/viewuser.jsp"));
+                    request.setAttribute("dispatcher", request.getRequestDispatcher("/WEB-INF/ownerview/editpass.jsp"));
                     break;
                 case 2:
-                    request.setAttribute("dispatcher", request.getRequestDispatcher("/WEB-INF/adminview/viewuser.jsp"));
+                    request.setAttribute("dispatcher", request.getRequestDispatcher("/WEB-INF/adminview/editpass.jsp"));
                     break;
                 case 3:
-                    request.setAttribute("dispatcher", request.getRequestDispatcher("/WEB-INF/managerview/viewuser.jsp"));
+                    request.setAttribute("dispatcher", request.getRequestDispatcher("/WEB-INF/managerview/editpass.jsp"));
                     break;
                 case 4:
-                    request.setAttribute("dispatcher", request.getRequestDispatcher("/WEB-INF/userview/viewuser.jsp"));
+                    request.setAttribute("dispatcher", request.getRequestDispatcher("/WEB-INF/userview/editpass.jsp"));
                     break;
                 case 5:
                     throw new UserException("Доступ запрещен. Пользователь заблокирован"); //на всякий случай...
@@ -74,13 +76,17 @@ public class ViewUserFilter implements Filter {
                 default:
                     request.setAttribute("dispatcher", request.getRequestDispatcher("/login.jsp")); //на всякий случай...
             }
+            
+                    
+            //идем дальше
             chain.doFilter(request, response);
-
-        } catch (SQLException | NamingException | UserException ex) {
+            
+        } catch (UserException | SQLException | NamingException ex) {
             String errorString = "Ошибка! " + ex.toString(); //информация об ошибке
             request.setAttribute("resultString", errorString);
-            request.setAttribute("redirect", "/userlist"); //указываем чтобы маршрутизация с resultpage была на userlist
+            request.setAttribute("redirect", "/"); //указываем чтобы маршрутизация с resultpage была на userlist
             request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response); //идем на страницу с ошибкой
         }
+
     }
 }

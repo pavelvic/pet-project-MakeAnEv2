@@ -53,17 +53,72 @@ public class CheckPermission {
         checkBlockUser(userInSession);
 
         switch (userInSession.getGroup_id()) {
-//            case 1:
-//            case 2:
+
             case 3:
                 throw new UserException("Доступ запрещён.");
             case 4:
                 throw new UserException("Доступ запрещён.");
             case 5:
                 throw new UserException("Доступ запрещён.");
-
         }
 
+    }
+
+    public static void checkResetPassword(User userInSession) throws UserException {
+        //проверим логин
+        checkNotLogin(userInSession);
+
+        //проверим заблокирован ли пользователь
+        checkBlockUser(userInSession);
+
+        switch (userInSession.getGroup_id()) {
+            case 2:
+                throw new UserException("Доступ запрещен. Сброс пароля может делать только Администратор");
+            case 3:
+                throw new UserException("Доступ запрещен. Сброс пароля может делать только Администратор");
+            case 4:
+                throw new UserException("Доступ запрещен. Сброс пароля может делать только Администратор");
+        }
+    }
+
+    public static void checkDeleteUser(User userInSession, User userToAccess) throws UserException {
+        //проверим логин
+        checkNotLogin(userInSession);
+
+        //проверим заблокирован ли пользователь
+        checkBlockUser(userInSession);
+
+        if (userInSession.getId_user() != userToAccess.getId_user()) {
+
+            switch (userInSession.getGroup_id()) {
+                case 2:
+                    throw new UserException("Доступ запрещен. Нет полномочий на удаление пользователя");
+                case 3:
+                    throw new UserException("Доступ запрещен. Нет полномочий на удаление пользователя");
+                case 4:
+                    throw new UserException("Доступ запрещен. Нет полномочий на удаление пользователя");
+            }
+        }
+    }
+    
+        public static void checkEditPassword(User userInSession, User userToAccess) throws UserException {
+        //проверим логин
+        checkNotLogin(userInSession);
+
+        //проверим заблокирован ли пользователь
+        checkBlockUser(userInSession);
+
+        if (userInSession.getId_user() != userToAccess.getId_user()) {
+
+            switch (userInSession.getGroup_id()) {
+                case 2:
+                    throw new UserException("Доступ запрещен. Нет полномочий на редактирование чужого пароля");
+                case 3:
+                    throw new UserException("Доступ запрещен. Нет полномочий на редактирование чужого пароля");
+                case 4:
+                    throw new UserException("Доступ запрещен. Нет полномочий на редактирование чужого пароля");
+            }
+        }
     }
 
     //метод проверки при открытии страницы логина

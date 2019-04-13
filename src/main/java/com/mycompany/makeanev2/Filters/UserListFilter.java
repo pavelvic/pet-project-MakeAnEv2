@@ -67,7 +67,7 @@ public class UserListFilter implements Filter {
             String errorString = "Ошибка! " + ex.toString(); //информация об ошибке
             request.setAttribute("resultString", errorString);
             request.setAttribute("redirect", "/"); //указываем чтобы маршрутизация с resultpage была на userlist
-            request.getRequestDispatcher("/resultpage.jsp").forward(request, response); //идем на страницу с ошибкой
+            request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response); //идем на страницу с ошибкой
         }
 
     }    

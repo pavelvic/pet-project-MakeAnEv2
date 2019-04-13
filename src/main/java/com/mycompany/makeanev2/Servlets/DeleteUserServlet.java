@@ -1,5 +1,6 @@
 package com.mycompany.makeanev2.Servlets;
 
+import com.mycompany.makeanev2.User;
 import com.mycompany.makeanev2.Utils.DbQuery;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
@@ -18,10 +19,11 @@ public class DeleteUserServlet extends HttpServlet {
             throws ServletException, IOException {
         String resultString = null;
         
+        User userToDelete = (User)request.getAttribute("user");
+        
         try {
             Connection con = DbConnection.getConnection();
-            String id_user = (String) request.getParameter("id_user"); //параметры только строки
-            DbQuery.deleteUser(con, id_user);
+            DbQuery.deleteUser(con, userToDelete);
             con.close();
             resultString = "Пользователь удалён"; //специфицировать резалт
         } catch (SQLException | NamingException | NumberFormatException ex) {
@@ -30,9 +32,9 @@ public class DeleteUserServlet extends HttpServlet {
         
         finally {
             request.setAttribute("resultString", resultString);
-            request.setAttribute("redirect", "/userlist"); //указываем откуда мы идем на страницу результата для настройки маршрутизации
+            request.setAttribute("redirect", "/"); //указываем откуда мы идем на страницу результата для настройки маршрутизации
             
-            request.getRequestDispatcher("/resultpage.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response);
         }
     }
 }

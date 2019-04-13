@@ -15,12 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 //сделать комментарии, сервлет для обработки вывода инфы на страницу
-public class AddUserServlet extends HttpServlet {
+public class RegisterUserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/adduser.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class AddUserServlet extends HttpServlet {
         } finally {
             request.setAttribute("resultString", resultString);
             request.setAttribute("user", user);
-            request.getRequestDispatcher("/adduser.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
         }
 
     }

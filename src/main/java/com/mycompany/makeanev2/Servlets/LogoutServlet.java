@@ -27,6 +27,6 @@ public class LogoutServlet extends HttpServlet {
         }
 
         request.setAttribute("resultString", resultString);
-        request.getRequestDispatcher("/resultpage.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response);
     }
 }

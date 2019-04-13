@@ -33,7 +33,7 @@ public class ResetPasswordServlet extends HttpServlet {
             request.setAttribute("resultString", resultString);
             request.setAttribute("redirect", "/viewuser?id_user="+id_user); //указываем откуда мы идем на страницу результата для настройки маршрутизации
             
-            request.getRequestDispatcher("/resultpage.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response);
         }
     }
 }

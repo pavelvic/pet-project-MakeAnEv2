@@ -59,8 +59,15 @@ public class EditUserServlet extends HttpServlet {
             String group_id = null;
             String groupname = null;
             String splitidname[];
-            if (idnamegroup != null) splitidname = idnamegroup.split(":"); //полученный массив используем для создания user
+            if (idnamegroup != "") {
+             splitidname = idnamegroup.split(":"); //полученный массив используем для создания user
+             group_id = splitidname[0];
+             groupname = splitidname[1];
+            }
+                
+                
             
+           
             //HashMap с изменениями
             Map<String,String> updateUser = new HashMap<>();
             

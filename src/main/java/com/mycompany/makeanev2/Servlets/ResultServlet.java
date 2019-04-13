@@ -13,7 +13,7 @@ public class ResultServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/resultpage.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response);
     }
 
 }

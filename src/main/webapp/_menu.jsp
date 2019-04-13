@@ -10,12 +10,9 @@
    |
    <a href="${pageContext.request.contextPath}/userlist">Список пользователей</a>
    |
-   <a href="${pageContext.request.contextPath}/adduser">Добавить пользователя</a>
-   |
    <a href = "${pageContext.request.contextPath}/login">Войти</a>
    |
    <a href = "${pageContext.request.contextPath}/logout">Выйти</a>
    |
    HELLO, ${loginedUser.username} (${loginedUser.groupname}) <a href="/MakeAnEv2/viewuser?id_user=${loginedUser.id_user}">[Мои данные]</a>
-
 </div>

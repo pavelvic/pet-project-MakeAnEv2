@@ -14,8 +14,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-public class LoginFilter implements Filter {
-//Заранее ставим правильну кодировку, иначе в БД пишет в ISO из за чего проблема с кириллицей
+public class ResetPasswordFilter implements Filter {
 
     @Override
     public void init(FilterConfig fConfig) throws ServletException {
@@ -30,17 +29,25 @@ public class LoginFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+
+        //определяем залогинишвегося
         HttpServletRequest req = (HttpServletRequest) request;
         HttpSession session = req.getSession();
         User userInSession = AuthUtils.getLoginedUser(session);
 
         try {
-            CheckPermission.checkLoginAccess(userInSession);
+            //проверяем полномочия
+            CheckPermission.checkResetPassword(userInSession);
+            
+            //идем дальше
             chain.doFilter(request, response);
+            
         } catch (UserException ex) {
-            request.setAttribute("resultString", "Ошибка! " + ex.toString());
-            request.setAttribute("redirect", "/");
-            request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response);
+            String errorString = "Ошибка! " + ex.toString(); //информация об ошибке
+            request.setAttribute("resultString", errorString);
+            request.setAttribute("redirect", "/userlist"); //указываем чтобы маршрутизация с resultpage была на userlist
+            request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response); //идем на страницу с ошибкой
         }
+
     }
 }
