@@ -19,20 +19,21 @@ import javax.servlet.http.HttpServletResponse;
 
 public class EditUserServlet extends HttpServlet {
 
-   private User userToUpdate;
+    private User userToUpdate;
     //все существующие в БД группы для формирования списка на странице
-   /*использование этого экземпляра user: doGet - получаем объект по id, 
+    /*использование этого экземпляра user: doGet - получаем объект по id, 
    в doPost экземпляр создается по ЛЮБЫМ введенным данным (даже в случае не успеха UPDATE в БД),
    что необходимо для передачи в finally метода doPost этого объекта на страницу editsuer
    глобальная переменная user позволяет правильно маршутизировать в finally: при exeption в doPost объект не создается
    и страница edituser выводилась бы пустая, но поскольку глобально при doGet уже был определен user, 
    он и выводится на страницу при exception, без глобального экземпляра такое взаимодействие было бы невозможным*/
-   private RequestDispatcher dispatcher;
+    private RequestDispatcher dispatcher;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        userToUpdate = (User)request.getAttribute("user");
+
+        userToUpdate = (User) request.getAttribute("user");
         dispatcher = (RequestDispatcher) request.getAttribute("dispatcher");
         dispatcher.forward(request, response); //открываем страницу
 
@@ -41,11 +42,11 @@ public class EditUserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String resultString = null;
         try {
-            Connection con = DbConnection.getConnection();
             
+
             String id_user = (String) request.getParameter("id_user"); //параметры только строки
             String idnamegroup = (String) request.getParameter("idnamegroup");
             String username = (String) request.getParameter("username");
@@ -54,23 +55,20 @@ public class EditUserServlet extends HttpServlet {
             String name = (String) request.getParameter("name");
             String surname = (String) request.getParameter("surname");
             String comment = (String) request.getParameter("comment");
-            
+
             //отделим id_group и Name от параметра на странице idnamegroup (паттерн: [id_group]:[название группы])
             String group_id = null;
             String groupname = null;
             String splitidname[];
-            if (idnamegroup != "") {
-             splitidname = idnamegroup.split(":"); //полученный массив используем для создания user
-             group_id = splitidname[0];
-             groupname = splitidname[1];
+            if (idnamegroup != null) {
+                splitidname = idnamegroup.split(":"); //полученный массив используем для создания user
+                group_id = splitidname[0];
+                groupname = splitidname[1];
             }
-                
-                
-            
-           
+
             //HashMap с изменениями
-            Map<String,String> updateUser = new HashMap<>();
-            
+            Map<String, String> updateUser = new HashMap<>();
+
             updateUser.put("id_user", id_user);
             updateUser.put("group_id", group_id);
             updateUser.put("groupname", groupname);
@@ -82,23 +80,24 @@ public class EditUserServlet extends HttpServlet {
             updateUser.put("name", name);
             updateUser.put("surname", surname);
             updateUser.put("comment", comment);
-            
+
             //применяем
             userToUpdate.applyChanges(updateUser);
-            
-            userToUpdate.checkUsernamePattern(); //проверка формата e-mail
+
+            userToUpdate.checkUsernamePattern(); //проверка формата имени польз
             userToUpdate.checkEmailPattern(); //проверка формата e-mail
             userToUpdate.checkPhonePattern(); //проверка формата телефона
             
+            Connection con = DbConnection.getConnection();
+
             List<User> allUsers = DbQuery.selectUserExcept(con, id_user);
             userToUpdate.checkUniqueUser(allUsers);//проверка на уникальность пользователя (username, e-mail, phone - не должны совпадать с существующими)
-            
+
             DbQuery.updateUser(con, userToUpdate);
             con.close();
-            resultString = "Изменения внесены";
-            
-            //TODO если обновляем своего пользователя, надо обновить его данные в session и куках
 
+            //обновляем данные в сессии и куках,если мы изменили того же самого пользователя, что хранился в сессии
+           resultString = "Изменения внесены";
 
         } catch (SQLException | NamingException | UserException ex) {
             resultString = "Ошибка! " + ex.toString();

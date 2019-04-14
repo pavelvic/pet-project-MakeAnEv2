@@ -12,6 +12,7 @@
         <title>Страница входа</title>
     </head>
     <body>
+        <jsp:include page="/_menu.jsp"></jsp:include>
         <h1>Введите имя пользователя и пароль</h1>
         <h4>${errorString}</h4>
         <form method="POST" action="">

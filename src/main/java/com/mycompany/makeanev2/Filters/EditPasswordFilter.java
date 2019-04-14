@@ -44,8 +44,9 @@ public class EditPasswordFilter implements Filter {
         try {
             
             //получаем пользователя к которому запрашивается доступ
-            Connection con = DbConnection.getConnection();
+            
             String id_user = (String) request.getParameter("id_user"); //параметры Object, приводим к String
+            Connection con = DbConnection.getConnection();
             User userToAccess = DbQuery.selectUser(con, id_user);
             con.close();
             
@@ -55,29 +56,7 @@ public class EditPasswordFilter implements Filter {
             //сохраняем в запрос пользоваеля
             request.setAttribute("user", userToAccess);
             
-            //делаем маршрутизацию (себе менять пароль можно (для чего нужно ввести старый пароль, супер пользователь может менять любые пароли, ему не нужно знать старые пароли))
             
-            switch (userInSession.getGroup_id()) {
-                case 1:
-                    request.setAttribute("dispatcher", request.getRequestDispatcher("/WEB-INF/ownerview/editpass.jsp"));
-                    break;
-                case 2:
-                    request.setAttribute("dispatcher", request.getRequestDispatcher("/WEB-INF/adminview/editpass.jsp"));
-                    break;
-                case 3:
-                    request.setAttribute("dispatcher", request.getRequestDispatcher("/WEB-INF/managerview/editpass.jsp"));
-                    break;
-                case 4:
-                    request.setAttribute("dispatcher", request.getRequestDispatcher("/WEB-INF/userview/editpass.jsp"));
-                    break;
-                case 5:
-                    throw new UserException("Доступ запрещен. Пользователь заблокирован"); //на всякий случай...
-                    
-                default:
-                    request.setAttribute("dispatcher", request.getRequestDispatcher("/login.jsp")); //на всякий случай...
-            }
-            
-                    
             //идем дальше
             chain.doFilter(request, response);
             

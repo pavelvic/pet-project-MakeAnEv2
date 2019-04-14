@@ -40,6 +40,14 @@
         <filter-name>EditPasswordFilter</filter-name>
         <filter-class>com.mycompany.makeanev2.Filters.EditPasswordFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>RefreshLoginedUserFilter</filter-name>
+        <filter-class>com.mycompany.makeanev2.Filters.RefreshLoginedUserFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>RefreshLoginedUserFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>EditPasswordFilter</filter-name>
         <servlet-name>EditPasswordServlet</servlet-name>

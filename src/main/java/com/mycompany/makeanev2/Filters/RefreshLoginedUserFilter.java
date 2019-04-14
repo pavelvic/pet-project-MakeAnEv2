@@ -15,10 +15,10 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class CookieFilter implements Filter {
-
+public class RefreshLoginedUserFilter implements Filter {
 
     @Override
     public void init(FilterConfig fConfig) throws ServletException {
@@ -37,32 +37,36 @@ public class CookieFilter implements Filter {
         HttpSession session = req.getSession();
 
         User userInSession = AuthUtils.getLoginedUser(session);
-        
-        if (userInSession != null) {
-            session.setAttribute("COOKIE_CHECKED", "CHECKED");
+
+        if (userInSession == null) {
             chain.doFilter(request, response);
             return;
         }
 
         try {
-            
-            String cheked = (String) session.getAttribute("COOKIE_CHECKED");
+            //получаем пользователя из БД
+            Connection con = DbConnection.getConnection();
+            User userInDB = DbQuery.findUser(con, userInSession.getUsername());
+            con.close();
 
-            if (cheked == null) {
-                String username = AuthUtils.getLoginedUserCookie(req);
-                Connection con = DbConnection.getConnection();
-                User user = DbQuery.findUser(con, username);
-                con.close();
-                AuthUtils.storeLoginedUser(session, user);
-                session.setAttribute("COOKIE_CHECKED", "CHECKED");
+            //если пользователь был удалён, то просто чистим сессию и куки
+            if (userInDB == null) {
+                AuthUtils.deleteLoginedUser(session);
+                AuthUtils.deleteLoginedUserCookie((HttpServletResponse) response, userInSession);
+                chain.doFilter(request, response);
+                return;
             }
-            
-            chain.doFilter(request, response);
 
+            //если пользователя изменили (например, группу пользователей), обновляем его в сессии
+            if (!userInSession.equals(userInDB)) {
+                AuthUtils.refreshLoginedUser(req, (HttpServletResponse) response, userInDB);
+            }
+            chain.doFilter(request, response);
         } catch (SQLException | NamingException ex) {
             request.setAttribute("resultString", "Ошибка! : " + ex.toString());
-            request.setAttribute("redirect", "/"); 
+            request.setAttribute("redirect", "/");
             request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response);
         }
+        //}
     }
 }

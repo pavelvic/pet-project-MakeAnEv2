@@ -31,7 +31,7 @@ public class RegisterUserServlet extends HttpServlet {
         
         User user = null;
         try {
-            Connection con = DbConnection.getConnection();
+            
              
             String username = (String) request.getParameter("username");
             String password = (String) request.getParameter("password");
@@ -50,13 +50,14 @@ public class RegisterUserServlet extends HttpServlet {
             user.checkPhonePattern();
             user.checkPasswordPattern();
             
+            Connection con = DbConnection.getConnection();
             List<User> allUsers = DbQuery.selectUser(con);
             user.checkUniqueUser(allUsers);//проверка на уникальность пользователя (username, e-mail, phone - не должны совпадать с существующими)
 
             //добавляем запись в БД и устанавливаем сообщение об успехе
             DbQuery.insertUser(con, user);
             con.close();
-            resultString = "Пользователь добавлен";
+            resultString = "Регистрация успешно выполнена. Вы можете войти на сайт";
             user = null; //обнуляем экземпляр, чтобы на старнице вывелись пустые поля
 
         } catch (SQLException | NamingException | UserException ex) { //Недосутпно соединение или ошмбка драйвера или не прошли проверку введеных значений

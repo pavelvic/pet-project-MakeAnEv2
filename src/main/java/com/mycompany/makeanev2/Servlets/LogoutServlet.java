@@ -14,11 +14,16 @@ public class LogoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String resultString;
-        //request.setAttribute("user", AuthUtils.getLoginedUser(request.getSession()));
+        request.setAttribute("user", AuthUtils.getLoginedUser(request.getSession()));
 
         User loginedUser = AuthUtils.getLoginedUser(request.getSession());
         if (loginedUser != null) {
             resultString = "Вы вышли";
+            
+            //обнуляем куки
+            AuthUtils.deleteLoginedUserCookie(response, loginedUser);
+            
+            //обнуляем пользователя в сессии
             AuthUtils.deleteLoginedUser(request.getSession());
             request.setAttribute("redirect", "/");
         } else {

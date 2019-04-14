@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class LoginFilter implements Filter {
@@ -36,6 +37,7 @@ public class LoginFilter implements Filter {
 
         try {
             CheckPermission.checkLoginAccess(userInSession);
+
             chain.doFilter(request, response);
         } catch (UserException ex) {
             request.setAttribute("resultString", "Ошибка! " + ex.toString());

@@ -4,6 +4,7 @@
     Author     : Pavelvic
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -16,10 +17,12 @@
         <h4>${resultString}</h4>
         <form method="POST" action="">
            <table border="0">
+               <c:if test="${loginedUser.group_id != 1}">
             <tr>
                <td>Текущий пароль</td>
                <td><input type="text" name="actualPassword" value=""></td>
             </tr>
+              </c:if>
             <tr>
                <td>Новый пароль</td>
                <td><input type="text" name="newPassword" value=""></td>

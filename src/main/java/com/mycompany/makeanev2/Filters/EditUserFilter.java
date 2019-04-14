@@ -49,6 +49,7 @@ public class EditUserFilter implements Filter {
           //получаем пользователя к которому хотим получить доступ
           
             String id_user = (String) request.getParameter("id_user"); //параметры Object, приводим к String
+            
             User userToAccess = DbQuery.selectUser(con, id_user);
             con.close();
             

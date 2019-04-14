@@ -14,7 +14,7 @@
     </head>
     <body>
         <jsp:include page="/_menu.jsp"></jsp:include>
-        <h1>EDIT USER HERE КАК СУПЕР"!!</h1>
+        <h1>Изменить</h1>
         <h4>${resultString}</h4>
         <form method="POST" action="">
            <table border="0">
@@ -28,7 +28,7 @@
             </tr>
             <tr>
                <td>E-mail*</td>
-               <td><input type="text" name="email" value=${user.email}></td>
+               <td><input type="email" name="email" value=${user.email}></td>
             </tr>
             
             <tr>
@@ -45,7 +45,7 @@
             </tr>
             <tr>
                <td>Телефон</td>
-               <td><input type="text" name="phone" value=${user.phone}></td>
+               <td><input type="tel" name="phone" value=${user.phone}></td>
             </tr>
             <tr>
                <td>Имя</td>
@@ -61,11 +61,13 @@
             </tr>
             <tr>
                <td colspan="2"><input type="submit" value="Сохранить">
-               <a href="viewuser?id_user=${user.id_user}">Назад</a></td>
+               </td>
             </tr>
            </table>
         </form>
+        <h3> <a href="viewuser?id_user=${user.id_user}">Отмена</a></h3>
         <h3><a href = "editpass?id_user=${user.id_user}">Изменить пароль</a></h3>
         <h3><a href = "resetpass?id_user=${user.id_user}">Сбросить пароль</a></h3>
+        <h3><a href = "deleteuser?id_user=${user.id_user}">Удалить пользователя</a></h3>
     </body>
 </html>

@@ -14,7 +14,7 @@
     </head>
     <body>
         <jsp:include page="/_menu.jsp"></jsp:include>
-        <h1>EDIT USER HERE АДМИН!!!</h1>
+        <h1>Изменить</h1>
         <h4>${resultString}</h4>
 
 
@@ -35,7 +35,15 @@
             </tr>
             <tr>
                <td>Группа*</td>
-               <td>${user.groupname}</td>
+               <td>
+                <select name ="idnamegroup" size="1">
+                    <option selected value=${user.group_id}:${user.groupname}><b>${user.groupname}</b></option>
+                    <c:forEach items = "${usergroups}" var = "usergroups">
+                        <c:if test="${usergroups.id_group != user.group_id && usergroups.id_group !=1}">
+                            <option value=${usergroups.id_group}:${usergroups.name}>${usergroups.name}</option>
+                        </c:if>
+                    </c:forEach> 
+               </td>
             </tr>
             <tr>
                <td>Телефон</td>
@@ -70,11 +78,11 @@
             </tr>
             <tr>
                <td>Имя пользователя*</td>
-               <td><input type="text" name="username" value=${user.username}></td>
+               <td>${user.username}</td>
             </tr>
             <tr>
                <td>E-mail*</td>
-               <td><input type="text" name="email" value=${user.email}></td>
+               <td>${user.email}</td>
             </tr>
             <tr>
                <td>Группа*</td>
@@ -82,7 +90,7 @@
                 <select name ="idnamegroup" size="1">
                     <option selected value=${user.group_id}:${user.groupname}><b>${user.groupname}</b></option>
                     <c:forEach items = "${usergroups}" var = "usergroups">
-                        <c:if test="${usergroups.id_group != user.group_id}">
+                        <c:if test="${usergroups.id_group != user.group_id && usergroups.id_group !=1}">
                             <option value=${usergroups.id_group}:${usergroups.name}>${usergroups.name}</option>
                         </c:if>
                     </c:forEach> 
@@ -90,7 +98,7 @@
             </tr>
             <tr>
                <td>Телефон</td>
-               <td><input type="text" name="phone" value=${user.phone}></td>
+               <td><input type="tel" name="phone" value=${user.phone}></td>
             </tr>
             <tr>
                <td>Имя</td>
@@ -105,14 +113,13 @@
                <td><input type="text" name="comment" value=${user.comment}></td>
             </tr>
             <tr>
-               <td colspan="2"><input type="submit" value="Сохранить">
-               <a href="viewuser?id_user=${user.id_user}">Назад</a></td>
+               <td colspan="2"><input type="submit" value="Сохранить"></td>
             </tr>
            </table>
+         <h3> <a href="viewuser?id_user=${user.id_user}">Отмена</a></h3>
+         <h3><a href = "editpass?id_user=${user.id_user}">Изменить пароль</a></h3>
+         <h3><a href = "deleteuser?id_user=${user.id_user}">Удалить пользователя</a></h3>
         </form>
         </c:if> 
-        
-        <h3><a href = "editpass?id_user=${user.id_user}">Изменить пароль</a></h3>
-        <h3><a href = "resetpass?id_user=${user.id_user}">Сбросить пароль</a></h3>
     </body>
 </html>

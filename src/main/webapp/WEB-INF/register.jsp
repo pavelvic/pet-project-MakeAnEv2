@@ -24,15 +24,15 @@
             </tr>
             <tr>
                <td>Пароль*</td>
-               <td><input type="text" name="password" value=${user.passwordStr}></td>
+               <td><input type="password" name="password" value=${user.passwordStr}></td>
             </tr>           
             <tr>
                <td>E-mail*</td>
-               <td><input type="text" name="email" value=${user.email}></td>
+               <td><input type="email" name="email" value=${user.email}></td>
             </tr>
             <tr>
                <td>Телефон</td>
-               <td><input type="text" name="phone" value=${user.phone}></td>
+               <td><input type="tel" name="phone" value=${user.phone}></td>
             </tr>
             <tr>
                <td>Имя</td>
@@ -47,8 +47,11 @@
                <td><input type="text" name="comment" value=${user.comment}></td>
             </tr>
             <tr>
-               <td colspan="2"><input type="submit" value="Сохранить">
-               <a href=${pageContext.request.contextPath}>Назад</a></td>
+               <td colspan="2">
+                   <input type="submit" value="Сохранить">
+               <a href=${pageContext.request.contextPath}>Назад</a>
+                   <input type="reset" value="Очистить">
+               </td>
             </tr>
            </table>
         </form>

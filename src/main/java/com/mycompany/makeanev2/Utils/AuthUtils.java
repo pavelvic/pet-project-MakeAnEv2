@@ -10,7 +10,7 @@ public class AuthUtils {
     private static final String ATT_NAME_USER_NAME_COOKIE = "UserNameCookieAttribute";
     //сохранить пользователя в сессию
     public static void storeLoginedUser(HttpSession session, User loginedUser) {
-        session.setAttribute("loginedUser", loginedUser);
+       session.setAttribute("loginedUser", loginedUser);
     }
     
     public static void deleteLoginedUser(HttpSession session) {
@@ -21,6 +21,18 @@ public class AuthUtils {
     public static User getLoginedUser(HttpSession session) {
         User loginedUser = (User) session.getAttribute("loginedUser");
         return loginedUser;
+    }
+    
+    public static void refreshLoginedUser (HttpServletRequest request, HttpServletResponse response, User userToUpdate) {
+    //сначала данные куки, есл есть
+                if (AuthUtils.getLoginedUserCookie(request) != null) {
+                    AuthUtils.deleteLoginedUserCookie(response, AuthUtils.getLoginedUser(request.getSession()));
+                    AuthUtils.storeLoginedUserCookie(response, userToUpdate);
+                }
+
+                //потом данные самой session    
+                AuthUtils.deleteLoginedUser(request.getSession());
+                AuthUtils.storeLoginedUser(request.getSession(), userToUpdate);
     }
 
     //сохранить пользователя в cookies
@@ -41,6 +53,7 @@ public class AuthUtils {
         }
     return null;
     }
+    
     
     public static void deleteLoginedUserCookie(HttpServletResponse response, User user) {
         Cookie cookieUserName = new Cookie(ATT_NAME_USER_NAME_COOKIE, user.getUsername());

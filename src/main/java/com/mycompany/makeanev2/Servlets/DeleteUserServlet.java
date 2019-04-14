@@ -1,12 +1,14 @@
 package com.mycompany.makeanev2.Servlets;
 
 import com.mycompany.makeanev2.User;
+import com.mycompany.makeanev2.Utils.AuthUtils;
 import com.mycompany.makeanev2.Utils.DbQuery;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.naming.NamingException;
+import javax.security.auth.AuthPermission;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +27,7 @@ public class DeleteUserServlet extends HttpServlet {
             Connection con = DbConnection.getConnection();
             DbQuery.deleteUser(con, userToDelete);
             con.close();
+            //AuthUtils.deleteLoginedUser(request.getSession(), userToDelete);
             resultString = "Пользователь удалён"; //специфицировать резалт
         } catch (SQLException | NamingException | NumberFormatException ex) {
             resultString = "Ошибка! "+ex.getMessage();
