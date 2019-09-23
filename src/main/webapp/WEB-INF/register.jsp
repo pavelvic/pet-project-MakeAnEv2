@@ -10,11 +10,11 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Добавить пользователя</title>
+        <title>Регистрация</title>
     </head>
     <body>
         <jsp:include page="/_menu.jsp"></jsp:include>
-        <h1>REGISTER HERE</h1>
+        <h1>Регистрация</h1>
         <h4>${resultString}</h4>
         <form method="POST" action="">
            <table border="0">

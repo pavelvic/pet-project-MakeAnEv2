@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Инфо</title>
+        <title>Информация</title>
     </head>
     <body>
         <jsp:include page="/_menu.jsp"></jsp:include>

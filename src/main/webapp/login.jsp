@@ -35,6 +35,6 @@
             </tr>
            </table>
         </form>
-            <h3>Регистрация</h3>
+            <h3><a href = "${pageContext.request.contextPath}/register">Регистрация</h3></a>
     </body>
 </html>

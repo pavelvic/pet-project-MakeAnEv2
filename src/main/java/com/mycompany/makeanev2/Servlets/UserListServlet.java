@@ -15,14 +15,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class UserListServlet extends HttpServlet {
-
+private  List<User> list;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
 
         String errorString; // строка с возможными ошибками
-        List<User> list; //сюда помещаем результат запроса
+        //List<User> list; //сюда помещаем результат запроса
 
         try {
             Connection con = DbConnection.getConnection();
@@ -39,6 +39,21 @@ public class UserListServlet extends HttpServlet {
             request.setAttribute("redirect", "/"); //указываем чтобы маршрутизация с resultpage была на главную
             request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response); //идем на страницу с ошибкой
         }
+    }
+    
+        protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        //Логика поиска и вывода по кнопке
+        
+        //получить список для поиска
+        //получить что искать (строку)
+        //пройти все записи списка и где такая строка находится, оставить, остальные - удалить из list
+        //передать на страницу новый список и отобразить
+        //подсветить искомую подстроку - опиционально
+        
+    
+    
+    
     }
 
 }

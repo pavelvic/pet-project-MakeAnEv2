@@ -7,6 +7,7 @@ import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
@@ -52,12 +53,13 @@ public class RegisterUserServlet extends HttpServlet {
             
             Connection con = DbConnection.getConnection();
             List<User> allUsers = DbQuery.selectUser(con);
-            user.checkUniqueUser(allUsers);//проверка на уникальность пользователя (username, e-mail, phone - не должны совпадать с существующими)
+            List<User> remUsers = new ArrayList<>(); //генерируем лист исключений для проверки уникальности (пустой для данного случая, поскольку это новый пользователь и исклюений для проверки не может быть, сравниваем со всеми пользователями в БД)
+            user.checkUniqueUser(allUsers,remUsers);//проверка на уникальность пользователя (username, e-mail, phone - не должны совпадать с существующими)
 
             //добавляем запись в БД и устанавливаем сообщение об успехе
             DbQuery.insertUser(con, user);
             con.close();
-            resultString = "Регистрация успешно выполнена. Вы можете войти на сайт";
+            resultString = "Регистрация успешно выполнена. Добро пожаловать!";
             user = null; //обнуляем экземпляр, чтобы на старнице вывелись пустые поля
 
         } catch (SQLException | NamingException | UserException ex) { //Недосутпно соединение или ошмбка драйвера или не прошли проверку введеных значений

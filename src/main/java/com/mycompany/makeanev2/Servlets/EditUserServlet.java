@@ -7,6 +7,7 @@ import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +83,7 @@ public class EditUserServlet extends HttpServlet {
             updateUser.put("comment", comment);
 
             //применяем
+            
             userToUpdate.applyChanges(updateUser);
 
             userToUpdate.checkUsernamePattern(); //проверка формата имени польз
@@ -89,19 +91,22 @@ public class EditUserServlet extends HttpServlet {
             userToUpdate.checkPhonePattern(); //проверка формата телефона
             
             Connection con = DbConnection.getConnection();
-
-            List<User> allUsers = DbQuery.selectUserExcept(con, id_user);
-            userToUpdate.checkUniqueUser(allUsers);//проверка на уникальность пользователя (username, e-mail, phone - не должны совпадать с существующими)
+            
+            
+            List<User> allUsers = DbQuery.selectUser(con);//берем всех пользователей
+            List<User> remUsers = new ArrayList<>(); 
+            remUsers.add((User) request.getAttribute("user")); //генерируем лист исключений для проверки уникальности (проверять уникальность по редактируемому пользователю не нужно, только сравнить их со всеми остальными пользователями)
+            userToUpdate.checkUniqueUser(allUsers,remUsers);//проверка на уникальность пользователя (username, e-mail, phone - не должны совпадать с существующими, исключая редактируемого пользователя)
 
             DbQuery.updateUser(con, userToUpdate);
             con.close();
 
-            //обновляем данные в сессии и куках,если мы изменили того же самого пользователя, что хранился в сессии
            resultString = "Изменения внесены";
 
         } catch (SQLException | NamingException | UserException ex) {
             resultString = "Ошибка! " + ex.toString();
         } finally {
+            
             request.setAttribute("resultString", resultString); //передали результат действия
             request.setAttribute("user", userToUpdate); //сохранили что ввели и передали на страницу для отображения
             dispatcher.forward(request, response); //показали страницу

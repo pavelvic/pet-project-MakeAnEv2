@@ -22,8 +22,7 @@ public class User {
     private String comment;
 
     //TODO: подумать над оптимизацией конструкторов - в частности сделать в конструкторе параметр - httpservletreques и разбирать его там
-    
-    public User(int id_user, int group_id, String groupname, String username,int hashpassword, String password, String email, String phone, String name, String surname, String comment) {
+    public User(int id_user, int group_id, String groupname, String username, int hashpassword, String password, String email, String phone, String name, String surname, String comment) {
         this.id_user = id_user;
         this.group_id = group_id;
         this.groupname = groupname;
@@ -50,7 +49,6 @@ public class User {
         this.surname = rs.getString(9);
         this.comment = rs.getString(10);
     }
-
 
     //геттеры сеттеры
     public int getId_user() {
@@ -156,7 +154,7 @@ public class User {
         if (!username.matches(usernamePattern)) {
             throw new UserException("Имя пользователя не заполнено или не соответсвует требованиям: от 2 до 20 символов из латинских букв и цифр, первый символ обязательно буква");
         }
-        
+
     }
 
     public void checkEmailPattern() throws UserException {
@@ -183,16 +181,56 @@ public class User {
             throw new UserException("Телефон введён некорректно(формат +7ХХХХХХХХХХ)");
         }
     }
-    
-    public void checkUniqueUser(List<User> allUsers) throws UserException {
-    
+    //TODO сделать  перегруженный метод проверки пользователей со списком исключений
+//    public void checkUniqueUser(List<User> allUsers) throws UserException {
+//    
+//        for (User oneUser : allUsers) {
+//            
+//                if (username.equals(oneUser.getUsername())) throw new UserException("Недопустимое значение Имя пользователя. Такой пользователь есть в системе"); //уникальность username
+//                if (email.equals(oneUser.getEmail())) throw new UserException("Недопустимое значение E-mail. Пользователь с таким e-mail есть в системе"); //уникальность email
+//                if (phone.equals(oneUser.getPhone())) throw new UserException("Недопустимое значение Телефона. Пользователь с таким телефоном есть в системе"); //уникальность phone
+//            
+//            
+//            }
+//    }
+    //метод проверки на уникальность пользователя (с возможностью исключения из проверки перечней пользователей)
+    public void checkUniqueUser(List<User> allUsers, List<User> remUsers) throws UserException {
+        allUsers.removeAll(remUsers);
+
         for (User oneUser : allUsers) {
-            
-                if (username.equals(oneUser.getUsername())) throw new UserException("Недопустимое значение Имя пользователя. Такой пользователь есть в системе"); //уникальность username
-                if (email.equals(oneUser.getEmail())) throw new UserException("Недопустимое значение E-mail. Пользователь с таким e-mail есть в системе"); //уникальность email
-                if (phone.equals(oneUser.getPhone())) throw new UserException("Недопустимое значение Телефона. Пользователь с таким телефоном есть в системе"); //уникальность phone
-            
-            
+
+            if (username.equals(oneUser.getUsername())) {
+                throw new UserException("Недопустимое значение Имя пользователя. Такой пользователь есть в системе"); //уникальность username
             }
+            if (email.equals(oneUser.getEmail())) {
+                throw new UserException("Недопустимое значение E-mail. Пользователь с таким e-mail есть в системе"); //уникальность email
+            }
+            if (phone.equals(oneUser.getPhone())) {
+                throw new UserException("Недопустимое значение Телефона. Пользователь с таким телефоном есть в системе"); //уникальность phone
+            }
+
+        }
     }
+
+    //переопределяем методы сравнения объектов для использования в колленкциях и других местах, задаем правила по которым объекты сравниваются
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        User us = (User) obj;
+        return id_user == us.id_user;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 11 * hash + this.id_user;
+        return hash;
+    }
+
 }

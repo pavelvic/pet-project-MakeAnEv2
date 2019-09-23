@@ -53,7 +53,7 @@ public class EditPasswordFilter implements Filter {
             //проверяем полномочия
             CheckPermission.checkEditPassword(userInSession, userToAccess);
             
-            //сохраняем в запрос пользоваеля
+            //сохраняем в http-запрос пользоваеля
             request.setAttribute("user", userToAccess);
             
             
