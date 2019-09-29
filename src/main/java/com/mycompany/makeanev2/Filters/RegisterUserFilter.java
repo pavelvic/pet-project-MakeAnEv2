@@ -13,6 +13,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+/*фильтр для предобработки события регистрации пользователя (при переходе в сервлет RegisterUserServlet, URL '/register') */
 public class RegisterUserFilter implements Filter {
 
     @Override
@@ -29,13 +30,18 @@ public class RegisterUserFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
+        //получаем пользователя из сессии
         HttpServletRequest req = (HttpServletRequest) request;
         HttpSession session = req.getSession();
         User userInSession = AuthUtils.getLoginedUser(session);
 
+        //если в сесси есть пользователь, регистрация невозможно, выдаем исключение с соотв сообщением
         if (userInSession != null) {
             try {
-                throw new UserException("Вы уже вошли в систему под пользователем "+userInSession.getUsername()+". Регистрация невозомжна");
+                throw new UserException("Вы уже вошли в систему под пользователем " + userInSession.getUsername() + ". Регистрация невозомжна");
+
+                //блок исключений, если что-то пошло не так прервываем загрузку страницы и выдаем пользователю сообщение о проблеме
+                //в данном случае только ошибка попытка регистрации при имеющемся пользователе
             } catch (UserException ex) {
                 String errorString = "Ошибка! " + ex.toString(); //информация об ошибке
                 request.setAttribute("resultString", errorString);
@@ -44,6 +50,5 @@ public class RegisterUserFilter implements Filter {
             }
         }
         chain.doFilter(request, response);
-
     }
 }

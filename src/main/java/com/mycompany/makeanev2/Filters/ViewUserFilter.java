@@ -19,6 +19,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+/*фильтр для предобработки события просмотра параметров пользователя (при переходе в сервлет ViewUserServlet, URL '/viewuser?id_user = ?') */
 public class ViewUserFilter implements Filter {
 
     @Override
@@ -34,8 +35,6 @@ public class ViewUserFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        //в фильтре делаем редирект на правильную область сайта в зависимости от роли
-
         try {
             //получаем пользователя к которому хотим получить доступ
             Connection con = DbConnection.getConnection();
@@ -49,12 +48,17 @@ public class ViewUserFilter implements Filter {
             User userInSession = AuthUtils.getLoginedUser(session);
 
             //проверяем есть ли доступ до данному запросу
+            //свой профиль смотреть можно (userInSession = userToAccess), также 1 - Суперпользователь и 2 - Администратор могут смотреть других 
+            //выдается исключение UserException если фиксируются попытки просмотра не разрешенных пользователей
             CheckPermission.checkViewUserAccess(userInSession, userToAccess);
 
             //сохраняем в запрос самого пользователя для дальнейшего исопльзования
             request.setAttribute("user", userToAccess);
 
             //если все хорошо и исключений мы не получили, устанавливаем диспетчера для перехода в сервлете
+            //в зависимости от группы пользователя залогиненного, определяем какая страница будет открыта, маршрут сохраняется в спец объекте dispatcher
+            //которого сохраняем в сессии, в коде Servlet этот объект указывает какую страницу надо открыть
+            //позволяет настроить свои страницы для каждой группы пользователей, со своим оформлением и функционалом
             switch (userInSession.getGroup_id()) {
                 case 1:
                     request.setAttribute("dispatcher", request.getRequestDispatcher("/WEB-INF/ownerview/viewuser.jsp"));
@@ -70,12 +74,13 @@ public class ViewUserFilter implements Filter {
                     break;
                 case 5:
                     throw new UserException("Доступ запрещен. Пользователь заблокирован"); //на всякий случай...
-                    
+
                 default:
                     request.setAttribute("dispatcher", request.getRequestDispatcher("/login.jsp")); //на всякий случай...
             }
             chain.doFilter(request, response);
 
+            //блок исключений, если что-то пошло не так прервываем загрузку страницы и выдаем пользователю сообщение о проблеме
         } catch (SQLException | NamingException | UserException ex) {
             String errorString = "Ошибка! " + ex.toString(); //информация об ошибке
             request.setAttribute("resultString", errorString);

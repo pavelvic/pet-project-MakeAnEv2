@@ -14,7 +14,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-
+/*фильтр для предобработки события просмотра списка пользователей (при переходе в сервлет UserListServlet, URL '/userlist') */
 public class UserListFilter implements Filter {
 
     @Override
@@ -30,19 +30,20 @@ public class UserListFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        //в фильтре делаем редирект на правильную область сайта в зависимости от роли
-        
-                  //определяем залогинишвегося
-            HttpServletRequest req = (HttpServletRequest) request;
-            HttpSession session = req.getSession();
-            User userInSession = AuthUtils.getLoginedUser(session);
-          
-          
+        //определяем залогинишвегося
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpSession session = req.getSession();
+        User userInSession = AuthUtils.getLoginedUser(session);
+
         try {
-            //проверяем есть ли доступ до данному запросу
+            //проверяем есть ли доступ к списку пользователей (только 1 - Суперпользователь и 2 - Администратор)
+            //генерируем исключение UserException при непрохождении проверки
             CheckPermission.checkUserListAccess(userInSession);
-            
-            //если всё хорошо, определяем диспетчера для дальнейшего использования в сервлете
+
+            //если все хорошо и исключений мы не получили, устанавливаем диспетчера для перехода в сервлете
+            //в зависимости от группы пользователя залогиненного, определяем какая страница будет открыта, маршрут сохраняется в спец объекте dispatcher
+            //которого сохраняем в сессии, в коде Servlet этот объект указывает какую страницу надо открыть
+            //позволяет настроить свои страницы для каждой группы пользователей, со своим оформлением и функционалом
             switch (userInSession.getGroup_id()) {
                 case 1:
                     request.setAttribute("dispatcher", request.getRequestDispatcher("/WEB-INF/ownerview/userlist.jsp"));
@@ -56,22 +57,19 @@ public class UserListFilter implements Filter {
                     throw new UserException("Доступ запрещен. Недостаточно полномочий Пользователя");
                 case 5:
                     throw new UserException("Доступ запрещен. Пользователь заблокирован"); //на всякий случай...
-                    
+
                 default:
                     request.setAttribute("dispatcher", request.getRequestDispatcher("/login.jsp")); //на всякий случай...
             }
-          //идем дальше
-          chain.doFilter(request, response);
-          
+            //идем дальше
+            chain.doFilter(request, response);
+
+            //блок исключений, если что-то пошло не так прервываем загрузку страницы и выдаем пользователю сообщение о проблеме  
         } catch (UserException ex) {
             String errorString = "Ошибка! " + ex.toString(); //информация об ошибке
             request.setAttribute("resultString", errorString);
-            request.setAttribute("redirect", "/"); //указываем чтобы маршрутизация с resultpage была на userlist
+            request.setAttribute("redirect", "/");
             request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response); //идем на страницу с ошибкой
         }
-
-    }    
-    
-    
-
+    }
 }

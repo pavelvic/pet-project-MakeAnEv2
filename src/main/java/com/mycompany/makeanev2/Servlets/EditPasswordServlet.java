@@ -14,64 +14,66 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/*реализация события редактирования пароля, URL editpass?id_user=?*/
 public class EditPasswordServlet extends HttpServlet {
-//private RequestDispatcher dispatcher;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-//        dispatcher = (RequestDispatcher) request.getAttribute("dispatcher");
-//        dispatcher.forward(request, response); //открываем страницу 
-        
+        //открываем страницу
         request.getRequestDispatcher("/WEB-INF/editpass.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        //обработка кнопки изменения пароля
+        //инициализируем сообщение о результате операции
         String resultString = "";
 
+        //получаем идентификатор пользователя, которому меняем пароль
         String id_user = (String) request.getParameter("id_user");
+
+        // получаем злогинившегося пользователя от чего имени выполняется операция
         User userInSession = AuthUtils.getLoginedUser(request.getSession());
 
         try {
-            
-
-            //получаем пароль для сравнения
+            //получаем пароль для сравнения с текущим паролем, только при совпадении будет разрешено внести изменения
+            //исключение - суперпользователь, при попытке изменить пароль у него не запрашивается текущий пароль во всех случаях, на то он и суперпользователь
             String actualPassword = (String) request.getParameter("actualPassword");
             String newPassword = (String) request.getParameter("newPassword");
 
+            //получаем пользователя, для которого меняем пароль
             User user = (User) request.getAttribute("user");
-            
-            //обработка нужна для нормальной работы суперпользователя, он не доджен вводить пароль пользователя дла смены
-            int actualHashCodePassword=-1;
+
+            //инициализируем переменную для сравнения хэш-кодов, если пароль не пустой, записываем туда хэш код для сравнения с БД
+            int actualHashCodePassword = -1;
             if (actualPassword != null) {
                 actualHashCodePassword = actualPassword.hashCode();
             }
-            
 
-            if ((actualHashCodePassword == user.getPassword())||(userInSession.getGroup_id()==1)) {
-                user.setPassword(newPassword);
-                user.checkPasswordPattern();
-                
+            //обработка нужна для нормальной работы суперпользователя, он не доджен вводить пароль пользователя для смены
+            //разрешаем менять пароль если пароль изменяемого пользователя введен верно или если это супер пользователь (группа = 1)
+            if ((actualHashCodePassword == user.getPassword()) || (userInSession.getGroup_id() == 1)) {
+                user.setPassword(newPassword); //изменяем объект и устанавливаем новый пароль
+                user.checkPasswordPattern(); //проверяем новый пароль объекта на корректность - UserException в случае не успеха
                 Connection con = DbConnection.getConnection();
-                DbQuery.updateUserPassword(con, user);
+                DbQuery.updateUserPassword(con, user); //передаем в БД обновленный объект и фиксируем там изменения
                 con.close();
-                resultString = "Пароль изменён";
+                resultString = "Пароль изменён"; //фиксируем результат операции
             } else {
-                resultString = "Пароль не совпадает. Введите правильный пароль";
-
+                resultString = "Пароль не совпадает. Введите правильный пароль"; //фиксируем результат операции: введен не совпадающий пароль
             }
 
+            //фиксируем результат операции, если что-то пошло не так
         } catch (SQLException | NamingException | UserException ex) {
             resultString = "Ошибка! " + ex.toString();
+
+            //выводим результат операции
         } finally {
-            request.setAttribute("resultString", resultString);
-
-            //request.setAttribute("id_user", id_user);
-            request.getRequestDispatcher("/WEB-INF/editpass.jsp").forward(request, response);
-            //dispatcher.forward(request, response);
+            request.setAttribute("resultString", resultString); //сохраняем в http-запросе, передается на страницу
+            request.getRequestDispatcher("/WEB-INF/editpass.jsp").forward(request, response); //открываем страницу
         }
-
     }
 }

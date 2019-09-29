@@ -6,22 +6,23 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+/*контейнер для формирования пользователей и методы действия над ними*/
 public class User {
 
-    /*класс для работы с объектом пользователь, формируется из данных в БД*/
-    private int id_user;
-    private int group_id;
-    private String groupname;
-    private String username;
-    private int password;
-    private String passwordStr;
-    private String email;
-    private String phone;
-    private String name;
-    private String surname;
-    private String comment;
+    //параметры пользователя, соотв данным в полях БД
+    private int id_user; //уникальный идентификатор
+    private int group_id; //идентификатор группы пользователей, определяет права: 1 - суперпользователь, 2 - админ, 3 - менеджер, 4 - пользователь (рядовой), 5 - заблокированный
+    private String groupname; //название группы пользователей
+    private String username; //уникальное имя пользователя
+    private int password; // hash пароль
+    private String passwordStr; //парлоль в текстовом виде, не хранится в БД
+    private String email; //почта
+    private String phone; //телефон
+    private String name; //имя по паспорту
+    private String surname; //фамилия по паспорту
+    private String comment; //комментарий
 
-    //TODO: подумать над оптимизацией конструкторов - в частности сделать в конструкторе параметр - httpservletreques и разбирать его там
+    //конструктуор по параметрам (общий)
     public User(int id_user, int group_id, String groupname, String username, int hashpassword, String password, String email, String phone, String name, String surname, String comment) {
         this.id_user = id_user;
         this.group_id = group_id;
@@ -36,6 +37,7 @@ public class User {
         this.comment = comment;
     }
 
+    //конструктор для формирования пользователя по результату SQL-запроса (на вход подаем результат sql запроса в виде ResultSet)
     public User(ResultSet rs) throws SQLException {
         this.id_user = rs.getInt(1);
         this.group_id = rs.getInt(2);
@@ -50,7 +52,7 @@ public class User {
         this.comment = rs.getString(10);
     }
 
-    //геттеры сеттеры
+    //геттеры сеттеры в соответствии с параметрами (описаны при объявлении в начале класса)
     public int getId_user() {
         return id_user;
     }
@@ -100,8 +102,10 @@ public class User {
         return comment;
     }
 
+    //механизм "пакетного" внесения изменений по коллекции данных (позволяет указывать произвольное количество полей для изменений)
     public void applyChanges(Map updateMap) {
 
+        //проверяем в коллекции наличие параметра, если находим - меняем в объекте, к которому данный метод применяется
         if (updateMap.get("id_user") != null) {
             id_user = Integer.parseInt((String) updateMap.get("id_user"));
         }
@@ -145,26 +149,25 @@ public class User {
         if (updateMap.get("comment") != null) {
             comment = (String) updateMap.get("comment");
         }
-
     }
 
-    //проверка значений
+    //проверка имени пользователя на наличие недопустимых символов через реглуярные выражения, при непрохождении выдаем исключение, которое обрабатываем и выводим как сообщение ползователю
     public void checkUsernamePattern() throws UserException {
         String usernamePattern = "^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$";
         if (!username.matches(usernamePattern)) {
             throw new UserException("Имя пользователя не заполнено или не соответсвует требованиям: от 2 до 20 символов из латинских букв и цифр, первый символ обязательно буква");
         }
-
     }
 
+    //проверка e-mail На соответствие формату
     public void checkEmailPattern() throws UserException {
         String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
         if (!email.matches(emailPattern)) {
             throw new UserException("E-mail не заполнен или не соответсвует формату ИмяПользователя@домен.*");
         }
-
     }
 
+    //проверка требований к безопасности пароля
     public void checkPasswordPattern() throws UserException {
         String passPattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
         if (!passwordStr.matches(passPattern)) {
@@ -175,24 +178,14 @@ public class User {
         }
     }
 
+    //проверка формата телефона
     public void checkPhonePattern() throws UserException {
         String phonePattern = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$";
         if ((!phone.matches(phonePattern)) && (!"".equals(phone))) {
             throw new UserException("Телефон введён некорректно(формат +7ХХХХХХХХХХ)");
         }
     }
-    //TODO сделать  перегруженный метод проверки пользователей со списком исключений
-//    public void checkUniqueUser(List<User> allUsers) throws UserException {
-//    
-//        for (User oneUser : allUsers) {
-//            
-//                if (username.equals(oneUser.getUsername())) throw new UserException("Недопустимое значение Имя пользователя. Такой пользователь есть в системе"); //уникальность username
-//                if (email.equals(oneUser.getEmail())) throw new UserException("Недопустимое значение E-mail. Пользователь с таким e-mail есть в системе"); //уникальность email
-//                if (phone.equals(oneUser.getPhone())) throw new UserException("Недопустимое значение Телефона. Пользователь с таким телефоном есть в системе"); //уникальность phone
-//            
-//            
-//            }
-//    }
+
     //метод проверки на уникальность пользователя (с возможностью исключения из проверки перечней пользователей)
     public void checkUniqueUser(List<User> allUsers, List<User> remUsers) throws UserException {
         allUsers.removeAll(remUsers);
@@ -208,7 +201,6 @@ public class User {
             if (phone.equals(oneUser.getPhone())) {
                 throw new UserException("Недопустимое значение Телефона. Пользователь с таким телефоном есть в системе"); //уникальность phone
             }
-
         }
     }
 
@@ -232,5 +224,4 @@ public class User {
         hash = 11 * hash + this.id_user;
         return hash;
     }
-
 }

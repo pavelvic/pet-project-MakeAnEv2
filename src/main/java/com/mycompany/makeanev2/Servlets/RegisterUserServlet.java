@@ -10,30 +10,31 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.NamingException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-//сделать комментарии, сервлет для обработки вывода инфы на страницу
+/*реализация события регистрации нового пользователя, URL /register   */
 public class RegisterUserServlet extends HttpServlet {
+    
+private RequestDispatcher dispatcher;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //открываем страницу
         request.getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String resultString = null;
-        //request по умолчению в ISO-8859-1 ???, БД - в UTF-8. 
-        //Заранее ставим правильну кодировку, иначе в БД пишет в ISO из за чего проблема с кириллицей
+        String resultString = null; //переменная для фиксации результата операции
+        User user = null; //регистрируемый пользователь для записи в БД
         
-        User user = null;
         try {
-            
-             
+            //разбираем введенные в форму регистрации параметры из http-запроса
             String username = (String) request.getParameter("username");
             String password = (String) request.getParameter("password");
             String email = (String) request.getParameter("email");
@@ -42,15 +43,16 @@ public class RegisterUserServlet extends HttpServlet {
             String surname = (String) request.getParameter("surname");
             String comment = (String) request.getParameter("comment");
 
-            //по дефолту при регистрации указывает группу пользователей 4 - Пользователь
+            //по дефолту при регистрации указывает группу пользователей 4 - Пользователь; Создаем пользователя
             user = new User(0, 4, "Пользователь",username, password.hashCode(), password, email, phone, name, surname, comment);
 
-            //выполняем проверки значений с генерацией исключений UserException
+            //выполняем проверки введенных значений с генерацией исключений UserException
             user.checkUsernamePattern();
             user.checkEmailPattern();
             user.checkPhonePattern();
             user.checkPasswordPattern();
             
+            //реализуем проверку пользователя на уникальность (одинаковых имени пользователя и e-mail в БД быть не может)
             Connection con = DbConnection.getConnection();
             List<User> allUsers = DbQuery.selectUser(con);
             List<User> remUsers = new ArrayList<>(); //генерируем лист исключений для проверки уникальности (пустой для данного случая, поскольку это новый пользователь и исклюений для проверки не может быть, сравниваем со всеми пользователями в БД)
@@ -59,19 +61,20 @@ public class RegisterUserServlet extends HttpServlet {
             //добавляем запись в БД и устанавливаем сообщение об успехе
             DbQuery.insertUser(con, user);
             con.close();
-            resultString = "Регистрация успешно выполнена. Добро пожаловать!";
-            user = null; //обнуляем экземпляр, чтобы на старнице вывелись пустые поля
-
-        } catch (SQLException | NamingException | UserException ex) { //Недосутпно соединение или ошмбка драйвера или не прошли проверку введеных значений
-
+            resultString = "Регистрация успешно выполнена. Теперь можете войти на сайт!";
+            dispatcher = request.getRequestDispatcher("/WEB-INF/resultpage.jsp"); //маршрутизируем на страницу с сообщением
+            //user = null; //обнуляем экземпляр, чтобы на старнице вывелись пустые поля
+            
+            //если что-то пошло не так, фиксируем ошибку
+        } catch (SQLException | NamingException | UserException ex) {
             resultString = "Ошибка! " + ex.toString();
-
+            dispatcher = request.getRequestDispatcher("/WEB-INF/register.jsp"); //при ошибке открываем снова эту же страницу
+        
+        //выводим результат операции
         } finally {
             request.setAttribute("resultString", resultString);
             request.setAttribute("user", user);
-            request.getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
+            dispatcher.forward(request, response); //идем на страницу в завиимости от dispatcher
         }
-
     }
-
 }

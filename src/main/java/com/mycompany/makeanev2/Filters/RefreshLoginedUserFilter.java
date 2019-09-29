@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+/*выполняется при каждой загрукзке страницы, обновляет пользователя в сессии на основании актуальных данных в БД*/
 public class RefreshLoginedUserFilter implements Filter {
 
     @Override
@@ -33,11 +34,12 @@ public class RefreshLoginedUserFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+        //получаем пользователя из сессии
         HttpServletRequest req = (HttpServletRequest) request;
         HttpSession session = req.getSession();
-
         User userInSession = AuthUtils.getLoginedUser(session);
 
+        //если пользователь не залогинился, просто идем дальше, но если залогинен - обновляем в сессии для актуальности
         if (userInSession == null) {
             chain.doFilter(request, response);
             return;
@@ -49,7 +51,7 @@ public class RefreshLoginedUserFilter implements Filter {
             User userInDB = DbQuery.findUser(con, userInSession.getUsername());
             con.close();
 
-            //если пользователь был удалён, то просто чистим сессию и куки
+            //если пользователь был удалён, то просто чистим сессию и куки и идем дальше
             if (userInDB == null) {
                 AuthUtils.deleteLoginedUser(session);
                 AuthUtils.deleteLoginedUserCookie((HttpServletResponse) response, userInSession);
@@ -57,16 +59,22 @@ public class RefreshLoginedUserFilter implements Filter {
                 return;
             }
 
-            //если пользователя изменили (например, группу пользователей), обновляем его в сессии
-            if (!userInSession.equals(userInDB)) {
-                AuthUtils.refreshLoginedUser(req, (HttpServletResponse) response, userInDB);
-            }
+            //обновляем его в сессии и открываем страницу
+            AuthUtils.refreshLoginedUser(req, (HttpServletResponse) response, userInDB);
             chain.doFilter(request, response);
+
+            //TODO: кажется неэффективным ходить в БД и обновлять пользователя в сессии постоянно
+            //подумать как можно управлять сессиями более эффективно
+            //проблема в изменении критичных данных пользователя (который в сессии) в БД
+            //например, поменяли группу полномочий, а в сессии того самого пользователя группа все та же, в результате будет доступ куда не надо
+            //идея: пре редактировании пользователей получать доступ к сессии такого пользователя (если она активна)
+            //и подменять (на уровне сервера) пользвателя в этой сессии
+            //для этого надо понять как можно из сервлетов управлять сессиями, хранящимися на сервере, как найти нужную и как ее можно редактировать (если это вообще возможно)
+            //блок исключений, если что-то пошло не так прервываем загрузку страницы и выдаем пользователю сообщение о проблеме
         } catch (SQLException | NamingException ex) {
             request.setAttribute("resultString", "Ошибка! : " + ex.toString());
             request.setAttribute("redirect", "/");
             request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response);
         }
-        //}
     }
 }

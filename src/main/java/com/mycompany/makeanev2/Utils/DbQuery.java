@@ -9,8 +9,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/*класс запросов к БД*/
 public class DbQuery {
 
+    //найти пользователя в БД по логину и паролю (актуально для аутентификации)
     public static User findUser(Connection con, String username, String password) throws SQLException {
         String sql = "SELECT u.id_user, u.group_id, g.Name, u.username, u.password, u.email, u.phone, u.name, u.surname, u.comment FROM `user` u, `usergroups` g "
                 + "WHERE g.id_group = u.group_id "
@@ -30,23 +32,30 @@ public class DbQuery {
         return null;
     }
 
+    //получить пользователя из БД по логину (актуально для случаев, когда прошла аутентификация)
     public static User findUser(Connection con, String username) throws SQLException {
+        //в подходах java определено использовать символ "?" как параметр sql запроса
         String sql = "SELECT u.id_user, u.group_id, g.Name, u.username, u.password, u.email, u.phone, u.name, u.surname, u.comment FROM `user` u, `usergroups` g "
                 + "WHERE g.id_group = u.group_id "
                 + "AND u.username = ?";
 
         PreparedStatement pstm = con.prepareStatement(sql);
 
+        //установка параметров
         pstm.setString(1, username);
-
+        
+        //выполнение и результат в курсоре rs
         ResultSet rs = pstm.executeQuery();
 
+        //вывод курсора как результат функции
         if (rs.next()) {
             return new User(rs);
         }
         return null;
     }
 
+    //отдельный список групп пользователей и их названий нужен для вывода на страницах редактирования групп пользователей
+    //для обеспечения выпадающих списков
     public static List<UserGroup> selectUserGroup(Connection con) throws SQLException {
         String sql = "SELECT id_group, Name FROM usergroups ORDER BY id_group ASC";
 
@@ -61,13 +70,14 @@ public class DbQuery {
         return list;
     }
 
-
+    //добавление нового пользователя в БД на основе объекта, актуально при регистрации пользователя
     public static void insertUser(Connection con, User user) throws SQLException {
-        /*метод для добавления записи в таблиц пользователей, передаем соединение и пользователя, метод записывает данные в таблицу по соединению*/
-
+        
+        //в подходах java определено использовать символ "?" как параметр sql запроса
         String sql = "INSERT INTO user(group_id, username,  password, email, phone, name, surname, comment) VALUES (?,?,?,?,?,?,?,?)";
         PreparedStatement ps = con.prepareStatement(sql);
 
+        //здесь определяем параметры (символ "?") для sql-запроса на основе объекта User
         ps.setInt(1, user.getGroup_id());
         ps.setString(2, user.getUsername());
         ps.setInt(3, user.getPassword());
@@ -77,11 +87,13 @@ public class DbQuery {
         ps.setString(7, user.getSurname());
         ps.setString(8, user.getComment());
 
+        //ВЫПОЛНЯЕМ sql-запрос
         ps.executeUpdate();
     }
 
+    //получение в коллекции всего списка пользователей из БД в виде объектов (актуально при выводе списков пользователей и проверке на уникальность новых и редактируемых пользователей)
     public static List<User> selectUser(Connection con) throws SQLException {
-        /*метод для получения атрибутов пользователя из БД*/
+        
         String sql = "SELECT u.id_user, u.group_id, g.Name, u.username, u.password, u.email, u.phone, u.name, u.surname, u.comment "
                 + "FROM `user` u, `usergroups` g "
                 + "WHERE g.id_group = u.group_id";
@@ -96,26 +108,12 @@ public class DbQuery {
         }
         return list;
     }
-    
-//        public static List<User> selectUserExcept(Connection con, String id_userStr) throws SQLException {
-//        /*метод для получения атрибутов пользователя из БД*/
-//        String sql = "SELECT u.id_user, u.group_id, g.Name, u.username, u.password, u.email, u.phone, u.name, u.surname, u.comment "
-//                + "FROM `user` u, `usergroups` g "
-//                + "WHERE g.id_group = u.group_id";
-//
-//        PreparedStatement pstm = con.prepareStatement(sql);
-//
-//        ResultSet rs = pstm.executeQuery();
-//        List<User> list = new ArrayList<>();
-//
-//        while (rs.next()) {
-//            if (rs.getInt(1)!=Integer.parseInt(id_userStr)) list.add(new User(rs));
-//        }
-//        return list;
-//    }
 
+    /*перегруженный метод, возвращающий 1 одного пользователя по id, нужен при просмотре пользователя, редактировании, удалении
+    когда переходим на страницу, из параметров в наличии только айди, по которому мы конструируем из БД сам объект User для даль
+    нейших манипуляций*/
     public static User selectUser(Connection con, String id_userStr) throws SQLException {
-        /*перегруженный метод, возвращающий одного пользователя по id*/
+        
         String sql = "SELECT u.id_user, u.group_id, g.Name, u.username, u.password, u.email, u.phone, u.name, u.surname, u.comment "
                 + "FROM `user` u, `usergroups` g "
                 + "WHERE g.id_group = u.group_id "
@@ -133,9 +131,9 @@ public class DbQuery {
         return null;
     }
     
-
+    /*обновляем информацию о пользователе в БД, при различных пользовательских редактированиях*/
     public static void updateUser(Connection con, User user) throws SQLException {
-        /*обновляем информацию о пользователе в БД*/
+        
         String sql = "UPDATE user SET group_id = ?, username = ?, email = ?, phone = ?, name = ?, surname = ?, comment = ? WHERE id_user = ?"; //? - параметр, подставляем из экземпляра
 
         PreparedStatement ptsm = con.prepareStatement(sql);
@@ -152,6 +150,7 @@ public class DbQuery {
         ptsm.executeUpdate();
     }
 
+    /*обновляем пароль пользователя (для функционала установки нового пароля)*/
     public static void updateUserPassword(Connection con, User user) throws SQLException {
         /*обновляем пароль для пользователя*/
         String sql = "UPDATE user SET password = ? WHERE id_user = ?";
@@ -164,7 +163,8 @@ public class DbQuery {
         ptsm.executeUpdate();
 
     }
-
+    //TODO: переписать этот метод на отдельный resetUserPassword, разораться почему это сделано по id_user, а не объектом
+    //сброс пароля пользователя
     public static void updateUserPassword(Connection con, String id_user) throws SQLException {
         /*обновляем пароль для пользователя*/
         String sql = "UPDATE user SET password = ? WHERE id_user = ?";
@@ -178,6 +178,7 @@ public class DbQuery {
 
     }
 
+    /*удаляем пользователя из БД*/
     public static void deleteUser(Connection con, User user) throws SQLException, NumberFormatException {
         /*Удаляем запись пользователя*/
         String sql = "DELETE FROM user WHERE id_user=?";
@@ -188,5 +189,4 @@ public class DbQuery {
 
         ptsm.executeUpdate();
     }
-
 }

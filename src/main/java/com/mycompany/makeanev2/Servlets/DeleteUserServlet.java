@@ -1,42 +1,43 @@
 package com.mycompany.makeanev2.Servlets;
 
 import com.mycompany.makeanev2.User;
-import com.mycompany.makeanev2.Utils.AuthUtils;
 import com.mycompany.makeanev2.Utils.DbQuery;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.naming.NamingException;
-import javax.security.auth.AuthPermission;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/*обработка события удаления пользователя после проверки всех полномочий, URL /deleteuser?id_user = ? */
 public class DeleteUserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        //информация о результате операции
         String resultString = null;
-        
-        User userToDelete = (User)request.getAttribute("user");
-        
+
+        //пользователь для удаления (сформирован ранее в Filter, где проверялось можно ли его удалять)
+        User userToDelete = (User) request.getAttribute("user");
+
         try {
             Connection con = DbConnection.getConnection();
-            DbQuery.deleteUser(con, userToDelete);
+            DbQuery.deleteUser(con, userToDelete); //запрос в БД для удаления пользователя
             con.close();
-            //AuthUtils.deleteLoginedUser(request.getSession(), userToDelete);
-            resultString = "Пользователь удалён"; //специфицировать резалт
+            resultString = "Пользователь удалён"; //сообщаем результат операции
+
+            //если что-то пошло не так, сообщаем иной результат операции с текстом ошибки
         } catch (SQLException | NamingException | NumberFormatException ex) {
-            resultString = "Ошибка! "+ex.getMessage();
-        }
-        
+            resultString = "Ошибка! " + ex.getMessage();
+        } //вывод результата операции 
         finally {
             request.setAttribute("resultString", resultString);
             request.setAttribute("redirect", "/"); //указываем откуда мы идем на страницу результата для настройки маршрутизации
-            
             request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response);
         }
     }

@@ -18,36 +18,35 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/*реализация события редактирования данных пользователя, URL /edituser?id_user=?*/
 public class EditUserServlet extends HttpServlet {
 
+    //пользователь, которого хотим поменять
     private User userToUpdate;
-    //все существующие в БД группы для формирования списка на странице
-    /*использование этого экземпляра user: doGet - получаем объект по id, 
-   в doPost экземпляр создается по ЛЮБЫМ введенным данным (даже в случае не успеха UPDATE в БД),
-   что необходимо для передачи в finally метода doPost этого объекта на страницу editsuer
-   глобальная переменная user позволяет правильно маршутизировать в finally: при exeption в doPost объект не создается
-   и страница edituser выводилась бы пустая, но поскольку глобально при doGet уже был определен user, 
-   он и выводится на страницу при exception, без глобального экземпляра такое взаимодействие было бы невозможным*/
+
+    //диспетчер для маршрутизации, указываем какую страницу открывать в зависимости от отработки кода в фильтре
+    //информация о маршрутизации определена на этапе выполнения фильтра этого сервлета (на основании проверки полномочий), dispatcher размщен в сессии
+    //достаем из сессии и выполняем маршрутизацию
     private RequestDispatcher dispatcher;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        //перед открытием страницы
+        //получаем данные из сессии для обработки в методе редактирования пользователя
         userToUpdate = (User) request.getAttribute("user");
         dispatcher = (RequestDispatcher) request.getAttribute("dispatcher");
         dispatcher.forward(request, response); //открываем страницу
-
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        //по нажатии кнопки "Сохранить"
+        //инициализируем строку с результатами операции на данной странице
         String resultString = null;
         try {
-            
-
+            //получаем с форм ввода на странице инфу о пользователе
             String id_user = (String) request.getParameter("id_user"); //параметры только строки
             String idnamegroup = (String) request.getParameter("idnamegroup");
             String username = (String) request.getParameter("username");
@@ -67,9 +66,8 @@ public class EditUserServlet extends HttpServlet {
                 groupname = splitidname[1];
             }
 
-            //HashMap с изменениями
+            //складываем параметры с формы в коллекцию
             Map<String, String> updateUser = new HashMap<>();
-
             updateUser.put("id_user", id_user);
             updateUser.put("group_id", group_id);
             updateUser.put("groupname", groupname);
@@ -82,34 +80,37 @@ public class EditUserServlet extends HttpServlet {
             updateUser.put("surname", surname);
             updateUser.put("comment", comment);
 
-            //применяем
-            
+            //применяем изменения к открытому на странице пользователю
             userToUpdate.applyChanges(updateUser);
 
-            userToUpdate.checkUsernamePattern(); //проверка формата имени польз
-            userToUpdate.checkEmailPattern(); //проверка формата e-mail
-            userToUpdate.checkPhonePattern(); //проверка формата телефона
-            
-            Connection con = DbConnection.getConnection();
-            
-            
-            List<User> allUsers = DbQuery.selectUser(con);//берем всех пользователей
-            List<User> remUsers = new ArrayList<>(); 
-            remUsers.add((User) request.getAttribute("user")); //генерируем лист исключений для проверки уникальности (проверять уникальность по редактируемому пользователю не нужно, только сравнить их со всеми остальными пользователями)
-            userToUpdate.checkUniqueUser(allUsers,remUsers);//проверка на уникальность пользователя (username, e-mail, phone - не должны совпадать с существующими, исключая редактируемого пользователя)
+            //проверка форматов и допустимости введенных данных, генерируем исключение UserException в случае проблем
+            userToUpdate.checkUsernamePattern();
+            userToUpdate.checkEmailPattern();
+            userToUpdate.checkPhonePattern();
 
+            //проверяем параметры измененного пользователя на уникальность в рамках всех пользователей БД, генерируем UserException в случае проблем            
+            Connection con = DbConnection.getConnection();
+            List<User> allUsers = DbQuery.selectUser(con); //все пользователи
+            List<User> remUsers = new ArrayList<>();//коллекция пользователей-исключений
+            remUsers.add((User) request.getAttribute("user")); //исключить из проверки на уникальность самого редактирумого пользователя, иначе проверку не пройти
+            userToUpdate.checkUniqueUser(allUsers, remUsers);//проверка на уникальность пользователя (username, e-mail, phone - не должны совпадать с существующими, исключая редактируемого пользователя)
+
+            //апдетим данные пользователя в БД
             DbQuery.updateUser(con, userToUpdate);
             con.close();
 
-           resultString = "Изменения внесены";
+            //успешный результат операции запоминаем     
+            resultString = "Изменения внесены";
 
+            //если что-то пошло не так, фиксируем другой результат операции
         } catch (SQLException | NamingException | UserException ex) {
             resultString = "Ошибка! " + ex.toString();
+
+            //выводим результат операции на эту же страницу  
         } finally {
-            
-            request.setAttribute("resultString", resultString); //передали результат действия
+            request.setAttribute("resultString", resultString); //передали результат действия на страницу
             request.setAttribute("user", userToUpdate); //сохранили что ввели и передали на страницу для отображения
-            dispatcher.forward(request, response); //показали страницу
+            dispatcher.forward(request, response); //показали эту же страницу с новыми данными
         }
     }
 }

@@ -16,46 +16,51 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-//сделать комментарии, сервлет для обработки вывода инфы на страницу
+/*реализация события логина пользователя (вход в систему), URL /login  */
 public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        //открываем страницу
         request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        //реализация нажатия кнопки "Залогиниться"
+        String username = request.getParameter("username"); //получаем с формы сайта "имя пользователя"
+        String password = request.getParameter("password"); //пароль (текст)
 
-        boolean remember = "Y".equals(request.getParameter("rememberMe"));
+        boolean remember = "Y".equals(request.getParameter("rememberMe")); //галка "Заполнить меня"
 
-        User user = null;
-        String redirectString;
-        String errorString = null;
+        User user = null; //для формрования входящего на сайт пользователя
+        String redirectString; //маршрутизация с этой страницы
+        String errorString = null; //для фиксации ошибок
 
-        redirectString = "/login.jsp";
+        redirectString = "/login.jsp"; //по умолчанию переходим на эту же страницу
 
         try {
+            //если пользователь не ввел имя и пароль, фиксируем ошибку
             if (username == null || password == null || username.length() == 0 || password.length() == 0) {
                 errorString = "Не заполнены Имя ользователя и / или пароль";
+            //если ввел
             } else {
                 Connection con = DbConnection.getConnection();
-                user = DbQuery.findUser(con, username, password);
+                user = DbQuery.findUser(con, username, password); //ищем в БД
                 con.close();
                 CheckPermission.checkBlockUser(user); //проверим блокирован ли пользователь, который пытается войти
+                //если такой пользователь в базе не найден
                 if (user == null) {
-
-                    errorString = "Имя пользователя или пароль не корректны";
+                    errorString = "Имя пользователя или пароль не корректны"; //фиксируем ошибку
+                //если найден
                 } else {
+                    HttpSession session = request.getSession(); //получаем сессию
+                    AuthUtils.storeLoginedUser(session, user);// записываем туда пользователя (это и есть операция входа на сайт)
+                    redirectString = "/"; //отправляем на домашнюю страницу
 
-                    HttpSession session = request.getSession();
-                    AuthUtils.storeLoginedUser(session, user);
-                    redirectString = "/";
-
+                    //Дополнительно: если установлена галочка "Запомнить меня" - формируем куки файл
+                    //если не установлена, удаляем куки файл
                     if (remember) {
                         AuthUtils.storeLoginedUserCookie(response, user);
                     } else {
@@ -63,8 +68,10 @@ public class LoginServlet extends HttpServlet {
                     }
                 }
             }
+        //если что-то пошло не так фиксируем ошибку
         } catch (SQLException | NamingException | UserException ex) {
             errorString = "Ошибка! " + ex.toString();
+        //выводим результат операциии + ошибку если имела место, или идем на домашнюю старницу
         } finally {
             request.setAttribute("errorString", errorString);
             request.getRequestDispatcher(redirectString).forward(request, response);
