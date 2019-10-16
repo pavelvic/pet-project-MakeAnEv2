@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*класс запросов к БД*/
-public class DbQuery {
+public class UserDbQuery {
 
     //найти пользователя в БД по логину и паролю (актуально для аутентификации)
     public static User findUser(Connection con, String username, String password) throws SQLException {
@@ -73,7 +73,7 @@ public class DbQuery {
     //добавление нового пользователя в БД на основе объекта, актуально при регистрации пользователя
     public static void insertUser(Connection con, User user) throws SQLException {
         
-        //в подходах java определено использовать символ "?" как параметр sql запроса
+        //символ "?" как параметр sql запроса
         String sql = "INSERT INTO user(group_id, username,  password, email, phone, name, surname, comment) VALUES (?,?,?,?,?,?,?,?)";
         PreparedStatement ps = con.prepareStatement(sql);
 

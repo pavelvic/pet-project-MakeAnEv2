@@ -1,10 +1,10 @@
-package com.mycompany.makeanev2.Servlets;
+package com.mycompany.makeanev2.Servlets.User;
 
 import com.mycompany.makeanev2.Exceptions.UserException;
 import com.mycompany.makeanev2.User;
 import com.mycompany.makeanev2.Utils.AuthUtils;
 import com.mycompany.makeanev2.Utils.CheckPermission;
-import com.mycompany.makeanev2.Utils.DbQuery;
+import com.mycompany.makeanev2.Utils.UserDbQuery;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
 import java.sql.Connection;
@@ -47,7 +47,7 @@ public class LoginServlet extends HttpServlet {
             //если ввел
             } else {
                 Connection con = DbConnection.getConnection();
-                user = DbQuery.findUser(con, username, password); //ищем в БД
+                user = UserDbQuery.findUser(con, username, password); //ищем в БД
                 con.close();
                 CheckPermission.checkBlockUser(user); //проверим блокирован ли пользователь, который пытается войти
                 //если такой пользователь в базе не найден

@@ -1,4 +1,4 @@
-package com.mycompany.makeanev2.Servlets;
+package com.mycompany.makeanev2.Servlets.User;
 
 import com.mycompany.makeanev2.User;
 import java.io.IOException;

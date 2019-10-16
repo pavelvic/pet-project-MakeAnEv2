@@ -145,5 +145,21 @@ public class CheckPermission {
             throw new UserException("Доступ запрещен. Войдите на сайт");
         }
     }
+    
+    
+    public static void checkCreateEventAccess(User userInSession) throws UserException {
+        /*логика работы аналогична checkViewUserAccess*/
+        checkNotLogin(userInSession);
+        checkBlockUser(userInSession);
+        
+        switch (userInSession.getGroup_id()) {
+                case 3:
+                    throw new UserException("Невозможно создать мероприятие. Функция доступна только администраторам");
+                case 4:
+                    throw new UserException("Невозможно создать мероприятие. Функция доступна только администраторам");
+                case 5:
+                    throw new UserException("Невозможно создать мероприятие. Функция доступна только администраторам");
+            }
+    }
 
 }

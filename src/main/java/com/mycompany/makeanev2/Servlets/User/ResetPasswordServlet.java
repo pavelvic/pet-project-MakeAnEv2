@@ -1,6 +1,6 @@
-package com.mycompany.makeanev2.Servlets;
+package com.mycompany.makeanev2.Servlets.User;
 
-import com.mycompany.makeanev2.Utils.DbQuery;
+import com.mycompany.makeanev2.Utils.UserDbQuery;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
 import java.sql.Connection;
@@ -23,7 +23,7 @@ public class ResetPasswordServlet extends HttpServlet {
         
         try {
             Connection con = DbConnection.getConnection();
-            DbQuery.updateUserPassword(con, id_user); //запрос меняет пароль на пароль по умолчанию
+            UserDbQuery.updateUserPassword(con, id_user); //запрос меняет пароль на пароль по умолчанию
             con.close();
             resultString = "Пароль сброшен. Используйте пароль по умолчанию - '0' "; //информация и результате операции
         //если что-то пошло не так

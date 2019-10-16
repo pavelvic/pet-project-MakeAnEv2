@@ -1,4 +1,4 @@
-package com.mycompany.makeanev2.Filters;
+package com.mycompany.makeanev2.Filters.User;
 
 import com.mycompany.makeanev2.Exceptions.UserException;
 import com.mycompany.makeanev2.User;
@@ -6,7 +6,7 @@ import com.mycompany.makeanev2.UserGroup;
 import com.mycompany.makeanev2.Utils.AuthUtils;
 import com.mycompany.makeanev2.Utils.CheckPermission;
 import com.mycompany.makeanev2.Utils.DbConnection;
-import com.mycompany.makeanev2.Utils.DbQuery;
+import com.mycompany.makeanev2.Utils.UserDbQuery;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -42,13 +42,13 @@ public class EditUserFilter implements Filter {
             Connection con = DbConnection.getConnection();
             //подготовить список групп пользователей для формирования списка на странице (
             //при редактировании нужно дать перечень всех групп пользователей для выбора из списка
-            List<UserGroup> userGroups = DbQuery.selectUserGroup(con);
+            List<UserGroup> userGroups = UserDbQuery.selectUserGroup(con);
             request.setAttribute("usergroups", userGroups); //сохраняем список в запросе и выводим на страницу в Servlet
 
             //проверяем полномочия, получаем пользователя к которому хотим получить доступ
             String id_user = (String) request.getParameter("id_user"); //параметры - Object, приводим к String
 
-            User userToAccess = DbQuery.selectUser(con, id_user);
+            User userToAccess = UserDbQuery.selectUser(con, id_user);
             con.close();
 
             //определяем залогинишвегося

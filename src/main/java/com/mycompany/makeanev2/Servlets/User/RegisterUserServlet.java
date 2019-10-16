@@ -1,8 +1,8 @@
-package com.mycompany.makeanev2.Servlets;
+package com.mycompany.makeanev2.Servlets.User;
 
 import com.mycompany.makeanev2.User;
 import com.mycompany.makeanev2.Exceptions.UserException;
-import com.mycompany.makeanev2.Utils.DbQuery;
+import com.mycompany.makeanev2.Utils.UserDbQuery;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
 import java.sql.Connection;
@@ -54,12 +54,12 @@ private RequestDispatcher dispatcher;
             
             //реализуем проверку пользователя на уникальность (одинаковых имени пользователя и e-mail в БД быть не может)
             Connection con = DbConnection.getConnection();
-            List<User> allUsers = DbQuery.selectUser(con);
+            List<User> allUsers = UserDbQuery.selectUser(con);
             List<User> remUsers = new ArrayList<>(); //генерируем лист исключений для проверки уникальности (пустой для данного случая, поскольку это новый пользователь и исклюений для проверки не может быть, сравниваем со всеми пользователями в БД)
             user.checkUniqueUser(allUsers,remUsers);//проверка на уникальность пользователя (username, e-mail, phone - не должны совпадать с существующими)
 
             //добавляем запись в БД и устанавливаем сообщение об успехе
-            DbQuery.insertUser(con, user);
+            UserDbQuery.insertUser(con, user);
             con.close();
             resultString = "Регистрация успешно выполнена. Теперь можете войти на сайт!";
             dispatcher = request.getRequestDispatcher("/WEB-INF/resultpage.jsp"); //маршрутизируем на страницу с сообщением

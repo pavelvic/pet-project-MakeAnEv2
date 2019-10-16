@@ -1,9 +1,9 @@
-package com.mycompany.makeanev2.Filters;
+package com.mycompany.makeanev2.Filters.User;
 
 import com.mycompany.makeanev2.User;
 import com.mycompany.makeanev2.Utils.AuthUtils;
 import com.mycompany.makeanev2.Utils.DbConnection;
-import com.mycompany.makeanev2.Utils.DbQuery;
+import com.mycompany.makeanev2.Utils.UserDbQuery;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -48,7 +48,7 @@ public class RefreshLoginedUserFilter implements Filter {
         try {
             //получаем пользователя из БД
             Connection con = DbConnection.getConnection();
-            User userInDB = DbQuery.findUser(con, userInSession.getUsername());
+            User userInDB = UserDbQuery.findUser(con, userInSession.getUsername());
             con.close();
 
             //если пользователь был удалён, то просто чистим сессию и куки и идем дальше

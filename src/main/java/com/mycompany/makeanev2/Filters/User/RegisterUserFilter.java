@@ -1,4 +1,4 @@
-package com.mycompany.makeanev2.Filters;
+package com.mycompany.makeanev2.Filters.User;
 
 import com.mycompany.makeanev2.Exceptions.UserException;
 import com.mycompany.makeanev2.User;

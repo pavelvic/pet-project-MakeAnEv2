@@ -1,7 +1,7 @@
-package com.mycompany.makeanev2.Servlets;
+package com.mycompany.makeanev2.Servlets.User;
 
 import com.mycompany.makeanev2.User;
-import com.mycompany.makeanev2.Utils.DbQuery;
+import com.mycompany.makeanev2.Utils.UserDbQuery;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
 import java.sql.Connection;
@@ -27,7 +27,7 @@ public class DeleteUserServlet extends HttpServlet {
 
         try {
             Connection con = DbConnection.getConnection();
-            DbQuery.deleteUser(con, userToDelete); //запрос в БД для удаления пользователя
+            UserDbQuery.deleteUser(con, userToDelete); //запрос в БД для удаления пользователя
             con.close();
             resultString = "Пользователь удалён"; //сообщаем результат операции
 

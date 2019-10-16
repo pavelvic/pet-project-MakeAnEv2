@@ -2,47 +2,51 @@
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <filter>
         <filter-name>EncodingFilter</filter-name>
-        <filter-class>com.mycompany.makeanev2.Filters.EncodingFilter</filter-class>
+        <filter-class>com.mycompany.makeanev2.Filters.User.EncodingFilter</filter-class>
     </filter>
     <filter>
         <filter-name>ViewUserFilter</filter-name>
-        <filter-class>com.mycompany.makeanev2.Filters.ViewUserFilter</filter-class>
+        <filter-class>com.mycompany.makeanev2.Filters.User.ViewUserFilter</filter-class>
     </filter>
     <filter>
         <filter-name>EditUserFilter</filter-name>
-        <filter-class>com.mycompany.makeanev2.Filters.EditUserFilter</filter-class>
+        <filter-class>com.mycompany.makeanev2.Filters.User.EditUserFilter</filter-class>
     </filter>
     <filter>
         <filter-name>CookieFilter</filter-name>
-        <filter-class>com.mycompany.makeanev2.Filters.CookieFilter</filter-class>
+        <filter-class>com.mycompany.makeanev2.Filters.User.CookieFilter</filter-class>
     </filter>
     <filter>
         <filter-name>LoginFilter</filter-name>
-        <filter-class>com.mycompany.makeanev2.Filters.LoginFilter</filter-class>
+        <filter-class>com.mycompany.makeanev2.Filters.User.LoginFilter</filter-class>
     </filter>
     <filter>
         <filter-name>UserListFilter</filter-name>
-        <filter-class>com.mycompany.makeanev2.Filters.UserListFilter</filter-class>
+        <filter-class>com.mycompany.makeanev2.Filters.User.UserListFilter</filter-class>
     </filter>
     <filter>
         <filter-name>RegisterUserFilter</filter-name>
-        <filter-class>com.mycompany.makeanev2.Filters.RegisterUserFilter</filter-class>
+        <filter-class>com.mycompany.makeanev2.Filters.User.RegisterUserFilter</filter-class>
     </filter>
     <filter>
         <filter-name>ResetPasswordFilter</filter-name>
-        <filter-class>com.mycompany.makeanev2.Filters.ResetPasswordFilter</filter-class>
+        <filter-class>com.mycompany.makeanev2.Filters.User.ResetPasswordFilter</filter-class>
     </filter>
     <filter>
         <filter-name>DeleteUserFilter</filter-name>
-        <filter-class>com.mycompany.makeanev2.Filters.DeleteUserFilter</filter-class>
+        <filter-class>com.mycompany.makeanev2.Filters.User.DeleteUserFilter</filter-class>
     </filter>
     <filter>
         <filter-name>EditPasswordFilter</filter-name>
-        <filter-class>com.mycompany.makeanev2.Filters.EditPasswordFilter</filter-class>
+        <filter-class>com.mycompany.makeanev2.Filters.User.EditPasswordFilter</filter-class>
     </filter>
     <filter>
         <filter-name>RefreshLoginedUserFilter</filter-name>
-        <filter-class>com.mycompany.makeanev2.Filters.RefreshLoginedUserFilter</filter-class>
+        <filter-class>com.mycompany.makeanev2.Filters.User.RefreshLoginedUserFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>CreateEventFilter</filter-name>
+        <filter-class>com.mycompany.makeanev2.Filters.Event.CreateEventFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>RefreshLoginedUserFilter</filter-name>
@@ -88,49 +92,57 @@
         <filter-name>ViewUserFilter</filter-name>
         <servlet-name>ViewUserServlet</servlet-name>
     </filter-mapping>
+    <filter-mapping>
+        <filter-name>CreateEventFilter</filter-name>
+        <servlet-name>CreateEventServlet</servlet-name>
+    </filter-mapping>
     <servlet>
         <servlet-name>UserListServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.Servlets.UserListServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.User.UserListServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RegisterUserServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.Servlets.RegisterUserServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.User.RegisterUserServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ViewUserServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.Servlets.ViewUserServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.User.ViewUserServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ResultServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.Servlets.ResultServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.User.ResultServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>EditUserServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.Servlets.EditUserServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.User.EditUserServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DeleteUserServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.Servlets.DeleteUserServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.User.DeleteUserServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>EditPasswordServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.Servlets.EditPasswordServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.User.EditPasswordServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ResetPasswordServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.Servlets.ResetPasswordServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.User.ResetPasswordServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.Servlets.LoginServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.User.LoginServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>HomeServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.Servlets.HomeServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.User.HomeServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.Servlets.LogoutServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.Servlets.User.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateEventServlet</servlet-name>
+        <servlet-class>com.mycompany.makeanev2.Servlets.Event.CreateEventServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserListServlet</servlet-name>
@@ -175,6 +187,10 @@
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateEventServlet</servlet-name>
+        <url-pattern>/createev</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -1,8 +1,8 @@
-package com.mycompany.makeanev2.Servlets;
+package com.mycompany.makeanev2.Servlets.User;
 
 import com.mycompany.makeanev2.User;
 import com.mycompany.makeanev2.Exceptions.UserException;
-import com.mycompany.makeanev2.Utils.DbQuery;
+import com.mycompany.makeanev2.Utils.UserDbQuery;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
 import java.sql.Connection;
@@ -90,13 +90,13 @@ public class EditUserServlet extends HttpServlet {
 
             //проверяем параметры измененного пользователя на уникальность в рамках всех пользователей БД, генерируем UserException в случае проблем            
             Connection con = DbConnection.getConnection();
-            List<User> allUsers = DbQuery.selectUser(con); //все пользователи
+            List<User> allUsers = UserDbQuery.selectUser(con); //все пользователи
             List<User> remUsers = new ArrayList<>();//коллекция пользователей-исключений
             remUsers.add((User) request.getAttribute("user")); //исключить из проверки на уникальность самого редактирумого пользователя, иначе проверку не пройти
             userToUpdate.checkUniqueUser(allUsers, remUsers);//проверка на уникальность пользователя (username, e-mail, phone - не должны совпадать с существующими, исключая редактируемого пользователя)
 
             //апдетим данные пользователя в БД
-            DbQuery.updateUser(con, userToUpdate);
+            UserDbQuery.updateUser(con, userToUpdate);
             con.close();
 
             //успешный результат операции запоминаем     

@@ -1,7 +1,7 @@
-package com.mycompany.makeanev2.Servlets;
+package com.mycompany.makeanev2.Servlets.User;
 
 import com.mycompany.makeanev2.User;
-import com.mycompany.makeanev2.Utils.DbQuery;
+import com.mycompany.makeanev2.Utils.UserDbQuery;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
 import java.sql.Connection;
@@ -25,7 +25,7 @@ private  List<User> list; //контейнер-коллекция для хра�
         String errorString; // строка с возможными ошибками
         try {
             Connection con = DbConnection.getConnection();
-            list = DbQuery.selectUser(con); //получаем список из БД и помещаем в контейнер
+            list = UserDbQuery.selectUser(con); //получаем список из БД и помещаем в контейнер
             con.close();
             request.setAttribute("userList", list); //передаем коллекцию на страницу для отображения
             

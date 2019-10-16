@@ -1,9 +1,9 @@
-package com.mycompany.makeanev2.Filters;
+package com.mycompany.makeanev2.Filters.User;
 
 import com.mycompany.makeanev2.User;
 import com.mycompany.makeanev2.Utils.AuthUtils;
 import com.mycompany.makeanev2.Utils.DbConnection;
-import com.mycompany.makeanev2.Utils.DbQuery;
+import com.mycompany.makeanev2.Utils.UserDbQuery;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -57,7 +57,7 @@ public class CookieFilter implements Filter {
             if (cheked == null) {
                 String username = AuthUtils.getLoginedUserCookie(req); //получаем имя пользователя из куки файлов
                 Connection con = DbConnection.getConnection();
-                User user = DbQuery.findUser(con, username); //формируем полноценный объект из БД
+                User user = UserDbQuery.findUser(con, username); //формируем полноценный объект из БД
                 con.close();
                 AuthUtils.storeLoginedUser(session, user); //записываем в сессию
                 session.setAttribute("COOKIE_CHECKED", "CHECKED"); //ставим признак, что куки проверили и подгрузили в сессию пользователя

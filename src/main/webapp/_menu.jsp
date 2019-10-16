@@ -22,6 +22,8 @@
 <div>
     <a href="${pageContext.request.contextPath}/">Главная</a>
     |
+    <a href = "${pageContext.request.contextPath}/createev">Создать событие</a>
+    |
     <a href = "${pageContext.request.contextPath}/userlist">Пользователи</a>
     |
     <a href = "${pageContext.request.contextPath}/logout">Выйти</a>
@@ -36,6 +38,8 @@
 <c:if test="${loginedUser.group_id == 2}">
 <div>
     <a href="${pageContext.request.contextPath}/">Главная</a>
+    |
+    <a href = "${pageContext.request.contextPath}/createev">Создать событие</a>
     |
     <a href = "${pageContext.request.contextPath}/userlist">Пользователи</a>
     |

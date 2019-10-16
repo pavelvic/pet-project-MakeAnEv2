@@ -1,9 +1,9 @@
-package com.mycompany.makeanev2.Servlets;
+package com.mycompany.makeanev2.Servlets.User;
 
 import com.mycompany.makeanev2.User;
 import com.mycompany.makeanev2.Exceptions.UserException;
 import com.mycompany.makeanev2.Utils.AuthUtils;
-import com.mycompany.makeanev2.Utils.DbQuery;
+import com.mycompany.makeanev2.Utils.UserDbQuery;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import java.io.IOException;
 import java.sql.Connection;
@@ -59,7 +59,7 @@ public class EditPasswordServlet extends HttpServlet {
                 user.setPassword(newPassword); //изменяем объект и устанавливаем новый пароль
                 user.checkPasswordPattern(); //проверяем новый пароль объекта на корректность - UserException в случае не успеха
                 Connection con = DbConnection.getConnection();
-                DbQuery.updateUserPassword(con, user); //передаем в БД обновленный объект и фиксируем там изменения
+                UserDbQuery.updateUserPassword(con, user); //передаем в БД обновленный объект и фиксируем там изменения
                 con.close();
                 resultString = "Пароль изменён"; //фиксируем результат операции
             } else {
