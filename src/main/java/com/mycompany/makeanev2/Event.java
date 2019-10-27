@@ -9,8 +9,9 @@ public class Event {
 
     //переменные
     private final int id_event; //уник идентификатор события, автоинкретемнт в БД
-    private final int eventstatus_id; //код статуса мероприятия, из таблицы статусов
-    private final int eventregstatus_id; //код статуса регистрации на мероприятие из таблицы статусов
+    private final EventStatus evStatus; //код статуса мероприятия, из таблицы статусов
+    //private final int eventregstatus_id; //код статуса регистрации на мероприятие из таблицы статусов
+    private final EventRegStatus evRegStatus;
     private final String name; //название события, обязательное
     private final String description; //описание события, не обязательное
     private final String place; //место проведения, обязательное
@@ -20,10 +21,10 @@ public class Event {
     private final ZonedDateTime critTime; //критичное время отказа от участия ???
 
     //общий конструктор
-    public Event(int id_event, int eventstatus_id, int eventregstatus_id, String name, String description, String place, LocalDateTime eventTime, int maxParticipants, ZonedDateTime createTime, ZonedDateTime critTime) {
+    public Event(int id_event, EventStatus evStatus, EventRegStatus evRegStatus, String name, String description, String place, LocalDateTime eventTime, int maxParticipants, ZonedDateTime createTime, ZonedDateTime critTime) {
         this.id_event = id_event;
-        this.eventstatus_id = eventstatus_id;
-        this.eventregstatus_id = eventregstatus_id;
+        this.evStatus = evStatus;
+        this.evRegStatus = evRegStatus;
         this.name = name;
         this.description = description;
         this.place = place;
@@ -54,12 +55,12 @@ public class Event {
         return id_event;
     }
 
-    public int getEventstatus_id() {
-        return eventstatus_id;
+    public EventStatus getEvStatus() {
+        return evStatus;
     }
 
-    public int getEventregstatus_id() {
-        return eventregstatus_id;
+    public EventRegStatus getEvRegStatus() {
+        return evRegStatus;
     }
 
     public String getName() {
@@ -77,8 +78,6 @@ public class Event {
     public LocalDateTime getEventTime() {
         return eventTime;
     }
-
-
 
     public int getMaxParticipants() {
         return maxParticipants;

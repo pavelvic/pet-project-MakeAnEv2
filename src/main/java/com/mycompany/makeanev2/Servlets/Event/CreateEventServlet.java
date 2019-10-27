@@ -1,7 +1,13 @@
 package com.mycompany.makeanev2.Servlets.Event;
 
 import com.mycompany.makeanev2.Event;
+import com.mycompany.makeanev2.EventRegStatus;
+import com.mycompany.makeanev2.EventStatus;
 import com.mycompany.makeanev2.Exceptions.EventException;
+import com.mycompany.makeanev2.Participant;
+import com.mycompany.makeanev2.ParticipantStatus;
+import com.mycompany.makeanev2.User;
+import com.mycompany.makeanev2.Utils.AuthUtils;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import com.mycompany.makeanev2.Utils.EventDbQuery;
 import java.io.IOException;
@@ -17,15 +23,19 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /*реализация создания меропприятия
 URL /createev*/
 public class CreateEventServlet extends HttpServlet {
-RequestDispatcher dispatcher;
+
+    RequestDispatcher dispatcher;
+    Connection con;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        dispatcher = (RequestDispatcher) request.getAttribute("dispatcher"); //получаем какую страницу открыть (разные группы пользовтеля имею свои страницы со своим интерфейсом и функциями)
+        dispatcher = (RequestDispatcher) request.getAttribute("dispatcher");
         dispatcher.forward(request, response); //открываем страницу
     }
 
@@ -33,42 +43,67 @@ RequestDispatcher dispatcher;
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String resultString = null; //переменная для фиксации результата операции
         Event event = null; //регистрируемое мероприятие пользователь для записи в БД
-        
+
         try {
             //разбираем введенные в форму регистрации параметры из http-запроса
             String name = (String) request.getParameter("name");
             String description = (String) request.getParameter("description");
+            String id_eventregstatus = (String) request.getParameter("id_eventregstatus");
             String place = (String) request.getParameter("place");
             String parEventTime = (String) request.getParameter("eventTime");
             String maxParticipants = (String) request.getParameter("maxParticipants");
-            String parCritTime = (String) request.getParameter("critTime")+ZoneId.ofOffset("", ZoneOffset.UTC);
-            
+            String parCritTime = (String) request.getParameter("critTime") + ZoneId.ofOffset("", ZoneOffset.UTC);
+
             LocalDateTime eventTime = LocalDateTime.parse(parEventTime);
             ZonedDateTime critTime = ZonedDateTime.parse(parCritTime);
-            
-            //создаем событие: id -0 (не важно), статус 1 (Планируется, статус регистрации 1(открыта)
-            event = new Event(0, 1, 1, name, description, place, eventTime, Integer.parseInt(maxParticipants), ZonedDateTime.now(java.time.Clock.systemUTC()), critTime);
+
+            con = DbConnection.getConnection();
+            EventRegStatus evRegSt = EventDbQuery.selectEventRegStatusById(con, id_eventregstatus); //получаем выбранный на странице статус из БД
+
+            int id_event = EventDbQuery.selectMaxEventId(con) + 1;
+            //создаем событие
+            event = new Event(id_event, new EventStatus(), evRegSt, name, description, place, eventTime, Integer.parseInt(maxParticipants), ZonedDateTime.now(java.time.Clock.systemUTC()), critTime);
 
             //проверяем правильно ли введены даты события (дата и время должна быть позже критичной даты)
             event.checkTimes();
 
+            //добавляем первого участника мероприятия
+            //определяем от имени кого создается мероприятие (залогинившейся) - он и есть первый участник и автор
+            HttpServletRequest req = (HttpServletRequest) request;
+            HttpSession session = req.getSession();
+            User userInSession = AuthUtils.getLoginedUser(session);
+
+            //формируем объект Participant: участник - текущий пользователь, он же добавил событие
+            Participant author = new Participant(event, userInSession, new ParticipantStatus(), userInSession, LocalDateTime.now());
+            author.setAsAuthor(); //устанавливаем признак авторства для первого участника
+
+            //пишем его в БД (транзакционно с созданием записи мероприятия)
             //добавляем запись в БД и устанавливаем сообщение об успехе
-            Connection con = DbConnection.getConnection();
+            con.setAutoCommit(false);
             EventDbQuery.insertEvent(con, event);
+            EventDbQuery.insertParticipant(con, author);
+            con.commit();
             con.close();
-            resultString = "Мероприятие создано!";
-            
+
+            resultString = "Мероприятие " + "№" + event.getId_event() + " [" + event.getName() + "], создано!";
+
             event = null; //обнуляем экземпляр, чтобы на старнице вывелись пустые поля
-            
+
             //если что-то пошло не так, фиксируем ошибку
-        } catch (SQLException | NamingException | EventException| NumberFormatException ex) {
+        } catch (SQLException | NamingException | EventException | NumberFormatException ex) {
+            try {
+                con.close();
+            } catch (SQLException ex1) {
+                resultString = "Ошибка! " + ex1.toString();
+            }
             resultString = "Ошибка! " + ex.toString();
-                    
-        //выводим результат операции
+
+            //выводим результат операции
         } finally {
+
             request.setAttribute("resultString", resultString);
             request.setAttribute("event", event);
             dispatcher.forward(request, response); //идем на страницу в завиимости от dispatcher
         }
     }
-    }
+}

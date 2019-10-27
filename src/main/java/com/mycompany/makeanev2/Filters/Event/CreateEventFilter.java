@@ -1,10 +1,17 @@
 package com.mycompany.makeanev2.Filters.Event;
 
+import com.mycompany.makeanev2.EventRegStatus;
 import com.mycompany.makeanev2.Exceptions.UserException;
 import com.mycompany.makeanev2.User;
 import com.mycompany.makeanev2.Utils.AuthUtils;
 import com.mycompany.makeanev2.Utils.CheckPermission;
+import com.mycompany.makeanev2.Utils.DbConnection;
+import com.mycompany.makeanev2.Utils.EventDbQuery;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import javax.naming.NamingException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -38,6 +45,10 @@ public class CreateEventFilter implements Filter {
 
             //проверяем есть ли доступ до данному запросу
             CheckPermission.checkCreateEventAccess(userInSession);
+            
+            Connection con = DbConnection.getConnection();
+            List<EventRegStatus> EventRegStatus = EventDbQuery.selectEventStatuses(con);
+            request.setAttribute("EventRegStatus", EventRegStatus);
 
             //если все хорошо и исключений мы не получили, устанавливаем диспетчера для перехода в сервлете
             //в зависимости от группы пользователя залогиненного, определяем какая страница будет открыта, маршрут сохраняется в спец объекте dispatcher
@@ -56,7 +67,7 @@ public class CreateEventFilter implements Filter {
             chain.doFilter(request, response);
 
             //блок исключений, если что-то пошло не так прервываем загрузку страницы и выдаем пользователю сообщение о проблеме
-        } catch (UserException ex) {
+        } catch (UserException | SQLException | NamingException ex) {
             String errorString = "Ошибка! " + ex.toString(); //информация об ошибке
             request.setAttribute("resultString", errorString);
             request.setAttribute("redirect", "/userlist"); //указываем чтобы маршрутизация с resultpage была на userlist
