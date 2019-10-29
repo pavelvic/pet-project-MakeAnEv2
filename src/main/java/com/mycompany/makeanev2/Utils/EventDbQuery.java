@@ -28,18 +28,37 @@ public class EventDbQuery {
         ps.setString(5, ev.getDescription());
         ps.setString(6, ev.getPlace());
         
-
-        ps.setLong(7, ev.getEventTime().toEpochSecond(ZoneOffset.UTC));
+        ps.setLong(7, ev.getEventTime().toEpochSecond());
         
         ps.setInt(8, ev.getMaxParticipants());
         
         //аналогично для другого поля с датой
         ps.setLong(9,ev.getCreateTime().toEpochSecond());
-        ps.setLong(10,ev.getCritTime().toEpochSecond(ZoneOffset.UTC));
+        ps.setLong(10,ev.getCritTime().toEpochSecond());
 
         //ВЫПОЛНЯЕМ sql-запрос
         ps.executeUpdate();
     }  
+  
+  public static Event selectEvent(Connection con, int id_event) throws SQLException {
+        
+        String sql = "SELECT e.id_event, es.id_eventstatus, es.name, ers.id_eventregstatus, ers.name, e.name, e.description, e.place, e.eventTime, e.maxParticipants, e.createTime, e.critTime "
+                + "FROM `event` e, `eventregstatus` ers, `eventstatus` es "
+                + "WHERE e.eventregstatus_id = ers.id_eventregstatus "
+                + "AND e.eventstatus_id = es.id_eventstatus "
+                + "AND e.id_event = ?";
+
+        PreparedStatement ptsm = con.prepareStatement(sql);
+
+        ptsm.setInt(1, id_event);
+
+        ResultSet rs = ptsm.executeQuery();
+
+        if (rs.next()) {
+            return new Event(rs);
+        }
+        return null;
+    }
   
   public static List<EventRegStatus> selectEventStatuses(Connection con) throws SQLException {
         String sql = "SELECT id_eventregstatus, name FROM eventregstatus ORDER BY id_eventregstatus ASC";
@@ -68,7 +87,7 @@ public class EventDbQuery {
         return 0;
     }
   
-  public static EventRegStatus selectEventRegStatusById(Connection con, String id_eventRegStatusStr) throws SQLException {
+  public static EventRegStatus selectEventRegStatusById(Connection con, int id_eventRegStatusStr) throws SQLException {
         
         String sql = "SELECT id_eventregstatus, name "
                 + "FROM `eventregstatus` "
@@ -76,7 +95,7 @@ public class EventDbQuery {
 
         PreparedStatement ptsm = con.prepareStatement(sql);
 
-        ptsm.setString(1, id_eventRegStatusStr);
+        ptsm.setInt(1, id_eventRegStatusStr);
 
         ResultSet rs = ptsm.executeQuery();
 

@@ -15,7 +15,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
@@ -52,17 +51,31 @@ public class CreateEventServlet extends HttpServlet {
             String place = (String) request.getParameter("place");
             String parEventTime = (String) request.getParameter("eventTime");
             String maxParticipants = (String) request.getParameter("maxParticipants");
-            String parCritTime = (String) request.getParameter("critTime") + ZoneId.ofOffset("", ZoneOffset.UTC);
+            String parCritTime = (String) request.getParameter("critTime");
 
-            LocalDateTime eventTime = LocalDateTime.parse(parEventTime);
-            ZonedDateTime critTime = ZonedDateTime.parse(parCritTime);
+//            LocalDateTime eventTime = LocalDateTime.parse(parEventTime);
+//            LocalDateTime critTime = LocalDateTime.parse(parCritTime);
+            LocalDateTime eventLocalTime = LocalDateTime.parse(parEventTime);
+            ZonedDateTime eventZonedTime = ZonedDateTime.of(eventLocalTime, ZoneId.of("UTC"));
+
+            LocalDateTime critLocalTime = LocalDateTime.parse(parCritTime);
+            ZonedDateTime critZonedTime = ZonedDateTime.of(critLocalTime, ZoneId.of("UTC"));
 
             con = DbConnection.getConnection();
-            EventRegStatus evRegSt = EventDbQuery.selectEventRegStatusById(con, id_eventregstatus); //получаем выбранный на странице статус из БД
+            EventRegStatus evRegSt = EventDbQuery.selectEventRegStatusById(con, Integer.parseInt(id_eventregstatus)); //получаем выбранный на странице статус из БД
 
             int id_event = EventDbQuery.selectMaxEventId(con) + 1;
             //создаем событие
-            event = new Event(id_event, new EventStatus(), evRegSt, name, description, place, eventTime, Integer.parseInt(maxParticipants), ZonedDateTime.now(java.time.Clock.systemUTC()), critTime);
+            event = new Event(id_event,
+                    new EventStatus(),
+                    evRegSt,
+                    name,
+                    description,
+                    place,
+                    eventZonedTime,
+                    Integer.parseInt(maxParticipants),
+                    ZonedDateTime.now(ZoneId.of("UTC")),
+                    critZonedTime);
 
             //проверяем правильно ли введены даты события (дата и время должна быть позже критичной даты)
             event.checkTimes();
