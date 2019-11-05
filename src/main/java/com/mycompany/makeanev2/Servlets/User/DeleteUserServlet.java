@@ -32,7 +32,7 @@ public class DeleteUserServlet extends HttpServlet {
             resultString = "Пользователь удалён"; //сообщаем результат операции
 
             //если что-то пошло не так, сообщаем иной результат операции с текстом ошибки
-        } catch (SQLException | NamingException | NumberFormatException ex) {
+        } catch (SQLException | NamingException | NumberFormatException | NullPointerException ex) {
             resultString = "Ошибка! " + ex.getMessage();
         } //вывод результата операции 
         finally {

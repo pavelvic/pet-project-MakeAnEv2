@@ -87,7 +87,7 @@ public class EventDbQuery {
         return 0;
     }
   
-  public static EventRegStatus selectEventRegStatusById(Connection con, int id_eventRegStatusStr) throws SQLException {
+  public static EventRegStatus selectEventRegStatusById(Connection con, int id_eventRegStatus) throws SQLException {
         
         String sql = "SELECT id_eventregstatus, name "
                 + "FROM `eventregstatus` "
@@ -95,7 +95,7 @@ public class EventDbQuery {
 
         PreparedStatement ptsm = con.prepareStatement(sql);
 
-        ptsm.setInt(1, id_eventRegStatusStr);
+        ptsm.setInt(1, id_eventRegStatus);
 
         ResultSet rs = ptsm.executeQuery();
 

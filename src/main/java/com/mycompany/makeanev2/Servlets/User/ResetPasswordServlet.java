@@ -23,11 +23,11 @@ public class ResetPasswordServlet extends HttpServlet {
         
         try {
             Connection con = DbConnection.getConnection();
-            UserDbQuery.updateUserPassword(con, id_user); //запрос меняет пароль на пароль по умолчанию
+            UserDbQuery.updateUserPassword(con, Integer.parseInt(id_user)); //запрос меняет пароль на пароль по умолчанию
             con.close();
             resultString = "Пароль сброшен. Используйте пароль по умолчанию - '0' "; //информация и результате операции
         //если что-то пошло не так
-        } catch (SQLException | NamingException  ex) {
+        } catch (SQLException | NamingException | NumberFormatException | NullPointerException  ex) {
             resultString = "Ошибка! "+ex.getMessage(); //в результате операции фиксируем информацию
         }
         

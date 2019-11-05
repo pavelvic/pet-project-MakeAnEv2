@@ -112,7 +112,7 @@ public class UserDbQuery {
     /*перегруженный метод, возвращающий 1 одного пользователя по id, нужен при просмотре пользователя, редактировании, удалении
     когда переходим на страницу, из параметров в наличии только айди, по которому мы конструируем из БД сам объект User для даль
     нейших манипуляций*/
-    public static User selectUser(Connection con, String id_userStr) throws SQLException {
+    public static User selectUser(Connection con, int id_user) throws SQLException {
         
         String sql = "SELECT u.id_user, u.group_id, g.Name, u.username, u.password, u.email, u.phone, u.name, u.surname, u.comment "
                 + "FROM `user` u, `usergroups` g "
@@ -121,7 +121,7 @@ public class UserDbQuery {
 
         PreparedStatement ptsm = con.prepareStatement(sql);
 
-        ptsm.setString(1, id_userStr);
+        ptsm.setInt(1, id_user);
 
         ResultSet rs = ptsm.executeQuery();
 
@@ -165,21 +165,21 @@ public class UserDbQuery {
     }
     //TODO: переписать этот метод на отдельный resetUserPassword, разораться почему это сделано по id_user, а не объектом
     //сброс пароля пользователя
-    public static void updateUserPassword(Connection con, String id_user) throws SQLException {
+    public static void updateUserPassword(Connection con, int id_user) throws SQLException {
         /*обновляем пароль для пользователя*/
         String sql = "UPDATE user SET password = ? WHERE id_user = ?";
         String pass = "0"; //пароль по умолчанию при сбросе
         PreparedStatement ptsm = con.prepareStatement(sql);
 
         ptsm.setInt(1, pass.hashCode());
-        ptsm.setString(2, id_user);
+        ptsm.setInt(2, id_user);
 
         ptsm.executeUpdate();
 
     }
 
     /*удаляем пользователя из БД*/
-    public static void deleteUser(Connection con, User user) throws SQLException, NumberFormatException {
+    public static void deleteUser(Connection con, User user) throws SQLException {
         /*Удаляем запись пользователя*/
         String sql = "DELETE FROM user WHERE id_user=?";
 

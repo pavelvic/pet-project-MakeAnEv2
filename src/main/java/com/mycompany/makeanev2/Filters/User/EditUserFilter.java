@@ -48,7 +48,7 @@ public class EditUserFilter implements Filter {
             //проверяем полномочия, получаем пользователя к которому хотим получить доступ
             String id_user = (String) request.getParameter("id_user"); //параметры - Object, приводим к String
 
-            User userToAccess = UserDbQuery.selectUser(con, id_user);
+            User userToAccess = UserDbQuery.selectUser(con, Integer.parseInt(id_user));
             con.close();
 
             //определяем залогинишвегося
@@ -91,7 +91,7 @@ public class EditUserFilter implements Filter {
             chain.doFilter(request, response);
 
             //блок исключений, если что-то пошло не так прервываем загрузку страницы и выдаем пользователю сообщение о проблеме
-        } catch (SQLException | NamingException | UserException ex) {
+        } catch (SQLException | NamingException | UserException | NumberFormatException | NullPointerException ex) {
             String errorString = "Ошибка! " + ex.toString(); //информация об ошибке
             request.setAttribute("resultString", errorString);
             request.setAttribute("redirect", "/userlist"); //указываем чтобы маршрутизация с resultpage была на userlist

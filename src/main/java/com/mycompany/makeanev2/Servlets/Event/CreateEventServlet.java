@@ -103,7 +103,7 @@ public class CreateEventServlet extends HttpServlet {
             event = null; //обнуляем экземпляр, чтобы на старнице вывелись пустые поля
 
             //если что-то пошло не так, фиксируем ошибку
-        } catch (SQLException | NamingException | EventException | NumberFormatException ex) {
+        } catch (SQLException | NamingException | EventException | NumberFormatException | NullPointerException ex) {
             try {
                 con.close();
             } catch (SQLException ex1) {

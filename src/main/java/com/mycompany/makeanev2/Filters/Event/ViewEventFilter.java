@@ -83,7 +83,7 @@ public class ViewEventFilter implements Filter {
             chain.doFilter(request, response);
 
             //блок исключений, если что-то пошло не так прервываем загрузку страницы и выдаем пользователю сообщение о проблеме
-        } catch (SQLException | NamingException | UserException | NumberFormatException ex) {
+        } catch (SQLException | NamingException | UserException | NumberFormatException | NullPointerException  ex) {
             String errorString = "Ошибка! " + ex.toString(); //информация об ошибке
             request.setAttribute("resultString", errorString);
             request.setAttribute("redirect", "/"); //указываем чтобы маршрутизация с resultpage была на userlist
