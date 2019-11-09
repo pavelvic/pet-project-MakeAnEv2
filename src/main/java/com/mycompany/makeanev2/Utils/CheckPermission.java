@@ -161,5 +161,11 @@ public class CheckPermission {
                     throw new UserException("Невозможно создать мероприятие. Функция доступна только администраторам");
             }
     }
+    
+    public static void checkEventListAccess(User userInSession) throws UserException {
+        
+        checkNotLogin(userInSession);
+        checkBlockUser(userInSession);
+    }
 
 }

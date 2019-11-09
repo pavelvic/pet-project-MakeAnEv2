@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Event {
 
@@ -22,6 +23,7 @@ public class Event {
     private final int maxParticipants; //макс число участников
     private final ZonedDateTime createTime; //Дата создания
     private final ZonedDateTime critTime; //критичное время отказа от участия ???
+    private  ZoneId zone;
 
     //общий конструктор
     public Event(int id_event, EventStatus evStatus, EventRegStatus evRegStatus, String name, String description, String place, ZonedDateTime eventTime, int maxParticipants, ZonedDateTime createTime, ZonedDateTime critTime) {
@@ -35,6 +37,7 @@ public class Event {
         this.maxParticipants = maxParticipants;
         this.createTime = createTime;
         this.critTime = critTime;
+        this.zone = ZoneId.of("UTC");
     }
 
     //конструктор по ResultSet для работы с БД
@@ -47,10 +50,11 @@ public class Event {
         this.description = rs.getString(7);
         this.place = rs.getString(8);
         //this.eventTime = LocalDateTime.ofEpochSecond(rs.getLong(9), 0, ZoneOffset.UTC);
-        this.eventTime = ZonedDateTime.of(LocalDateTime.ofEpochSecond(rs.getLong(9), 0, ZoneOffset.UTC), ZoneId.of("UTC"));
+        this.zone = ZoneId.of("UTC");
+        this.eventTime = ZonedDateTime.of(LocalDateTime.ofEpochSecond(rs.getLong(9), 0, ZoneOffset.UTC), zone);
         this.maxParticipants = rs.getInt(10);
-        this.createTime = ZonedDateTime.of(LocalDateTime.ofEpochSecond(rs.getLong(11), 0, ZoneOffset.UTC), ZoneId.of("UTC"));
-        this.critTime = ZonedDateTime.of(LocalDateTime.ofEpochSecond(rs.getLong(12), 0, ZoneOffset.UTC), ZoneId.of("UTC"));
+        this.createTime = ZonedDateTime.of(LocalDateTime.ofEpochSecond(rs.getLong(11), 0, ZoneOffset.UTC), zone);
+        this.critTime = ZonedDateTime.of(LocalDateTime.ofEpochSecond(rs.getLong(12), 0, ZoneOffset.UTC), zone);
     }
 
     //геттеры сеттеры
@@ -78,7 +82,11 @@ public class Event {
         return place;
     }
 
-    public ZonedDateTime getEventTime() {
+    public String getEventTime() {
+        return eventTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+    }
+    
+    public ZonedDateTime getZonedEventTime() {
         return eventTime;
     }
 
@@ -86,15 +94,27 @@ public class Event {
         return maxParticipants;
     }
 
-    public ZonedDateTime getCreateTime() {
+    public String getCreateTime() {
+        return createTime.withZoneSameInstant(zone).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+    }
+    
+    public ZonedDateTime getZonedCreateTime() {
         return createTime;
     }
 
     
-    public ZonedDateTime getCritTime() {
+    public String getCritTime() {
+        return critTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+    }
+    
+    public ZonedDateTime getZonedCritTime() {
         return critTime;
     }
-
+    
+    
+    public void setZone(ZoneId zone) {
+        this.zone = zone;
+    }
 
     //другие методы: проверки значений, изменение, equals() и hashCode()
     //проверка: критичная дата время должна быть меньше даты времени события

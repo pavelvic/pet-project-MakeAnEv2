@@ -13,6 +13,7 @@ import com.mycompany.makeanev2.Utils.EventDbQuery;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -87,7 +88,7 @@ public class CreateEventServlet extends HttpServlet {
             User userInSession = AuthUtils.getLoginedUser(session);
 
             //формируем объект Participant: участник - текущий пользователь, он же добавил событие
-            Participant author = new Participant(event, userInSession, new ParticipantStatus(), userInSession, LocalDateTime.now());
+            Participant author = new Participant(event, userInSession, new ParticipantStatus(), userInSession, ZonedDateTime.now(ZoneId.of("UTC")));
             author.setAsAuthor(); //устанавливаем признак авторства для первого участника
 
             //пишем его в БД (транзакционно с созданием записи мероприятия)

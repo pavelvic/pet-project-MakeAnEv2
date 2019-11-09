@@ -48,7 +48,7 @@
 
             <tr>
                 <td>Дата и время (местн.)</td>
-                <td>${eventTime}</td>
+                <td>${event.eventTime}</td>
             </tr>
 
             <tr>
@@ -58,12 +58,12 @@
 
             <tr>
                 <td>Критичная дата (местн.)</td>
-                <td>${critTime}</td>
+                <td>${event.critTime}</td>
             </tr>
 
             <tr>
                 <td>Создано</td>
-                <td>${createTime}</td>
+                <td>${event.createTime}</td>
             </tr>
            
         </table>

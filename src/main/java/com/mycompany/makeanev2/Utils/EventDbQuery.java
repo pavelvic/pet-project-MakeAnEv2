@@ -28,13 +28,13 @@ public class EventDbQuery {
         ps.setString(5, ev.getDescription());
         ps.setString(6, ev.getPlace());
         
-        ps.setLong(7, ev.getEventTime().toEpochSecond());
+        ps.setLong(7, ev.getZonedEventTime().toEpochSecond());
         
         ps.setInt(8, ev.getMaxParticipants());
         
         //аналогично для другого поля с датой
-        ps.setLong(9,ev.getCreateTime().toEpochSecond());
-        ps.setLong(10,ev.getCritTime().toEpochSecond());
+        ps.setLong(9,ev.getZonedCreateTime().toEpochSecond());
+        ps.setLong(10,ev.getZonedCritTime().toEpochSecond());
 
         //ВЫПОЛНЯЕМ sql-запрос
         ps.executeUpdate();
@@ -115,9 +115,52 @@ public class EventDbQuery {
           ps.setInt(3, pct.getStatus().getId_participantStatus());
           ps.setInt(4, pct.getWhoAdd().getId_user());
           ps.setBoolean(5, pct.isIsAuthor());
-          ps.setLong(6, pct.getRegDatetime().toEpochSecond(ZoneOffset.UTC));
+          ps.setLong(6, pct.getRegDatetime().toEpochSecond());
           
           //ВЫПОЛНЯЕМ sql-запрос
           ps.executeUpdate();
+    }
+  
+  public static List<Event> selectEventsByUserLikeAuthor(Connection con, int id_user) throws SQLException {
+        
+        String sql = "SELECT e.id_event, es.id_eventstatus, es.name, ers.id_eventregstatus, ers.name, e.name, e.description, e.place, e.eventTime, e.maxParticipants, e.createTime, e.critTime "
+                + "FROM `event` e, `eventregstatus` ers, `eventstatus` es, `participant` p "
+                + "WHERE e.eventregstatus_id = ers.id_eventregstatus "
+                + "AND e.eventstatus_id = es.id_eventstatus "
+                + "AND e.id_event = p.event_id "
+                + "AND p.user_id = ? "
+                + "AND p.isAuthor = 1";
+        
+        PreparedStatement pstm = con.prepareStatement(sql);
+        pstm.setInt(1, id_user);
+
+        ResultSet rs = pstm.executeQuery();
+        List<Event> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new Event(rs));
+        }
+        return list;
+    }
+  public static List<Event> selectEventsByUserLikeParticipant(Connection con, int id_user) throws SQLException {
+        
+        String sql = "SELECT e.id_event, es.id_eventstatus, es.name, ers.id_eventregstatus, ers.name, e.name, e.description, e.place, e.eventTime, e.maxParticipants, e.createTime, e.critTime "
+                + "FROM `event` e, `eventregstatus` ers, `eventstatus` es, `participant` p "
+                + "WHERE e.eventregstatus_id = ers.id_eventregstatus "
+                + "AND e.eventstatus_id = es.id_eventstatus "
+                + "AND e.id_event = p.event_id "
+                + "AND p.user_id = ? "
+                + "AND p.isAuthor = 0";
+        
+        PreparedStatement pstm = con.prepareStatement(sql);
+        pstm.setInt(1, id_user);
+
+        ResultSet rs = pstm.executeQuery();
+        List<Event> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new Event(rs));
+        }
+        return list;
     }
 }

@@ -22,13 +22,15 @@
 <div>
     <a href="${pageContext.request.contextPath}/">Главная</a>
     |
+    <a href="${pageContext.request.contextPath}/events">Мои события</a>
+    |
     <a href = "${pageContext.request.contextPath}/createev">Создать событие</a>
     |
     <a href = "${pageContext.request.contextPath}/userlist">Пользователи</a>
     |
-    <a href = "${pageContext.request.contextPath}/logout">Выйти</a>
-    |
     <a href="/MakeAnEv2/viewuser?id_user=${loginedUser.id_user}">Мой профиль</a>
+    |
+    <a href = "${pageContext.request.contextPath}/logout">Выйти</a>
     <div>
     HELLO, ${loginedUser.username} (${loginedUser.groupname})
     </div>
@@ -39,13 +41,15 @@
 <div>
     <a href="${pageContext.request.contextPath}/">Главная</a>
     |
+    <a href="${pageContext.request.contextPath}/events">Мои события</a>
+    |
     <a href = "${pageContext.request.contextPath}/createev">Создать событие</a>
     |
     <a href = "${pageContext.request.contextPath}/userlist">Пользователи</a>
     |
-    <a href = "${pageContext.request.contextPath}/logout">Выйти</a>  
-    |
     <a href="/MakeAnEv2/viewuser?id_user=${loginedUser.id_user}">Мой профиль</a>
+    |
+    <a href = "${pageContext.request.contextPath}/logout">Выйти</a>  
     <div>
     HELLO, ${loginedUser.username} (${loginedUser.groupname})
     </div>
@@ -56,9 +60,11 @@
 <div>
     <a href="${pageContext.request.contextPath}/">Главная</a>
     |
-    <a href = "${pageContext.request.contextPath}/logout">Выйти</a>  
+    <a href="${pageContext.request.contextPath}/events">Мои события</a>
     |
     <a href="/MakeAnEv2/viewuser?id_user=${loginedUser.id_user}">Мой профиль</a>
+    |
+    <a href = "${pageContext.request.contextPath}/logout">Выйти</a>
     <div>
     HELLO, ${loginedUser.username} (${loginedUser.groupname})
     </div>
@@ -69,9 +75,11 @@
 <div>
     <a href="${pageContext.request.contextPath}/">Главная</a>
     |
-    <a href = "${pageContext.request.contextPath}/logout">Выйти</a>  
+    <a href="${pageContext.request.contextPath}/events">Мои события</a>
     |
     <a href="/MakeAnEv2/viewuser?id_user=${loginedUser.id_user}">Мой профиль</a>
+    |
+    <a href = "${pageContext.request.contextPath}/logout">Выйти</a>  
     <div>
     HELLO, ${loginedUser.username} (${loginedUser.groupname})
     </div>
@@ -82,9 +90,11 @@
 <div>
     <a href="${pageContext.request.contextPath}/">Главная</a>
     |
-    <a href = "${pageContext.request.contextPath}/logout">Выйти</a>  
+    <a href="${pageContext.request.contextPath}/events">Мои события</a> 
     |
     <a href="/MakeAnEv2/viewuser?id_user=${loginedUser.id_user}">Мой профиль</a>
+    |
+    <a href = "${pageContext.request.contextPath}/logout">Выйти</a> 
     <div>
     HELLO, ${loginedUser.username} (${loginedUser.groupname})
     </div>

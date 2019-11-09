@@ -1,6 +1,6 @@
 package com.mycompany.makeanev2;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 
 public class Participant {
@@ -10,9 +10,9 @@ public class Participant {
     private final ParticipantStatus status;
     private final User whoAdd;
     private boolean isAuthor;
-    private final LocalDateTime regDatetime;
+    private final ZonedDateTime regDatetime;
     
-    public Participant(Event event, User person, ParticipantStatus status, User whoAdd, LocalDateTime regDatetime) {
+    public Participant(Event event, User person, ParticipantStatus status, User whoAdd, ZonedDateTime regDatetime) {
         this.event = event;
         this.person = person;
         this.status = status; //основной или запасной участник
@@ -45,7 +45,7 @@ public class Participant {
         return isAuthor;
     }
 
-    public LocalDateTime getRegDatetime() {
+    public ZonedDateTime getRegDatetime() {
         return regDatetime;
     }
     
