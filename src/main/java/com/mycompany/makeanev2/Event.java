@@ -23,7 +23,7 @@ public class Event {
     private final int maxParticipants; //макс число участников
     private final ZonedDateTime createTime; //Дата создания
     private final ZonedDateTime critTime; //критичное время отказа от участия ???
-    private  ZoneId zone;
+    private ZoneId zone;
 
     //общий конструктор
     public Event(int id_event, EventStatus evStatus, EventRegStatus evRegStatus, String name, String description, String place, ZonedDateTime eventTime, int maxParticipants, ZonedDateTime createTime, ZonedDateTime critTime) {
@@ -115,6 +115,12 @@ public class Event {
     public void setZone(ZoneId zone) {
         this.zone = zone;
     }
+
+    public ZoneId getZone() {
+        return zone;
+    }
+    
+    
 
     //другие методы: проверки значений, изменение, equals() и hashCode()
     //проверка: критичная дата время должна быть меньше даты времени события

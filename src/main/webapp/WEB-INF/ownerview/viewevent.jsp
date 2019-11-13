@@ -4,8 +4,8 @@
     Author     : Pavelvic
 --%>
 
-<%@page import="com.mycompany.makeanev2.Event"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -65,7 +65,37 @@
                 <td>Создано</td>
                 <td>${event.createTime}</td>
             </tr>
-           
+            
+            <tr>
+                <td>Автор</td>
+                <td>${author.person.username}</td>
+            </tr>
         </table>
+            
+            <h2>Участники</h2>
+            <table border = "1" cellpadding="5" cellspacing="1">
+                <tr>
+                    <th>Логин</th>
+                    <th>Статус</th>
+                    <th>e-mail</th>
+                    <th>Тел</th>
+                    <th>Имя</th>
+                    <th>Фамилия</th>
+                    <th>Добавил</th>
+                    <th>От</th>                   
+                </tr>
+            <c:forEach items = "${participants}" var = "participants">
+                <tr>
+                    <td>${participants.person.username}</td>
+                    <td>${participants.status.name}</td>
+                    <td>${participants.person.email}</td>
+                    <td>${participants.person.phone}</td>
+                    <td>${participants.person.name}</td>
+                    <td>${participants.person.surname}</td>
+                    <td>${participants.whoAdd.username}</td>
+                    <td>${participants.regDatetime}</td>
+                </tr>
+            </c:forEach>
+            </table>
     </body>
 </html>

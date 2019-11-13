@@ -78,6 +78,39 @@
                     <td><a href = "viewevent?id_event=${likeAuthorEvents.id_event}">Подробно...</a></td>
                 </tr>
             </c:forEach>
-            </table>         
+            </table>   
+            
+            
+            <h2>Все события</h2>
+            <table border = "1" cellpadding="5" cellspacing="1">
+                <tr>
+                    <th>Номер</th>
+                    <th>Название</th>
+                    <th>Описание</th>
+                    <th>Место</th>
+                    <th>Дата и время проведения</th>
+                    <th>Участников</th>
+                    <th>Критичная дата</th>
+                    <th>Статус</th>
+                    <th>Регистрация</th>
+                    <th>Создано</th>
+                    <th>Подробно</th>
+                </tr>
+            <c:forEach items = "${allEvents}" var = "allEvents">
+                <tr>
+                    <td>${allEvents.id_event}</td>
+                    <td>${allEvents.name}</td>
+                    <td>${allEvents.description}</td>
+                    <td>${allEvents.place}</td>
+                    <td>${allEvents.eventTime}</td>
+                    <td>${allEvents.maxParticipants}</td>
+                    <td>${allEvents.critTime}</td>
+                    <td>${allEvents.evStatus.name}</td>
+                    <td>${allEvents.evRegStatus.name}</td>
+                    <td>${allEvents.createTime}</td>
+                    <td><a href = "viewevent?id_event=${allEvents.id_event}">Подробно...</a></td>
+                </tr>
+            </c:forEach>
+            </table>
     </body>
 </html>

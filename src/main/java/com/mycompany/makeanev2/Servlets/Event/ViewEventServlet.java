@@ -1,12 +1,14 @@
 package com.mycompany.makeanev2.Servlets.Event;
 
 import com.mycompany.makeanev2.Event;
+import com.mycompany.makeanev2.Participant;
 import com.mycompany.makeanev2.Utils.DbConnection;
 import com.mycompany.makeanev2.Utils.EventDbQuery;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.ZoneId;
+import java.util.List;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -27,12 +29,25 @@ public class ViewEventServlet extends HttpServlet {
             //получаем мероприятие к которому хотим получить доступ
             Connection con = DbConnection.getConnection();
             String id_event = (String) request.getParameter("id_event"); //параметры Object, приводим к String
+
             Event event = EventDbQuery.selectEvent(con, Integer.parseInt(id_event));
+            List<Participant> participants = EventDbQuery.selectParticipantsOfEvent(con, event);
+            Participant author = EventDbQuery.selectAuthorOfEvent(con, event);
             con.close();
 
             event.setZone(timeZone);
-            //сохраняем в запрос самого пользователя для дальнейшего исопльзования
+            author.setZone(timeZone);
+            if (participants != null) {
+                for (Participant participant : participants) {
+                    participant.setZone(timeZone);
+                }
+            }
+
             request.setAttribute("event", event);
+            request.setAttribute("author", author);
+            request.setAttribute("participants", participants);
+
+            //формируем список участников
             RequestDispatcher dispatcher = (RequestDispatcher) request.getAttribute("dispatcher");
             dispatcher.forward(request, response); //открываем нужную страницу
 
@@ -43,19 +58,5 @@ public class ViewEventServlet extends HttpServlet {
             request.setAttribute("redirect", "/"); //указываем чтобы маршрутизация с resultpage была на главную
             request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response); //идем на страницу с ошибкой
         }
-
-//        String formattedEventTime = event.getZonedEventTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
-//        request.setAttribute("eventTime", formattedEventTime);
-//        
-//        String formattedCritTime = event.getCritTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
-//        request.setAttribute("critTime", formattedCritTime);
-//        
-//        //механизм указания часового пояса позволяет выводить время создания события релевантное для пользователя (в какой временной зоне он находится)
-//        //с помощью веб-сервиса можно определять временную зону пользователя и передавать в этот параметр
-//        //аналогично можно сделать зонозависимыми все другие даты события (проведения, критическая дата)
-//        String formattedCreateTime = event.getZonedCreateTime().withZoneSameInstant(ZoneId.of("Europe/Moscow")).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
-//        request.setAttribute("createTime", formattedCreateTime);
-//        RequestDispatcher dispatcher = (RequestDispatcher) request.getAttribute("dispatcher"); //получаем какую страницу открыть (разные группы пользовтеля имею свои страницы со своим интерфейсом и функциями)
-//        dispatcher.forward(request, response); //открываем страницу  
     }
 }
