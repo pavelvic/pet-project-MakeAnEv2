@@ -1,11 +1,5 @@
-<%-- 
-    Document   : viewuser
-    Created on : 02.03.2019, 20:16:53
-    Author     : Pavelvic
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -65,11 +59,10 @@
                 <td>Создано</td>
                 <td>${event.createTime}</td>
             </tr>
-            
-            <tr>
                 <td>Автор</td>
-                <td>${author.person.username}</td>
+                <td><a href="viewuser?id_user=${author.person.id_user}">${author.person.username}</a></td>
             </tr>
+            
         </table>
             
             <h2>Участники</h2>
@@ -82,17 +75,17 @@
                     <th>Имя</th>
                     <th>Фамилия</th>
                     <th>Добавил</th>
-                    <th>От</th>                   
+                    <th>От</th>
                 </tr>
             <c:forEach items = "${participants}" var = "participants">
                 <tr>
-                    <td>${participants.person.username}</td>
+                    <td><a href = "viewuser?id_user=${participants.person.id_user}">${participants.person.username}</a></td>
                     <td>${participants.status.name}</td>
                     <td>${participants.person.email}</td>
                     <td>${participants.person.phone}</td>
                     <td>${participants.person.name}</td>
                     <td>${participants.person.surname}</td>
-                    <td>${participants.whoAdd.username}</td>
+                    <td><a href="viewuser?id_user=${participants.whoAdd.id_user}">${participants.whoAdd.username}</a></td>
                     <td>${participants.regDatetime}</td>
                 </tr>
             </c:forEach>

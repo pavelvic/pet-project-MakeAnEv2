@@ -1,9 +1,3 @@
-<%-- 
-    Document   : createev
-    Created on : Oct 13, 2019, 4:54:26 PM
-    Author     : Pavelvic
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>

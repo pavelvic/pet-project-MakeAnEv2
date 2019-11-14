@@ -1,9 +1,3 @@
-<%-- 
-    Document   : login
-    Created on : Mar 23, 2019, 3:59:07 PM
-    Author     : Pavelvic
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

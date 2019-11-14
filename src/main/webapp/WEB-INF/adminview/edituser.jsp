@@ -1,9 +1,3 @@
-<%-- 
-    Document   : edituser
-    Created on : 08.03.2019, 23:25:50
-    Author     : Pavelvic
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>

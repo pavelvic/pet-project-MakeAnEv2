@@ -1,9 +1,3 @@
-<%-- 
-    Document   : viewuser
-    Created on : 02.03.2019, 20:16:53
-    Author     : Pavelvic
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

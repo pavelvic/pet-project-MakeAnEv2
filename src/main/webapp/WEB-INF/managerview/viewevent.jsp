@@ -1,9 +1,3 @@
-<%-- 
-    Document   : viewuser
-    Created on : 02.03.2019, 20:16:53
-    Author     : Pavelvic
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
@@ -65,37 +59,59 @@
                 <td>Создано</td>
                 <td>${event.createTime}</td>
             </tr>
-            
+
             <tr>
                 <td>Автор</td>
-                <td>${author.person.username}</td>
+                <c:if test="${loginedUser.id_user == author.person.id_user}">
+                    <td><a href="viewuser?id_user=${author.person.id_user}">${author.person.username}</a></td>
+                    </c:if>
+                <c:if test="${loginedUser.id_user != author.person.id_user}">
+                    <td>${author.person.name}</td>
+                    </c:if>
             </tr>
         </table>
-            
-            <h2>Участники</h2>
-            <table border = "1" cellpadding="5" cellspacing="1">
-                <tr>
-                    <th>Логин</th>
-                    <th>Статус</th>
-                    <th>e-mail</th>
-                    <th>Тел</th>
-                    <th>Имя</th>
-                    <th>Фамилия</th>
-                    <th>Добавил</th>
-                    <th>От</th>                   
-                </tr>
+
+        <h2>Участники</h2>
+        <table border = "1" cellpadding="5" cellspacing="1">
+            <tr>
+                <th>Логин</th>
+                <th>Статус</th>
+                <th>e-mail</th>
+                <th>Тел</th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Добавил</th>
+                <th>От</th>
+            </tr>
             <c:forEach items = "${participants}" var = "participants">
                 <tr>
+                    
+                    <c:if test="${loginedUser.id_user == author.person.id_user}">
+                    <td><a href="viewuser?id_user=${participants.person.id_user}">${participants.person.username}</a></td>
+                    </c:if>
+                    
+                    <c:if test="${loginedUser.id_user != author.person.id_user}">
                     <td>${participants.person.username}</td>
+                    </c:if>
+                    
                     <td>${participants.status.name}</td>
                     <td>${participants.person.email}</td>
                     <td>${participants.person.phone}</td>
                     <td>${participants.person.name}</td>
                     <td>${participants.person.surname}</td>
+                    
+                    
+                    <c:if test="${loginedUser.id_user == author.person.id_user}">
+                    <td><a href="viewuser?id_user=${participants.whoAdd.id_user}">${participants.whoAdd.username}</a></td>
+                    </c:if>
+                    
+                    <c:if test="${loginedUser.id_user != author.person.id_user}">
                     <td>${participants.whoAdd.username}</td>
+                    </c:if>
+                    
                     <td>${participants.regDatetime}</td>
                 </tr>
             </c:forEach>
-            </table>
+        </table>
     </body>
 </html>

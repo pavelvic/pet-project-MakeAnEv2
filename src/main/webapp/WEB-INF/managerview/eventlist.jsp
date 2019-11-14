@@ -1,9 +1,3 @@
-<%-- 
-    Document   : userlist
-    Created on : 02.03.2019, 18:12:36
-    Author     : Pavelvic
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
@@ -29,7 +23,7 @@
                     <th>Статус</th>
                     <th>Регистрация</th>
                     <th>Создано</th>
-                    <th>Подробно</th>
+                    
                 </tr>
             <c:forEach items = "${likeParticipantEvents}" var = "likeParticipantEvents">
                 <tr>
@@ -43,7 +37,7 @@
                     <td>${likeParticipantEvents.evStatus.name}</td>
                     <td>${likeParticipantEvents.evRegStatus.name}</td>
                     <td>${likeParticipantEvents.createTime}</td>
-                    <td><a href = "viewevent?id_event=${likeParticipantEvents.id_event}">Подробно...</a></td>
+                    
                 </tr>
             </c:forEach>
         </table>    

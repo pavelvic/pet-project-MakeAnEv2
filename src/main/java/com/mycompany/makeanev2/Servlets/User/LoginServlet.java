@@ -49,12 +49,13 @@ public class LoginServlet extends HttpServlet {
                 Connection con = DbConnection.getConnection();
                 user = UserDbQuery.findUser(con, username, password); //ищем в БД
                 con.close();
-                CheckPermission.checkBlockUser(user); //проверим блокирован ли пользователь, который пытается войти
+                
                 //если такой пользователь в базе не найден
                 if (user == null) {
                     errorString = "Имя пользователя или пароль не корректны"; //фиксируем ошибку
                 //если найден
                 } else {
+                    CheckPermission.checkBlockUser(user); //проверим блокирован ли пользователь, который пытается войти
                     HttpSession session = request.getSession(); //получаем сессию
                     AuthUtils.storeLoginedUser(session, user);// записываем туда пользователя (это и есть операция входа на сайт)
                     redirectString = "/"; //отправляем на домашнюю страницу

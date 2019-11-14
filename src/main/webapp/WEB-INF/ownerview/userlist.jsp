@@ -1,9 +1,3 @@
-<%-- 
-    Document   : userlist
-    Created on : 02.03.2019, 18:12:36
-    Author     : Pavelvic
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>

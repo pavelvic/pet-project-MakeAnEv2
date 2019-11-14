@@ -53,7 +53,7 @@ public class ViewEventServlet extends HttpServlet {
 
             //если что-то пошло не так    
         } catch (SQLException | NamingException | NumberFormatException ex) {
-            errorString = "Ошибка соединения с базой данных! " + ex.getMessage(); //информация об ошибке
+            errorString = "Ошибка! " + ex.getMessage(); //информация об ошибке
             request.setAttribute("resultString", errorString);
             request.setAttribute("redirect", "/"); //указываем чтобы маршрутизация с resultpage была на главную
             request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response); //идем на страницу с ошибкой
