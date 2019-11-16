@@ -14,5 +14,7 @@ public class HomeServlet extends HttpServlet {
             throws ServletException, IOException {
         //открываем главную страницу
         request.getRequestDispatcher("/index.jsp").forward(request, response);
+//        String tst = request.getServletContext().getAttribute("ZoneID").toString();
+        
     }
 }

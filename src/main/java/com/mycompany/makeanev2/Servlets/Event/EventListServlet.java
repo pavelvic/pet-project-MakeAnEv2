@@ -31,7 +31,8 @@ public class EventListServlet extends HttpServlet {
     List<Event> allEvents = null;
     String errorString; // строка с возможными ошибками
     //устанавливаем временную зону, в которую пересчитываем даты
-    ZoneId timeZone = ZoneId.of("Europe/Moscow"); 
+//    ZoneId timeZone = ZoneId.of("Europe/Moscow"); 
+      ZoneId timeZone = (ZoneId) request.getServletContext().getAttribute("ZoneId");
         try {
             
             HttpServletRequest req = (HttpServletRequest) request;

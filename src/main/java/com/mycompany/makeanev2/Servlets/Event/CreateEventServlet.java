@@ -76,7 +76,8 @@ public class CreateEventServlet extends HttpServlet {
                     eventZonedTime,
                     Integer.parseInt(maxParticipants),
                     ZonedDateTime.now(ZoneId.of("UTC")),
-                    critZonedTime);
+                    critZonedTime,
+                    ZoneId.of("UTC"));
 
             //проверяем правильно ли введены даты события (дата и время должна быть позже критичной даты)
             event.checkTimes();

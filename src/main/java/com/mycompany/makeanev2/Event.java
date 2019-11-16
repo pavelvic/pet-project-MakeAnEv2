@@ -26,7 +26,7 @@ public class Event {
     private ZoneId zone;
 
     //общий конструктор
-    public Event(int id_event, EventStatus evStatus, EventRegStatus evRegStatus, String name, String description, String place, ZonedDateTime eventTime, int maxParticipants, ZonedDateTime createTime, ZonedDateTime critTime) {
+    public Event(int id_event, EventStatus evStatus, EventRegStatus evRegStatus, String name, String description, String place, ZonedDateTime eventTime, int maxParticipants, ZonedDateTime createTime, ZonedDateTime critTime, ZoneId zone) {
         this.id_event = id_event;
         this.evStatus = evStatus;
         this.evRegStatus = evRegStatus;
@@ -37,7 +37,7 @@ public class Event {
         this.maxParticipants = maxParticipants;
         this.createTime = createTime;
         this.critTime = critTime;
-        this.zone = ZoneId.of("UTC");
+        this.zone = zone;
     }
 
     //конструктор по ResultSet для работы с БД
@@ -141,7 +141,5 @@ public class Event {
         if (critTime.isBefore(ZonedDateTime.now(ZoneId.of("UTC")))) {
             throw new EventException("Критическая дата не может быть в прошлом");
         }
-    }
-    
-    
+    }  
 }
