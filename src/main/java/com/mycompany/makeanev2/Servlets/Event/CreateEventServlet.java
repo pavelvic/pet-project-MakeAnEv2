@@ -13,7 +13,6 @@ import com.mycompany.makeanev2.Utils.EventDbQuery;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

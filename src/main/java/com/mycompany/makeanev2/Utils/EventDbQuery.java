@@ -2,6 +2,7 @@ package com.mycompany.makeanev2.Utils;
 
 import com.mycompany.makeanev2.Event;
 import com.mycompany.makeanev2.EventRegStatus;
+import com.mycompany.makeanev2.Exceptions.EventException;
 import com.mycompany.makeanev2.Participant;
 import com.mycompany.makeanev2.ParticipantStatus;
 import com.mycompany.makeanev2.User;
@@ -44,7 +45,7 @@ public class EventDbQuery {
         ps.executeUpdate();
     }
 
-    public static Event selectEvent(Connection con, int id_event) throws SQLException {
+    public static Event selectEvent(Connection con, int id_event) throws SQLException, EventException {
 
         String sql = "SELECT e.id_event, es.id_eventstatus, es.name, ers.id_eventregstatus, ers.name, e.name, e.description, e.place, e.eventTime, e.maxParticipants, e.createTime, e.critTime "
                 + "FROM `event` e, `eventregstatus` ers, `eventstatus` es "
@@ -61,7 +62,8 @@ public class EventDbQuery {
         if (rs.next()) {
             return new Event(rs);
         }
-        return null;
+        throw new EventException("Запрошенного события не существует");
+        //return null;
     }
 
     public static List<EventRegStatus> selectEventStatuses(Connection con) throws SQLException {
@@ -124,6 +126,22 @@ public class EventDbQuery {
         //ВЫПОЛНЯЕМ sql-запрос
         ps.executeUpdate();
     }
+    
+    public static void deleteParticipant(Connection con, Participant pct) throws SQLException {
+
+        String sql = "DELETE FROM participant WHERE id_participant = ?";
+        PreparedStatement ps = con.prepareStatement(sql);
+
+        ps.setInt(1, pct.getId_participant());
+//        ps.setInt(2, pct.getPerson().getId_user());
+//        ps.setInt(3, pct.getStatus().getId_participantStatus());
+//        ps.setInt(4, pct.getWhoAdd().getId_user());
+//        ps.setBoolean(5, pct.getAuthor());
+//        ps.setLong(6, pct.getZonedRegDatetime().toEpochSecond());
+
+        //ВЫПОЛНЯЕМ sql-запрос
+        ps.executeUpdate();
+    }
 
     public static List<Event> selectEventsByUserLikeAuthor(Connection con, int id_user) throws SQLException {
 
@@ -142,7 +160,11 @@ public class EventDbQuery {
         List<Event> list = new ArrayList<>();
 
         while (rs.next()) {
-            list.add(new Event(rs));
+                        
+            Event ev = new Event(rs);
+            List<Participant> participantList = EventDbQuery.selectParticipantsOfEvent(con, ev);
+            ev.setParticipants(participantList);
+            list.add(ev);
         }
         return list;
     }
@@ -164,7 +186,11 @@ public class EventDbQuery {
         List<Event> list = new ArrayList<>();
 
         while (rs.next()) {
-            list.add(new Event(rs));
+            
+            Event ev = new Event(rs);
+            List<Participant> participantList = EventDbQuery.selectParticipantsOfEvent(con, ev);
+            ev.setParticipants(participantList);
+            list.add(ev);
         }
         return list;
     }
@@ -182,7 +208,11 @@ public class EventDbQuery {
         List<Event> list = new ArrayList<>();
 
         while (rs.next()) {
-            list.add(new Event(rs));
+                        
+            Event ev = new Event(rs);
+            List<Participant> participantList = EventDbQuery.selectParticipantsOfEvent(con, ev);
+            ev.setParticipants(participantList);
+            list.add(ev);
         }
         return list;
     }
@@ -194,7 +224,7 @@ public class EventDbQuery {
         User whoAdd;
         ZonedDateTime regDateTime;
 
-        String sql = "SELECT pers.id_user pers_id_user, pers.group_id pers_group_id, ugpers.Name pers_groupname, pers.username pers_username, pers.password pers_password, pers.email pers_email, pers.phone pers_phone, pers.name pers_name, pers.surname pers_surname, pers.comment pers_comment, "
+        String sql = "SELECT p.id_participant id_partic, pers.id_user pers_id_user, pers.group_id pers_group_id, ugpers.Name pers_groupname, pers.username pers_username, pers.password pers_password, pers.email pers_email, pers.phone pers_phone, pers.name pers_name, pers.surname pers_surname, pers.comment pers_comment, "
                 + "whoadd.id_user whoadd_id_user, whoadd.group_id whoadd_group_id, ugwhoadd.Name whoadd_groupname, whoadd.username whoadd_username, whoadd.password whoadd_password, whoadd.email whoadd_email, whoadd.phone whoadd_phone, whoadd.name whoadd_name, whoadd.surname whoadd_surname, whoadd.comment whoadd_comment, "
                 + "p.participantStatus_id participantStatus_id, ps.name status_name, "
                 + "p.regDatetime regDatetime, p.isAuthor isAuthor "
@@ -244,70 +274,8 @@ public class EventDbQuery {
 
             regDateTime = ZonedDateTime.of(LocalDateTime.ofEpochSecond(rs.getLong("regDatetime"), 0, ZoneOffset.UTC),ZoneId.of("UTC"));
 
-            list.add(new Participant(ev, person, status, whoAdd, rs.getInt("isAuthor"), regDateTime));
+            list.add(new Participant(rs.getInt("id_partic"),ev, person, status, whoAdd, rs.getInt("isAuthor"), regDateTime));
         }
         return list;
-    }
-    
-    public static Participant selectAuthorOfEvent(Connection con, Event ev) throws SQLException {
-
-        User person;
-        ParticipantStatus status;
-        User whoAdd;
-        ZonedDateTime regDateTime;
-
-       String sql = "SELECT pers.id_user pers_id_user, pers.group_id pers_group_id, ugpers.Name pers_groupname, pers.username pers_username, pers.password pers_password, pers.email pers_email, pers.phone pers_phone, pers.name pers_name, pers.surname pers_surname, pers.comment pers_comment, "
-                + "whoadd.id_user whoadd_id_user, whoadd.group_id whoadd_group_id, ugwhoadd.Name whoadd_groupname, whoadd.username whoadd_username, whoadd.password whoadd_password, whoadd.email whoadd_email, whoadd.phone whoadd_phone, whoadd.name whoadd_name, whoadd.surname whoadd_surname, whoadd.comment whoadd_comment, "
-                + "p.participantStatus_id participantStatus_id, ps.name status_name, "
-                + "p.regDatetime regDatetime, p.isAuthor isAuthor "
-                + "FROM participant p "
-                + "LEFT JOIN user pers ON p.user_id = pers.id_user "
-                + "LEFT JOIN usergroups ugpers ON ugpers.id_group = pers.group_id "
-                + "LEFT JOIN user whoadd ON p.user_id_whoadd = whoadd.id_user "
-                + "LEFT JOIN usergroups ugwhoadd ON ugwhoadd.id_group = whoadd.group_id "
-                + "LEFT JOIN participantstatus ps ON p.participantStatus_id = ps.id_participantstatus "
-                + "WHERE p.event_id = ? AND p.isAuthor = 1";
-
-        //план такой:сделать запрос, собрать из него все необходимые объекты, собрать целевой объект, записать в коллекцию
-        PreparedStatement pstm = con.prepareStatement(sql);
-        pstm.setInt(1, ev.getId_event());
-
-        ResultSet rs = pstm.executeQuery();
-     
-        
-        if (rs.next()) {
-            
-            //создаем person
-            person = new User(rs.getInt("pers_id_user"),
-                    rs.getInt("pers_group_id"),
-                    rs.getString("pers_groupname"),
-                    rs.getString("pers_username"),
-                    rs.getInt("pers_password"),
-                    "",
-                    rs.getString("pers_email"),
-                    rs.getString("pers_phone"),
-                    rs.getString("pers_name"),
-                    rs.getString("pers_surname"),
-                    rs.getString("pers_comment"));
-
-            status = new ParticipantStatus(rs.getInt("participantStatus_id"), rs.getString("status_name"));
-
-            whoAdd = new User(rs.getInt("whoadd_id_user"),
-                    rs.getInt("whoadd_group_id"),
-                    rs.getString("whoadd_groupname"),
-                    rs.getString("whoadd_username"),
-                    rs.getInt("whoadd_password"),
-                    "",
-                    rs.getString("whoadd_email"),
-                    rs.getString("whoadd_phone"),
-                    rs.getString("whoadd_name"),
-                    rs.getString("whoadd_surname"),
-                    rs.getString("whoadd_comment"));
-
-            regDateTime = ZonedDateTime.of(LocalDateTime.ofEpochSecond(rs.getLong("regDatetime"), 0, ZoneOffset.UTC),ZoneId.of("UTC"));
-            
-            return new Participant(ev, person, status, whoAdd, rs.getInt("isAuthor"), regDateTime);
-        }
-        return null;
     }
 }

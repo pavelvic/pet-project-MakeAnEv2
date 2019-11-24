@@ -60,6 +60,14 @@
         <filter-name>SubscribeEventFilter</filter-name>
         <filter-class>com.mycompany.makeanev2.Filters.Event.SubscribeEventFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>UnsubscribeEventFilter</filter-name>
+        <filter-class>com.mycompany.makeanev2.Filters.Event.UnsubscribeEventFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>UnsubscribeEventFilter</filter-name>
+        <servlet-name>UnsubscribeEventServlet</servlet-name>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>SubscribeEventFilter</filter-name>
         <servlet-name>SubscribeEventServlet</servlet-name>
@@ -162,7 +170,7 @@
     </servlet>
     <servlet>
         <servlet-name>HomeServlet</servlet-name>
-        <servlet-class>com.mycompany.makeanev2.Servlets.User.HomeServlet</servlet-class>
+        <servlet-class>com.mycompany.makeanev2.HomeServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
@@ -183,6 +191,10 @@
     <servlet>
         <servlet-name>SubscribeEventServlet</servlet-name>
         <servlet-class>com.mycompany.makeanev2.Servlets.Event.SubscribeEventServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UnsubscribeEventServlet</servlet-name>
+        <servlet-class>com.mycompany.makeanev2.Servlets.Event.UnsubscribeEventServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserListServlet</servlet-name>
@@ -243,6 +255,10 @@
     <servlet-mapping>
         <servlet-name>SubscribeEventServlet</servlet-name>
         <url-pattern>/subscribe</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UnsubscribeEventServlet</servlet-name>
+        <url-pattern>/unsubscribe</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -5,8 +5,8 @@ import java.sql.SQLException;
 
 
 public class ParticipantStatus {
-    private final int id_participantStatus;
-    private final String name;
+    private  int id_participantStatus;
+    private  String name;
 
     public ParticipantStatus(int id_participantStatus, String name) {
         this.id_participantStatus = id_participantStatus;
@@ -29,5 +29,10 @@ public class ParticipantStatus {
 
     public String getName() {
         return name;
+    }
+    
+    public void setReserveStatus() {
+        this.id_participantStatus = 2;
+        this.name = "Запасной";
     }
 }

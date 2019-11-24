@@ -4,7 +4,6 @@ import com.mycompany.makeanev2.Event;
 import com.mycompany.makeanev2.Exceptions.EventException;
 import com.mycompany.makeanev2.Exceptions.ParticipantException;
 import com.mycompany.makeanev2.Participant;
-import com.mycompany.makeanev2.ParticipantStatus;
 import com.mycompany.makeanev2.User;
 import com.mycompany.makeanev2.Utils.AuthUtils;
 import com.mycompany.makeanev2.Utils.DbConnection;
@@ -13,7 +12,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
@@ -25,7 +23,7 @@ import javax.servlet.http.HttpSession;
 
 /*обработка вывода списка пользователей (все пользователи в БД)
 URL ???? */
-public class SubscribeEventServlet extends HttpServlet {
+public class UnsubscribeEventServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -33,7 +31,7 @@ public class SubscribeEventServlet extends HttpServlet {
 
         ZoneId timeZone = (ZoneId) request.getServletContext().getAttribute("ZoneId");
         String resultString = null;
-
+        Participant unsubscriber;
 
         HttpServletRequest req = (HttpServletRequest) request;
         HttpSession session = req.getSession();
@@ -48,49 +46,32 @@ public class SubscribeEventServlet extends HttpServlet {
             Event event = EventDbQuery.selectEvent(con, Integer.parseInt(id_event));
             List<Participant> participants = EventDbQuery.selectParticipantsOfEvent(con, event);
 
-
             event.setZone(timeZone);
-
-                for (Participant participant : participants) {
-                    participant.setZone(timeZone);
-                }
-                
-            event.setParticipants(participants);
-            Participant author = event.getAuthor();
-
-
-            //проверим доступные статусы события: в уже запланированные (статус события "Запланировано") и проведенные ("Проведено") события нельзя региться
-            //также нельзя региться в события, регистрация в которые закрыта (статус регистрации "Закрыт")
-            event.checkEventStatus();
-            event.checkEventRegStatus();
-
-            //формирруем самого уастника стандартным способом (на основании userInSession)
-            //два шага: 1. статус участника: если в событии уже больше допустимых уастников, то запасной, если меньше - основной
-            //2. сам участник стандартным конструктором
-            ParticipantStatus ps = new ParticipantStatus();
-            if (participants.size() >= event.getMaxParticipants()) {
-                ps.setReserveStatus();
+            for (Participant participant : participants) {
+                participant.setZone(timeZone);
             }
 
-            Participant participant = new Participant(event, userInSession, ps, userInSession, ZonedDateTime.now(ZoneId.of("UTC")));
+            event.setParticipants(participants);
 
-            //проверяем зареген ли уже на событии участник, если да - выдаем исключение Участника об этом
+            unsubscriber = event.getParticipantByPerson(userInSession);
 
-                for (Participant pc : participants) {
-                    if (pc.getPerson().getId_user() == participant.getPerson().getId_user()) {
-                        throw new ParticipantException("Вы уже участвуете в мероприятии");
-                    }
-                }
+            //проверка на авторство с генерацией исключения
+            if (unsubscriber.getPerson().getId_user() == event.getAuthor().getPerson().getId_user()) {
+                throw new ParticipantException("Невозможно отказаться от участия инициатору (автору) события");
+            }
 
-
-            //добавляем участника в событие стандартным запросом, если все проверки пройдены и мы не получили исключений
-            EventDbQuery.insertParticipant(con, participant);
+            //получить участника мероприятия из event для удаления (на основе пользователя в сессии)
+            //в метод getParticipant объекта event передать userInSession
+            //в get-методе устроить перебор, сравнить person и userInSession через equals и вернуть первое совпадение в виде PArticipant
+            //если такого нет - выбросить исключение ParticipantException
+            //далее написать метод с sql-запросом, на входе PArticipant, в этом методе разбираются параметры для sql-Запроса (id_ события, id_уч и проч)
+            //sql-запрос удаляет запись из таблицы Participants
+            EventDbQuery.deleteParticipant(con, unsubscriber);
             con.close();
-            resultString = "Вы добавлены. Количество мест ограничено (" + event.getMaxParticipants() + "). Ваше место " + (participants.size() + 1)
-                    + ". Статус: " + participant.getStatus().getName();
+            resultString = "Вы удалены из участников события №" + event.getId_event() + " [" + event.getName() + "]";
 
             //если что-то пошло не так    
-        } catch (SQLException | NamingException | NumberFormatException | EventException | ParticipantException ex) {
+        } catch (SQLException | NamingException | NumberFormatException | ParticipantException | EventException ex) {
             resultString = "Ошибка! " + ex.toString(); //информация об ошибке
 
         } finally {
@@ -100,7 +81,6 @@ public class SubscribeEventServlet extends HttpServlet {
             //request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response); //идем на страницу с ошибкой          
             RequestDispatcher dispatcher = (RequestDispatcher) request.getAttribute("dispatcher");
             dispatcher.forward(request, response); //открываем нужную страницу
-
         }
     }
 

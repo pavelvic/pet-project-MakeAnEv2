@@ -1,6 +1,7 @@
 package com.mycompany.makeanev2.Servlets.Event;
 
 import com.mycompany.makeanev2.Event;
+import com.mycompany.makeanev2.Participant;
 import com.mycompany.makeanev2.User;
 import com.mycompany.makeanev2.Utils.AuthUtils;
 import com.mycompany.makeanev2.Utils.DbConnection;
@@ -26,83 +27,82 @@ public class EventListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    List<Event> likeAuthorEvents = null;
-    List<Event> likeParticipantEvents = null;  //контейнер-коллекция для хранения списка событий, где пользователь НЕ автор, НО участник
-    List<Event> allEvents = null;
-    String errorString; // строка с возможными ошибками
-    //устанавливаем временную зону, в которую пересчитываем даты
+        List<Event> likeAuthorEvents = null;
+        List<Event> likeParticipantEvents = null;  //контейнер-коллекция для хранения списка событий, где пользователь НЕ автор, НО участник
+        List<Event> allEvents = null;
+        String errorString; // строка с возможными ошибками
+        //устанавливаем временную зону, в которую пересчитываем даты
 //    ZoneId timeZone = ZoneId.of("Europe/Moscow"); 
-      ZoneId timeZone = (ZoneId) request.getServletContext().getAttribute("ZoneId");
+        ZoneId timeZone = (ZoneId) request.getServletContext().getAttribute("ZoneId");
         try {
             
             HttpServletRequest req = (HttpServletRequest) request;
-        HttpSession session = req.getSession();
-        User userInSession = AuthUtils.getLoginedUser(session);
+            HttpSession session = req.getSession();
+            User userInSession = AuthUtils.getLoginedUser(session);
 
-        //формируем списки событий в зависимости от группы пользователей (для разных ролей вывод разных списков)
-        Connection con = DbConnection.getConnection();
-        switch (userInSession.getGroup_id()) {
-            case 1: //супер пользователь может быть автором и участником
-                likeAuthorEvents = EventDbQuery.selectEventsByUserLikeAuthor(con, userInSession.getId_user());
-                likeParticipantEvents = EventDbQuery.selectEventsByUserLikeParticipant(con, userInSession.getId_user());
-                allEvents = EventDbQuery.selectAllEvents(con);
-                break;
-            case 2: //админ - автор и участник
-                likeAuthorEvents = EventDbQuery.selectEventsByUserLikeAuthor(con, userInSession.getId_user());
-                likeParticipantEvents = EventDbQuery.selectEventsByUserLikeParticipant(con, userInSession.getId_user());
-                break;
-            case 3: //менеджер только участник
-                likeParticipantEvents = EventDbQuery.selectEventsByUserLikeParticipant(con, userInSession.getId_user());
-                break;
-            case 4: //пользователь только участник
-                likeParticipantEvents = EventDbQuery.selectEventsByUserLikeParticipant(con, userInSession.getId_user());
-                break;
-        }
-        con.close();
-
-        //применяем правильную временную зону для вывода дат на страницу
-        if (likeAuthorEvents != null) {
-            for (Event likeAuthorEvent : likeAuthorEvents) {
-                likeAuthorEvent.setZone(timeZone);
+            //формируем списки событий в зависимости от группы пользователей (для разных ролей вывод разных списков)
+            Connection con = DbConnection.getConnection();
+            switch (userInSession.getGroup_id()) {
+                case 1: //супер пользователь может быть автором и участником
+                    likeAuthorEvents = EventDbQuery.selectEventsByUserLikeAuthor(con, userInSession.getId_user());
+                    likeParticipantEvents = EventDbQuery.selectEventsByUserLikeParticipant(con, userInSession.getId_user());
+                    allEvents = EventDbQuery.selectAllEvents(con);
+                    break;
+                case 2: //админ - автор и участник
+                    likeAuthorEvents = EventDbQuery.selectEventsByUserLikeAuthor(con, userInSession.getId_user());
+                    likeParticipantEvents = EventDbQuery.selectEventsByUserLikeParticipant(con, userInSession.getId_user());
+                    break;
+                case 3: //менеджер только участник
+                    likeParticipantEvents = EventDbQuery.selectEventsByUserLikeParticipant(con, userInSession.getId_user());
+                    break;
+                case 4: //пользователь только участник
+                    likeParticipantEvents = EventDbQuery.selectEventsByUserLikeParticipant(con, userInSession.getId_user());
+                    break;
             }
-        }
+            con.close();
 
-        if (likeAuthorEvents != null) {
-            for (Event likeParticipantEvent : likeParticipantEvents) {
-                likeParticipantEvent.setZone(timeZone);
+            //применяем правильную временную зону для вывода дат на страницу
+            if (likeAuthorEvents != null) {
+                for (Event likeAuthorEvent : likeAuthorEvents) {
+                    likeAuthorEvent.setZone(timeZone);
+                }
             }
-        }
-
-        if (allEvents != null) {
-            for (Event event : allEvents) {
-                event.setZone(timeZone);
+            
+            if (likeAuthorEvents != null) {
+                for (Event likeParticipantEvent : likeParticipantEvents) {
+                    likeParticipantEvent.setZone(timeZone);
+                    for (Participant plist : likeParticipantEvent.getParticipants()) {
+                        plist.setZone(timeZone);
+                    }
+                }
             }
-        }
+            
+            if (allEvents != null) {
+                for (Event event : allEvents) {
+                    event.setZone(timeZone);
+                }
+            }
+            
+            request.setAttribute("likeAuthorEvents", likeAuthorEvents); //передаем коллекцию на страницу для отображения
+            request.setAttribute("likeParticipantEvents", likeParticipantEvents);
+            request.setAttribute("allEvents", allEvents);//передаем коллекцию на страницу для отображения
 
-        request.setAttribute("likeAuthorEvents", likeAuthorEvents); //передаем коллекцию на страницу для отображения
-        request.setAttribute("likeParticipantEvents", likeParticipantEvents);
-        request.setAttribute("allEvents", allEvents);//передаем коллекцию на страницу для отображения
+            //берем из http-запроса инфу какую страницу открывать (определяется с фильтре в зависимости от полномочий)
+            //для каждой группы пользователей есть своя страница со списком пользователей для обеспечения возможностей кастомизации
+            RequestDispatcher dispatcher = (RequestDispatcher) request.getAttribute("dispatcher");
+            dispatcher.forward(request, response); //открываем нужную страницу
 
-        //берем из http-запроса инфу какую страницу открывать (определяется с фильтре в зависимости от полномочий)
-        //для каждой группы пользователей есть своя страница со списком пользователей для обеспечения возможностей кастомизации
-        RequestDispatcher dispatcher = (RequestDispatcher) request.getAttribute("dispatcher");
-        dispatcher.forward(request, response); //открываем нужную страницу
-
-        //если что-то пошло не так    
-    }
-    catch (SQLException | NamingException ex
-
-    
-        ) {
+            //если что-то пошло не так    
+        } catch (SQLException | NamingException ex) {
             errorString = "Ошибка соединения с базой данных! " + ex.getMessage(); //информация об ошибке
-        request.setAttribute("resultString", errorString);
-        request.setAttribute("redirect", "/"); //указываем чтобы маршрутизация с resultpage была на главную
-        request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response); //идем на страницу с ошибкой
+            request.setAttribute("resultString", errorString);
+            request.setAttribute("redirect", "/"); //указываем чтобы маршрутизация с resultpage была на главную
+            request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response); //идем на страницу с ошибкой
+        }
     }
-}
-
-@Override
-        protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //TODO: Логика поиска и вывода по кнопке
         //один из вариантов реализации поиска

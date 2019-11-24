@@ -38,12 +38,14 @@ public class LoginServlet extends HttpServlet {
         String redirectString; //маршрутизация с этой страницы
         String errorString = null; //для фиксации ошибок
 
-        redirectString = "/login.jsp"; //по умолчанию переходим на эту же страницу
+        //redirectString = request.getContextPath() + "/login"; //по умолчанию переходим на эту же страницу
 
         try {
             //если пользователь не ввел имя и пароль, фиксируем ошибку
             if (username == null || password == null || username.length() == 0 || password.length() == 0) {
-                errorString = "Не заполнены Имя ользователя и / или пароль";
+                errorString = "Не заполнены Имя пользователя и / или пароль";
+                request.setAttribute("errorString", errorString);
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
             //если ввел
             } else {
                 Connection con = DbConnection.getConnection();
@@ -53,12 +55,14 @@ public class LoginServlet extends HttpServlet {
                 //если такой пользователь в базе не найден
                 if (user == null) {
                     errorString = "Имя пользователя или пароль не корректны"; //фиксируем ошибку
+                    request.setAttribute("errorString", errorString);
+                    request.getRequestDispatcher("/login.jsp").forward(request, response);
                 //если найден
                 } else {
                     CheckPermission.checkBlockUser(user); //проверим блокирован ли пользователь, который пытается войти
                     HttpSession session = request.getSession(); //получаем сессию
                     AuthUtils.storeLoginedUser(session, user);// записываем туда пользователя (это и есть операция входа на сайт)
-                    redirectString = "/"; //отправляем на домашнюю страницу
+                    //redirectString = request.getContextPath() + "/"; //отправляем на домашнюю страницу
 
                     //Дополнительно: если установлена галочка "Запомнить меня" - формируем куки файл
                     //если не установлена, удаляем куки файл
@@ -69,13 +73,11 @@ public class LoginServlet extends HttpServlet {
                     }
                 }
             }
+         response.sendRedirect(request.getContextPath() + "/");
         //если что-то пошло не так фиксируем ошибку
         } catch (SQLException | NamingException | UserException ex) {
             errorString = "Ошибка! " + ex.toString();
         //выводим результат операциии + ошибку если имела место, или идем на домашнюю старницу
-        } finally {
-            request.setAttribute("errorString", errorString);
-            request.getRequestDispatcher(redirectString).forward(request, response);
-        }
+        } 
     }
 }

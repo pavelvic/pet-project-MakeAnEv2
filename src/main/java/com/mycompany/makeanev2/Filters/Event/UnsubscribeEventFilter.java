@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /*фильтр для  */
-public class SubscribeEventFilter implements Filter {
+public class UnsubscribeEventFilter implements Filter {
 
     @Override
     public void init(FilterConfig fConfig) throws ServletException {

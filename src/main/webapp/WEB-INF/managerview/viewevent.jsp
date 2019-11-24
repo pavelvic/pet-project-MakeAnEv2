@@ -66,7 +66,7 @@
                     <td><a href="viewuser?id_user=${author.person.id_user}">${author.person.username}</a></td>
                     </c:if>
                 <c:if test="${loginedUser.id_user != author.person.id_user}">
-                    <td>${author.person.name}</td>
+                    <td>${author.person.username}</td>
                     </c:if>
             </tr>
         </table>
@@ -113,5 +113,19 @@
                 </tr>
             </c:forEach>
         </table>
+        <c:if test="${author.person.id_user != loginedUser.id_user}">
+   
+        <c:if test="${regFlag == true}">
+        <h4><a href="subscribe?id_event=${event.id_event}">Участвовать</a></h4>
+        </c:if>
+        
+        <c:if test="${regFlag == false}">
+        <h4><a href="unsubscribe?id_event=${event.id_event}">Отказаться от участия</a></h4>
+        </c:if>
+        
+        </c:if>
+        
+        <c:if test="${author.person.id_user == loginedUser.id_user}">
+        </c:if>
     </body>
 </html>

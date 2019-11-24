@@ -8,6 +8,6 @@
           maxWait="10000" 
           username="root" 
           password="1234" 
-          driverClassName="com.mysql.jdbc.Driver" 
+          driverClassName="com.mysql.cj.jdbc.Driver" 
           url="jdbc:mysql://localhost/makeanevents?serverTimezone=UTC"/>  
 </Context>

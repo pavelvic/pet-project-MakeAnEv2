@@ -18,7 +18,8 @@
                     <th>Описание</th>
                     <th>Место</th>
                     <th>Дата и время проведения</th>
-                    <th>Участников</th>
+                    <th>Макс.чел.</th>
+                    <th>Заявились</th>
                     <th>Критичная дата</th>
                     <th>Статус</th>
                     <th>Регистрация</th>
@@ -33,6 +34,7 @@
                     <td>${likeParticipantEvents.place}</td>
                     <td>${likeParticipantEvents.eventTime}</td>
                     <td>${likeParticipantEvents.maxParticipants}</td>
+                    <td>${likeParticipantEvents.countOfParticipants}</td>
                     <td>${likeParticipantEvents.critTime}</td>
                     <td>${likeParticipantEvents.evStatus.name}</td>
                     <td>${likeParticipantEvents.evRegStatus.name}</td>
@@ -50,7 +52,8 @@
                     <th>Описание</th>
                     <th>Место</th>
                     <th>Дата и время проведения</th>
-                    <th>Участников</th>
+                    <th>Макс.чел.</th>
+                    <th>Заявились</th>
                     <th>Критичная дата</th>
                     <th>Статус</th>
                     <th>Регистрация</th>
@@ -65,6 +68,7 @@
                     <td>${likeAuthorEvents.place}</td>
                     <td>${likeAuthorEvents.eventTime}</td>
                     <td>${likeAuthorEvents.maxParticipants}</td>
+                    <td>${likeAuthorEvents.countOfParticipants}</td>
                     <td>${likeAuthorEvents.critTime}</td>
                     <td>${likeAuthorEvents.evStatus.name}</td>
                     <td>${likeAuthorEvents.evRegStatus.name}</td>

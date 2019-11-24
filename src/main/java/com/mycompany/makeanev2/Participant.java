@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Participant {
     
+    private final int id_participant;
     private final Event event;
     private final User person;
     private final ParticipantStatus status;
@@ -16,6 +17,7 @@ public class Participant {
     private ZoneId zone;
     
     public Participant(Event event, User person, ParticipantStatus status, User whoAdd, ZonedDateTime regDatetime) {
+        this.id_participant = 0;
         this.event = event;
         this.person = person;
         this.status = status; //основной или запасной участник
@@ -25,7 +27,8 @@ public class Participant {
         this.zone = ZoneId.of("UTC");
     }
     
-    public Participant(Event event, User person, ParticipantStatus status, User whoAdd, int isAuthor, ZonedDateTime regDatetime) {
+    public Participant(int id_participant, Event event, User person, ParticipantStatus status, User whoAdd, int isAuthor, ZonedDateTime regDatetime) {
+        this.id_participant = id_participant;
         this.event = event;
         this.person = person;
         this.status = status; //основной или запасной участник
@@ -44,6 +47,10 @@ public class Participant {
         this.isAuthor = true;
     }
 
+    public int getId_participant() {
+        return id_participant;
+    }
+    
     public Event getEvent() {
         return event;
     }
@@ -63,17 +70,14 @@ public class Participant {
     public boolean getAuthor() {
         return isAuthor;
     }
-
+    
     public String getRegDatetime() {
         return regDatetime.withZoneSameInstant(zone).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
     }
     
     public ZonedDateTime getZonedRegDatetime() {
         return regDatetime;
-    }
-    
-    
-    
+    } 
     
     
 }
