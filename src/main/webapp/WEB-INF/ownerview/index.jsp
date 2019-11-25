@@ -10,19 +10,10 @@
     <body>
     <jsp:include page="/_menu.jsp"></jsp:include>
    
-    <h2>События НЕРЕГ</h2>
+    <h2>События СУПЕР</h2>
     
-    <h4>С <input type="date" name="dateFrom" value="">  По <input type="date" name="dateTo" value=""></h4>
-    <h4> Автор 
-        <select name ="author" size="1">                   
-                    <c:forEach items = "${authors}" var = "authors">                   
-                            <option value=${authors.person.id_user}>${authors.person.name}</option>                       
-                    </c:forEach>
-                </select>
-    </h4>
-    
-    <h4>Описание <input type="search" name="searchDesc" value=""></h4>
-    <h4><input type="submit" value="Найти"></h4>
+    <h5>С</h5><input type="date" name="dateFrom" required="required" value="">
+    <h5>По</h5><input type="date" name="dateTo" required="required" value="">
     
             <table border = "1" cellpadding="5" cellspacing="1">
                 <tr>
@@ -43,7 +34,7 @@
             <c:forEach items = "${allEvents}" var = "allEvents">
                 <tr>
                     <td>${allEvents.id_event}</td>
-                    <td>${allEvents.author.person.username}</td>
+                    <td><a href="viewuser?id_user=${allEvents.author.person.id_user}">${allEvents.author.person.username}</a></td>
                     <td>${allEvents.name}</td>
                     <td>${allEvents.description}</td>
                     <td>${allEvents.place}</td>

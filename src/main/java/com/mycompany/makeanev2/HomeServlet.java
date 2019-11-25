@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import javax.naming.NamingException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,17 +26,25 @@ public class HomeServlet extends HttpServlet {
 
         try {
             Connection con = DbConnection.getConnection();
-            List<Event> allEvents = EventDbQuery.selectAllEvents(con);
+            List<Event> allEvents = EventDbQuery.selectEventsFromDateExceptStatus(con, ZonedDateTime.now(ZoneId.of("UTC")), new EventStatus(3, "Отменено"));
+            //добавить списко авторов
+            List <Participant> authors = null;
             con.close();
 
             if (allEvents != null) {
                 for (Event event : allEvents) {
                     event.setZone(timeZone);
+                    
                 }
             }
             request.setAttribute("allEvents", allEvents);
+            //добавить в аттрибут
+            request.setAttribute("authors", authors);
+            
             //открываем главную страницу
-            request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
+            //request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
+            RequestDispatcher dispatcher = (RequestDispatcher) request.getAttribute("dispatcher");
+            dispatcher.forward(request, response); //открываем нужную страницу
 
         } catch (SQLException | NamingException ex) {
             errorString = "Ошибка соединения с базой данных! " + ex.getMessage(); //информация об ошибке

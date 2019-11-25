@@ -10,20 +10,7 @@
     <body>
     <jsp:include page="/_menu.jsp"></jsp:include>
    
-    <h2>События НЕРЕГ</h2>
-    
-    <h4>С <input type="date" name="dateFrom" value="">  По <input type="date" name="dateTo" value=""></h4>
-    <h4> Автор 
-        <select name ="author" size="1">                   
-                    <c:forEach items = "${authors}" var = "authors">                   
-                            <option value=${authors.person.id_user}>${authors.person.name}</option>                       
-                    </c:forEach>
-                </select>
-    </h4>
-    
-    <h4>Описание <input type="search" name="searchDesc" value=""></h4>
-    <h4><input type="submit" value="Найти"></h4>
-    
+    <h2>События МЕНЕДЖЕР</h2>
             <table border = "1" cellpadding="5" cellspacing="1">
                 <tr>
                     <th>Номер</th>

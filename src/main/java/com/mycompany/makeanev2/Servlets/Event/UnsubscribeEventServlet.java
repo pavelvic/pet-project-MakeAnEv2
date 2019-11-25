@@ -56,7 +56,7 @@ public class UnsubscribeEventServlet extends HttpServlet {
             unsubscriber = event.getParticipantByPerson(userInSession);
 
             //проверка на авторство с генерацией исключения
-            if (unsubscriber.getPerson().getId_user() == event.getAuthor().getPerson().getId_user()) {
+            if (unsubscriber.getPerson().getId_user() == event.findAuthor().getPerson().getId_user()) {
                 throw new ParticipantException("Невозможно отказаться от участия инициатору (автору) события");
             }
 

@@ -29,6 +29,7 @@ public class Event {
     private ZoneId zone;
     private ArrayList<Participant> participantList;
     private int countOfParticipants;
+    private Participant author;
 
     //общий конструктор
     public Event(int id_event, EventStatus evStatus, EventRegStatus evRegStatus, String name, String description, String place, ZonedDateTime eventTime, int maxParticipants, ZonedDateTime createTime, ZonedDateTime critTime, ZoneId zone) {
@@ -45,6 +46,7 @@ public class Event {
         this.zone = zone;
         this.participantList = null;
         this.countOfParticipants = 0;
+        this.author = null;
     }
 
     //конструктор по ResultSet для работы с БД
@@ -64,6 +66,7 @@ public class Event {
         this.critTime = ZonedDateTime.of(LocalDateTime.ofEpochSecond(rs.getLong(12), 0, ZoneOffset.UTC), zone);
         this.participantList = null;
         this.countOfParticipants = 0;
+        this.author = null;
     }
 
     //геттеры сеттеры
@@ -178,14 +181,21 @@ public class Event {
         }
     }
 
-    public Participant getAuthor() {
+    public Participant findAuthor() {
        if (!participantList.isEmpty()) {
            for (Participant participant : participantList) {
                if (participant.getAuthor()) return participant;
            }   
        }
        return null;
-    } 
+    }
+
+    public Participant getAuthor() {
+        author = findAuthor();
+        return author;
+    }
+    
+    
 
     public Participant getParticipantByPerson(User user) throws ParticipantException {
         if (user != null) {

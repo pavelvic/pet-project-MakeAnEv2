@@ -56,7 +56,7 @@ public class SubscribeEventServlet extends HttpServlet {
                 }
                 
             event.setParticipants(participants);
-            Participant author = event.getAuthor();
+            Participant author = event.findAuthor();
 
 
             //проверим доступные статусы события: в уже запланированные (статус события "Запланировано") и проведенные ("Проведено") события нельзя региться

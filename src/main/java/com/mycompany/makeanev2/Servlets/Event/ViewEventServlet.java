@@ -56,7 +56,7 @@ public class ViewEventServlet extends HttpServlet {
             }
             
             event.setParticipants(participants);
-            Participant author = event.getAuthor();
+            Participant author = event.findAuthor();
 
             request.setAttribute("event", event);
             request.setAttribute("regFlag", regFlag); //для организации отображения кнопки "Участвую" / "Отказаться", в зависимости от нахождения в списке участников

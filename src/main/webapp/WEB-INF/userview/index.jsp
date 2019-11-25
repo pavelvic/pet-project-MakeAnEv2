@@ -10,20 +10,7 @@
     <body>
     <jsp:include page="/_menu.jsp"></jsp:include>
    
-    <h2>События НЕРЕГ</h2>
-    
-    <h4>С <input type="date" name="dateFrom" value="">  По <input type="date" name="dateTo" value=""></h4>
-    <h4> Автор 
-        <select name ="author" size="1">                   
-                    <c:forEach items = "${authors}" var = "authors">                   
-                            <option value=${authors.person.id_user}>${authors.person.name}</option>                       
-                    </c:forEach>
-                </select>
-    </h4>
-    
-    <h4>Описание <input type="search" name="searchDesc" value=""></h4>
-    <h4><input type="submit" value="Найти"></h4>
-    
+    <h2>События ПОЛЬЗ</h2>
             <table border = "1" cellpadding="5" cellspacing="1">
                 <tr>
                     <th>Номер</th>
@@ -43,7 +30,18 @@
             <c:forEach items = "${allEvents}" var = "allEvents">
                 <tr>
                     <td>${allEvents.id_event}</td>
+                    
+                    
+                    <c:if test="${loginedUser.id_user == allEvents.author.person.id_user}">
+                    <td><a href="viewuser?id_user=${allEvents.author.person.id_user}">${allEvents.author.person.username}</a></td>
+                    </c:if>
+                    
+                    <c:if test="${loginedUser.id_user != allEvents.author.person.id_user}">
                     <td>${allEvents.author.person.username}</td>
+                    </c:if>
+                    
+                    
+                    
                     <td>${allEvents.name}</td>
                     <td>${allEvents.description}</td>
                     <td>${allEvents.place}</td>

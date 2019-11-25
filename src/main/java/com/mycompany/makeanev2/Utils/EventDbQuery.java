@@ -2,6 +2,7 @@ package com.mycompany.makeanev2.Utils;
 
 import com.mycompany.makeanev2.Event;
 import com.mycompany.makeanev2.EventRegStatus;
+import com.mycompany.makeanev2.EventStatus;
 import com.mycompany.makeanev2.Exceptions.EventException;
 import com.mycompany.makeanev2.Participant;
 import com.mycompany.makeanev2.ParticipantStatus;
@@ -204,6 +205,33 @@ public class EventDbQuery {
 
         PreparedStatement pstm = con.prepareStatement(sql);
 
+        ResultSet rs = pstm.executeQuery();
+        List<Event> list = new ArrayList<>();
+
+        while (rs.next()) {
+                        
+            Event ev = new Event(rs);
+            List<Participant> participantList = EventDbQuery.selectParticipantsOfEvent(con, ev);
+            ev.setParticipants(participantList);
+            list.add(ev);
+        }
+        return list;
+    }
+    
+    public static List<Event> selectEventsFromDateExceptStatus(Connection con, ZonedDateTime fromDate, EventStatus es) throws SQLException {
+
+        String sql = "SELECT e.id_event, es.id_eventstatus, es.name, ers.id_eventregstatus, ers.name, e.name, e.description, e.place, e.eventTime, e.maxParticipants, e.createTime, e.critTime "
+                + "FROM `event` e, `eventregstatus` ers, `eventstatus` es "
+                + "WHERE e.eventregstatus_id = ers.id_eventregstatus "
+                + "AND e.eventstatus_id = es.id_eventstatus "
+                + "AND e.eventTime >= ? "
+                + "AND es.id_eventstatus <> ?";
+        
+        PreparedStatement pstm = con.prepareStatement(sql);
+        pstm.setLong(1, fromDate.toEpochSecond());
+        pstm.setInt(2, es.getId_eventStatus());
+
+        
         ResultSet rs = pstm.executeQuery();
         List<Event> list = new ArrayList<>();
 
