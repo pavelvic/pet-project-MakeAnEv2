@@ -72,7 +72,8 @@ public class SubscribeEventServlet extends HttpServlet {
                 ps.setReserveStatus();
             }
 
-            Participant participant = new Participant(event, userInSession, ps, userInSession, ZonedDateTime.now(ZoneId.of("UTC")));
+            //Participant participant = new Participant(event, userInSession, ps, userInSession, ZonedDateTime.now(ZoneId.of("UTC")));
+            Participant participant = new Participant(userInSession, ps, userInSession, ZonedDateTime.now(ZoneId.of("UTC")));
 
             //проверяем зареген ли уже на событии участник, если да - выдаем исключение Участника об этом
 
@@ -84,7 +85,7 @@ public class SubscribeEventServlet extends HttpServlet {
 
 
             //добавляем участника в событие стандартным запросом, если все проверки пройдены и мы не получили исключений
-            EventDbQuery.insertParticipant(con, participant);
+            EventDbQuery.insertParticipant(con, participant,event);
             con.close();
             resultString = "Вы добавлены. Количество мест ограничено (" + event.getMaxParticipants() + "). Ваше место " + (participants.size() + 1)
                     + ". Статус: " + participant.getStatus().getName();

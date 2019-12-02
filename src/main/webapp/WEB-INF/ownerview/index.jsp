@@ -12,8 +12,7 @@
    
     <h2>События СУПЕР</h2>
     
-    <h5>С</h5><input type="date" name="dateFrom" required="required" value="">
-    <h5>По</h5><input type="date" name="dateTo" required="required" value="">
+    <jsp:include page="/_searchform.jsp"></jsp:include>
     
             <table border = "1" cellpadding="5" cellspacing="1">
                 <tr>

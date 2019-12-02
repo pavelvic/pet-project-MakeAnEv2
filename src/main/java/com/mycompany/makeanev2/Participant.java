@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 public class Participant {
     
     private final int id_participant;
-    private final Event event;
+    //private final Event event;
     private final User person;
     private final ParticipantStatus status;
     private final User whoAdd;
@@ -16,9 +16,9 @@ public class Participant {
     private final ZonedDateTime regDatetime;
     private ZoneId zone;
     
-    public Participant(Event event, User person, ParticipantStatus status, User whoAdd, ZonedDateTime regDatetime) {
+    public Participant(User person, ParticipantStatus status, User whoAdd, ZonedDateTime regDatetime) {
         this.id_participant = 0;
-        this.event = event;
+        //this.event = event;
         this.person = person;
         this.status = status; //основной или запасной участник
         this.whoAdd = whoAdd;
@@ -27,9 +27,9 @@ public class Participant {
         this.zone = ZoneId.of("UTC");
     }
     
-    public Participant(int id_participant, Event event, User person, ParticipantStatus status, User whoAdd, int isAuthor, ZonedDateTime regDatetime) {
+    public Participant(int id_participant, User person, ParticipantStatus status, User whoAdd, int isAuthor, ZonedDateTime regDatetime) {
         this.id_participant = id_participant;
-        this.event = event;
+        //this.event = event;
         this.person = person;
         this.status = status; //основной или запасной участник
         this.whoAdd = whoAdd;
@@ -51,9 +51,9 @@ public class Participant {
         return id_participant;
     }
     
-    public Event getEvent() {
-        return event;
-    }
+//    public Event getEvent() {
+//        return event;
+//    }
 
     public User getPerson() {
         return person;

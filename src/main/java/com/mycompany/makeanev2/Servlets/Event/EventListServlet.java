@@ -29,7 +29,6 @@ public class EventListServlet extends HttpServlet {
             throws ServletException, IOException {
         List<Event> likeAuthorEvents = null;
         List<Event> likeParticipantEvents = null;  //контейнер-коллекция для хранения списка событий, где пользователь НЕ автор, НО участник
-        List<Event> allEvents = null;
         String errorString; // строка с возможными ошибками
         //устанавливаем временную зону, в которую пересчитываем даты
 //    ZoneId timeZone = ZoneId.of("Europe/Moscow"); 
@@ -46,7 +45,6 @@ public class EventListServlet extends HttpServlet {
                 case 1: //супер пользователь может быть автором и участником
                     likeAuthorEvents = EventDbQuery.selectEventsByUserLikeAuthor(con, userInSession.getId_user());
                     likeParticipantEvents = EventDbQuery.selectEventsByUserLikeParticipant(con, userInSession.getId_user());
-                    allEvents = EventDbQuery.selectAllEvents(con);
                     break;
                 case 2: //админ - автор и участник
                     likeAuthorEvents = EventDbQuery.selectEventsByUserLikeAuthor(con, userInSession.getId_user());
@@ -77,15 +75,8 @@ public class EventListServlet extends HttpServlet {
                 }
             }
             
-            if (allEvents != null) {
-                for (Event event : allEvents) {
-                    event.setZone(timeZone);
-                }
-            }
-            
             request.setAttribute("likeAuthorEvents", likeAuthorEvents); //передаем коллекцию на страницу для отображения
             request.setAttribute("likeParticipantEvents", likeParticipantEvents);
-            request.setAttribute("allEvents", allEvents);//передаем коллекцию на страницу для отображения
 
             //берем из http-запроса инфу какую страницу открывать (определяется с фильтре в зависимости от полномочий)
             //для каждой группы пользователей есть своя страница со списком пользователей для обеспечения возможностей кастомизации

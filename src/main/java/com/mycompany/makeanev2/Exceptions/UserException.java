@@ -1,6 +1,6 @@
 package com.mycompany.makeanev2.Exceptions;
 
-/*класс для генерации всех возможных исключений при работе с объектами User*/
+/*класс для генерации всех возможных исключений при работе с объектами */
 public class UserException extends Exception {
 
     //текст исключения для передачи на страницу

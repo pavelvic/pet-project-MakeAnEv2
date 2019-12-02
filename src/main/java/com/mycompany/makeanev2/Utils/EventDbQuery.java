@@ -112,12 +112,12 @@ public class EventDbQuery {
         return null;
     }
 
-    public static void insertParticipant(Connection con, Participant pct) throws SQLException {
+    public static void insertParticipant(Connection con, Participant pct, Event ev) throws SQLException {
 
         String sql = "INSERT INTO participant(event_id, user_id, participantStatus_id, user_id_whoadd, isAuthor, regDatetime) VALUES (?,?,?,?,?,?)";
         PreparedStatement ps = con.prepareStatement(sql);
 
-        ps.setInt(1, pct.getEvent().getId_event());
+        ps.setInt(1, ev.getId_event());
         ps.setInt(2, pct.getPerson().getId_user());
         ps.setInt(3, pct.getStatus().getId_participantStatus());
         ps.setInt(4, pct.getWhoAdd().getId_user());
@@ -127,7 +127,7 @@ public class EventDbQuery {
         //ВЫПОЛНЯЕМ sql-запрос
         ps.executeUpdate();
     }
-    
+
     public static void deleteParticipant(Connection con, Participant pct) throws SQLException {
 
         String sql = "DELETE FROM participant WHERE id_participant = ?";
@@ -161,7 +161,7 @@ public class EventDbQuery {
         List<Event> list = new ArrayList<>();
 
         while (rs.next()) {
-                        
+
             Event ev = new Event(rs);
             List<Participant> participantList = EventDbQuery.selectParticipantsOfEvent(con, ev);
             ev.setParticipants(participantList);
@@ -187,7 +187,7 @@ public class EventDbQuery {
         List<Event> list = new ArrayList<>();
 
         while (rs.next()) {
-            
+
             Event ev = new Event(rs);
             List<Participant> participantList = EventDbQuery.selectParticipantsOfEvent(con, ev);
             ev.setParticipants(participantList);
@@ -209,7 +209,7 @@ public class EventDbQuery {
         List<Event> list = new ArrayList<>();
 
         while (rs.next()) {
-                        
+
             Event ev = new Event(rs);
             List<Participant> participantList = EventDbQuery.selectParticipantsOfEvent(con, ev);
             ev.setParticipants(participantList);
@@ -217,7 +217,7 @@ public class EventDbQuery {
         }
         return list;
     }
-    
+
     public static List<Event> selectEventsFromDateExceptStatus(Connection con, ZonedDateTime fromDate, EventStatus es) throws SQLException {
 
         String sql = "SELECT e.id_event, es.id_eventstatus, es.name, ers.id_eventregstatus, ers.name, e.name, e.description, e.place, e.eventTime, e.maxParticipants, e.createTime, e.critTime "
@@ -226,17 +226,16 @@ public class EventDbQuery {
                 + "AND e.eventstatus_id = es.id_eventstatus "
                 + "AND e.eventTime >= ? "
                 + "AND es.id_eventstatus <> ?";
-        
+
         PreparedStatement pstm = con.prepareStatement(sql);
         pstm.setLong(1, fromDate.toEpochSecond());
         pstm.setInt(2, es.getId_eventStatus());
 
-        
         ResultSet rs = pstm.executeQuery();
         List<Event> list = new ArrayList<>();
 
         while (rs.next()) {
-                        
+
             Event ev = new Event(rs);
             List<Participant> participantList = EventDbQuery.selectParticipantsOfEvent(con, ev);
             ev.setParticipants(participantList);
@@ -300,9 +299,107 @@ public class EventDbQuery {
                     rs.getString("whoadd_surname"),
                     rs.getString("whoadd_comment"));
 
-            regDateTime = ZonedDateTime.of(LocalDateTime.ofEpochSecond(rs.getLong("regDatetime"), 0, ZoneOffset.UTC),ZoneId.of("UTC"));
+            regDateTime = ZonedDateTime.of(LocalDateTime.ofEpochSecond(rs.getLong("regDatetime"), 0, ZoneOffset.UTC), ZoneId.of("UTC"));
 
-            list.add(new Participant(rs.getInt("id_partic"),ev, person, status, whoAdd, rs.getInt("isAuthor"), regDateTime));
+            list.add(new Participant(rs.getInt("id_partic"), person, status, whoAdd, rs.getInt("isAuthor"), regDateTime));
+        }
+        return list;
+    }
+
+    public static List<User> selectAllAuthors(Connection con) throws SQLException {
+
+        String sql = "SELECT DISTINCT u.id_user, u.group_id, g.Name, u.username, u.password, u.email, u.phone, u.name, u.surname, u.comment FROM participant p, user u, usergroups g "
+                + "WHERE p.user_id = u.id_user "
+                + "AND u.group_id = g.id_group "
+                + "AND isAuthor = 1 "
+                + "ORDER BY u.username";
+
+        //план такой:сделать запрос, собрать из него все необходимые объекты, собрать целевой объект, записать в коллекцию
+        PreparedStatement pstm = con.prepareStatement(sql);
+
+        ResultSet rs = pstm.executeQuery();
+        List<User> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new User(rs));
+        }
+        return list;
+    }
+
+    //реализация поиска сербокса
+    public static List<Event> selectEventsByParam(Connection con, LocalDateTime dateFrom, LocalDateTime dateTo, int id_author, String searchDesc) throws SQLException, Exception {
+
+        //признак для формирования параметров запроса: d - ищем запрос сожержит даты, a - автора, t - текст из текстовых полей события
+        //базовый запрос
+        String sql = "SELECT e.id_event, es.id_eventstatus, es.name, ers.id_eventregstatus, ers.name, e.name, e.description, e.place, e.eventTime, e.maxParticipants, e.createTime, e.critTime "
+                + "FROM `event` e, `eventregstatus` ers, `eventstatus` es, `participant` p "
+                + "WHERE e.eventregstatus_id = ers.id_eventregstatus "
+                + "AND e.eventstatus_id = es.id_eventstatus "
+                + "AND e.id_event = p.event_id "
+                + "AND p.isAuthor = 1 ";
+
+        // логика формирования итоговой строки запроса
+        if (dateFrom != null & dateTo != null) {
+            sql = sql + "AND e.eventTime >= ? AND e.eventTime <= ? ";
+        }
+
+        if (id_author != 0) {
+            //sql
+            sql = sql + "AND p.user_id = ? ";
+        }
+
+        if (!searchDesc.isEmpty()) {
+            //sql
+            sql = sql + "AND (MATCH (e.name, e.description, e.place) AGAINST (?) "
+                    + "OR e.name LIKE ? "
+                    + "OR e.description LIKE ? "
+                    + "OR e.place LIKE ?)";
+        }
+
+        PreparedStatement pstm = con.prepareStatement(sql);
+
+        //формирование параметров запроса
+        int par = 1;
+        if (dateFrom != null & dateTo != null) {
+            pstm.setLong(par, dateFrom.toEpochSecond(ZoneOffset.UTC));
+            par++;
+            pstm.setLong(par, dateTo.toEpochSecond(ZoneOffset.UTC));
+            par++;
+        }
+
+        if (id_author != 0) {
+            pstm.setInt(par, id_author);
+            par++;
+        }
+
+        
+        
+        if (!searchDesc.isEmpty()) {
+            
+            searchDesc = searchDesc.replace("*", "%");
+            
+            pstm.setString(par, searchDesc);
+            par++;
+            pstm.setString(par, searchDesc);
+            par++;
+            pstm.setString(par, searchDesc);
+            par++;
+            pstm.setString(par, searchDesc);
+        }
+
+        if (pstm.getParameterMetaData().getParameterCount() == 0) {
+            throw new Exception("Поиск не выполнен. Не заполнен хотя бы один параметр (обе даты, автор, текст)");
+        }
+
+        ResultSet rs = pstm.executeQuery();
+        List<Event> list = new ArrayList<>();
+
+        while (rs.next()) {
+
+            Event ev = new Event(rs);
+            List<Participant> participantList = EventDbQuery.selectParticipantsOfEvent(con, ev);
+            ev.setParticipants(participantList);
+            list.add(ev);
         }
         return list;
     }

@@ -88,14 +88,15 @@ public class CreateEventServlet extends HttpServlet {
             User userInSession = AuthUtils.getLoginedUser(session);
 
             //формируем объект Participant: участник - текущий пользователь, он же добавил событие
-            Participant author = new Participant(event, userInSession, new ParticipantStatus(), userInSession, ZonedDateTime.now(ZoneId.of("UTC")));
+            //Participant author = new Participant(event, userInSession, new ParticipantStatus(), userInSession, ZonedDateTime.now(ZoneId.of("UTC")));
+            Participant author = new Participant(userInSession, new ParticipantStatus(), userInSession, ZonedDateTime.now(ZoneId.of("UTC")));
             author.setAsAuthor(); //устанавливаем признак авторства для первого участника
 
             //пишем его в БД (транзакционно с созданием записи мероприятия)
             //добавляем запись в БД и устанавливаем сообщение об успехе
             con.setAutoCommit(false);
             EventDbQuery.insertEvent(con, event);
-            EventDbQuery.insertParticipant(con, author);
+            EventDbQuery.insertParticipant(con, author, event);
             con.commit();
             con.close();
 
