@@ -68,6 +68,14 @@
         <filter-name>HomeFilter</filter-name>
         <filter-class>com.mycompany.makeanev2.HomeFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>DeleteEventFilter</filter-name>
+        <filter-class>com.mycompany.makeanev2.Filters.Event.DeleteEventFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>DeleteEventFilter</filter-name>
+        <servlet-name>DeleteEventServlet</servlet-name>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>HomeFilter</filter-name>
         <servlet-name>HomeServlet</servlet-name>
@@ -204,6 +212,10 @@
         <servlet-name>UnsubscribeEventServlet</servlet-name>
         <servlet-class>com.mycompany.makeanev2.Servlets.Event.UnsubscribeEventServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DeleteEventServlet</servlet-name>
+        <servlet-class>com.mycompany.makeanev2.Servlets.Event.DeleteEventServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>UserListServlet</servlet-name>
         <url-pattern>/userlist</url-pattern>
@@ -267,6 +279,10 @@
     <servlet-mapping>
         <servlet-name>UnsubscribeEventServlet</servlet-name>
         <url-pattern>/unsubscribe</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteEventServlet</servlet-name>
+        <url-pattern>/deleteevent</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

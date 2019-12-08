@@ -1,5 +1,7 @@
 package com.mycompany.makeanev2.Utils;
 
+import com.mycompany.makeanev2.Event;
+import com.mycompany.makeanev2.Exceptions.EventException;
 import com.mycompany.makeanev2.Exceptions.UserException;
 import com.mycompany.makeanev2.User;
 
@@ -10,7 +12,7 @@ public class CheckPermission {
     public static void checkViewUserAccess(User userInSession, User userToAccess) throws UserException {
         //в методе проверяем кто какого пользователя хочет смотреть и разрешаем / заперщаем в зависимости от группы пользователя
         // 1 - суперпользователь, 2 - администратор, 3 - менеджер, 4 - пользователь, 5 - заблокированный
-        
+
         //проверим логин
         checkNotLogin(userInSession);
 
@@ -21,7 +23,7 @@ public class CheckPermission {
         //свой профиль смотреть можно (id юзера в сессии = id юзера для просмотра)
         //если хотим смотреть чужого пользователя
         if (userInSession.getId_user() != userToAccess.getId_user()) {
-            
+
             //проверяем можем ли это делать, а в зависимости от наличия у нас полномочий (группа пользователя)
             //выбрасываем исключения, если доступ запрещен
             switch (userInSession.getGroup_id()) {
@@ -35,10 +37,10 @@ public class CheckPermission {
 
     public static void checkEditUserAccess(User userInSession, User userToAccess) throws UserException {
         /*логика работы аналогична checkViewUserAccess*/
-       
+
         checkNotLogin(userInSession);
         checkBlockUser(userInSession);
-        
+
         //своего пользователя можно редактировать, только админы (группа 2) и суперпользователи (группа 1) могут редактировтаь чужих
         if (userInSession.getId_user() != userToAccess.getId_user()) {
 
@@ -102,8 +104,8 @@ public class CheckPermission {
             }
         }
     }
-    
-        public static void checkEditPassword(User userInSession, User userToAccess) throws UserException {
+
+    public static void checkEditPassword(User userInSession, User userToAccess) throws UserException {
         /*логика работы аналогична checkViewUserAccess*/
         checkNotLogin(userInSession);
         checkBlockUser(userInSession);
@@ -145,27 +147,41 @@ public class CheckPermission {
             throw new UserException("Доступ запрещен. Войдите на сайт");
         }
     }
-    
-    
+
     public static void checkCreateEventAccess(User userInSession) throws UserException {
         /*логика работы аналогична checkViewUserAccess*/
         checkNotLogin(userInSession);
         checkBlockUser(userInSession);
-        
+
         switch (userInSession.getGroup_id()) {
-                case 3:
-                    throw new UserException("Невозможно создать мероприятие. Функция доступна только администраторам");
-                case 4:
-                    throw new UserException("Невозможно создать мероприятие. Функция доступна только администраторам");
-                case 5:
-                    throw new UserException("Невозможно создать мероприятие. Функция доступна только администраторам");
-            }
+            case 3:
+                throw new UserException("Невозможно создать мероприятие. Функция доступна только администраторам");
+            case 4:
+                throw new UserException("Невозможно создать мероприятие. Функция доступна только администраторам");
+            case 5:
+                throw new UserException("Невозможно создать мероприятие. Функция доступна только администраторам");
+        }
     }
-    
+
     public static void checkEventListAccess(User userInSession) throws UserException {
-        
+
         checkNotLogin(userInSession);
         checkBlockUser(userInSession);
     }
 
+    public static void checkDeleteEvent(User userInSession, Event event) throws UserException, EventException {
+
+
+        switch (userInSession.getGroup_id()) {
+            case 2:
+                if (userInSession.getId_user() != event.findAuthor().getPerson().getId_user()) {
+                    throw new EventException("Нет полномочий на удаление чужого мероприятия");
+                }
+                break;
+            case 3:
+                throw new EventException("Нет полномочий на удаление любых мероприятий");
+            case 4:
+                throw new EventException("Нет полномочий на удаление любых мероприятий");
+        }
+    }
 }

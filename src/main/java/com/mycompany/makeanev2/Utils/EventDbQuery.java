@@ -135,11 +135,6 @@ public class EventDbQuery {
         PreparedStatement ps = con.prepareStatement(sql);
 
         ps.setInt(1, pct.getId_participant());
-//        ps.setInt(2, pct.getPerson().getId_user());
-//        ps.setInt(3, pct.getStatus().getId_participantStatus());
-//        ps.setInt(4, pct.getWhoAdd().getId_user());
-//        ps.setBoolean(5, pct.getAuthor());
-//        ps.setLong(6, pct.getZonedRegDatetime().toEpochSecond());
 
         //ВЫПОЛНЯЕМ sql-запрос
         ps.executeUpdate();
@@ -403,5 +398,25 @@ public class EventDbQuery {
             list.add(ev);
         }
         return list;
+    }
+
+    public static void deleteParticipantsOfEvent(Connection con, Event ev) throws SQLException {
+        String sql = "DELETE FROM participant WHERE event_id=?";
+        
+        PreparedStatement ptsm = con.prepareStatement(sql);
+
+        ptsm.setInt(1, ev.getId_event());
+
+        ptsm.executeUpdate();
+    }
+    
+    public static void deleteEvent(Connection con, Event ev) throws SQLException {
+        String sql = "DELETE FROM event WHERE id_event=?";
+        
+        PreparedStatement ptsm = con.prepareStatement(sql);
+
+        ptsm.setInt(1, ev.getId_event());
+
+        ptsm.executeUpdate();
     }
 }

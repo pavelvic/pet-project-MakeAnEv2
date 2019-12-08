@@ -103,6 +103,7 @@
         </c:if>
         
         <c:if test="${author.person.id_user == loginedUser.id_user}">
-        </c:if>
+            <h5><a href="deleteevent?id_event=${event.id_event}">Удалить</a></h5>
+        </c:if>      
     </body>
 </html>
