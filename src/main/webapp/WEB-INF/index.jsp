@@ -12,6 +12,7 @@
    
     <h2>События НЕРЕГ</h2>
     <jsp:include page="/_searchform.jsp"></jsp:include>
+    <jsp:include page="/_monthform.jsp"></jsp:include>
     
     ${resultString}
             <table border = "1" cellpadding="5" cellspacing="1">

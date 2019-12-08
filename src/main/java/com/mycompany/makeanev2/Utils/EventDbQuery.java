@@ -4,6 +4,7 @@ import com.mycompany.makeanev2.Event;
 import com.mycompany.makeanev2.EventRegStatus;
 import com.mycompany.makeanev2.EventStatus;
 import com.mycompany.makeanev2.Exceptions.EventException;
+import com.mycompany.makeanev2.Exceptions.SearchException;
 import com.mycompany.makeanev2.Participant;
 import com.mycompany.makeanev2.ParticipantStatus;
 import com.mycompany.makeanev2.User;
@@ -306,7 +307,7 @@ public class EventDbQuery {
         return list;
     }
 
-    public static List<User> selectAllAuthors(Connection con) throws SQLException {
+    public static List<Participant> selectAllAuthors(Connection con) throws SQLException {
 
         String sql = "SELECT DISTINCT u.id_user, u.group_id, g.Name, u.username, u.password, u.email, u.phone, u.name, u.surname, u.comment FROM participant p, user u, usergroups g "
                 + "WHERE p.user_id = u.id_user "
@@ -318,16 +319,16 @@ public class EventDbQuery {
         PreparedStatement pstm = con.prepareStatement(sql);
 
         ResultSet rs = pstm.executeQuery();
-        List<User> list = new ArrayList<>();
+        List<Participant> list = new ArrayList<>();
 
         while (rs.next()) {
-            list.add(new User(rs));
+            list.add(new Participant(new User(rs), null, null, null));
         }
         return list;
     }
 
     //реализация поиска сербокса
-    public static List<Event> selectEventsByParam(Connection con, LocalDateTime dateFrom, LocalDateTime dateTo, int id_author, String searchDesc) throws SQLException, Exception {
+    public static List<Event> selectEventsByParam(Connection con, LocalDateTime dateFrom, LocalDateTime dateTo, int id_author, String searchDesc) throws SQLException, SearchException {
 
         //признак для формирования параметров запроса: d - ищем запрос сожержит даты, a - автора, t - текст из текстовых полей события
         //базовый запрос
@@ -388,7 +389,7 @@ public class EventDbQuery {
         }
 
         if (pstm.getParameterMetaData().getParameterCount() == 0) {
-            throw new Exception("Поиск не выполнен. Не заполнен хотя бы один параметр (обе даты, автор, текст)");
+            throw new SearchException("Поиск не выполнен. Не заполнен хотя бы один параметр (обе даты, автор, текст)");
         }
 
         ResultSet rs = pstm.executeQuery();

@@ -11,6 +11,8 @@
     <jsp:include page="/_menu.jsp"></jsp:include>
    
     <h2>События МЕНЕДЖЕР</h2>
+    <jsp:include page="/_searchform.jsp"></jsp:include>
+    <jsp:include page="/_monthform.jsp"></jsp:include>
             <table border = "1" cellpadding="5" cellspacing="1">
                 <tr>
                     <th>Номер</th>
@@ -27,21 +29,21 @@
                     <th>Создано</th>
                     <th>Подробно</th>
                 </tr>
-            <c:forEach items = "${allEvents}" var = "allEvents">
+            <c:forEach items = "${events}" var = "events">
                 <tr>
-                    <td>${allEvents.id_event}</td>
-                    <td>${allEvents.author.person.username}</td>
-                    <td>${allEvents.name}</td>
-                    <td>${allEvents.description}</td>
-                    <td>${allEvents.place}</td>
-                    <td>${allEvents.eventTime}</td>
-                    <td>${allEvents.maxParticipants}</td>
-                    <td>${allEvents.countOfParticipants}</td>
-                    <td>${allEvents.critTime}</td>
-                    <td>${allEvents.evStatus.name}</td>
-                    <td>${allEvents.evRegStatus.name}</td>
-                    <td>${allEvents.createTime}</td>
-                    <td><a href = "viewevent?id_event=${allEvents.id_event}">Подробно...</a></td>
+                    <td>${events.id_event}</td>
+                    <td>${events.author.person.username}</td>
+                    <td>${events.name}</td>
+                    <td>${events.description}</td>
+                    <td>${events.place}</td>
+                    <td>${events.eventTime}</td>
+                    <td>${events.maxParticipants}</td>
+                    <td>${events.countOfParticipants}</td>
+                    <td>${events.critTime}</td>
+                    <td>${events.evStatus.name}</td>
+                    <td>${events.evRegStatus.name}</td>
+                    <td>${events.createTime}</td>
+                    <td><a href = "viewevent?id_event=${events.id_event}">Подробно...</a></td>
                 </tr>
             </c:forEach>
             </table> 

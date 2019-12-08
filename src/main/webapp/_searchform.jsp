@@ -12,12 +12,10 @@
                     </c:if>
             
                     <c:forEach items = "${authors}" var = "authors">
-                        <c:if test="${authors.id_user != author_id}">
-                            <option value=${authors.id_user}:${authors.username}>${authors.username}</option> 
+                        <c:if test="${authors.person.id_user != author_id}">
+                            <option value=${authors.person.id_user}:${authors.person.username}>${authors.person.username}</option> 
                         </c:if>
-                    </c:forEach>
-                            
-                    
+                    </c:forEach> 
         </select>
     </h4>
     <h4>Описание <input type="search" size ="31" name="searchDesc" value="${searchDesc}"></h4>
