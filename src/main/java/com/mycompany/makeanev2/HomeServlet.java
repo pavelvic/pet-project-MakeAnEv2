@@ -13,6 +13,7 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import javax.naming.NamingException;
@@ -27,6 +28,7 @@ public class HomeServlet extends HttpServlet {
 
     private List<Event> events;
     private List<Participant> authors;
+    private List<EventStatus> statuses;
 
     private List<WeekOfMonth> weeksPrevMonth;
     private List<WeekOfMonth> weeksActualMonth;
@@ -53,24 +55,26 @@ public class HomeServlet extends HttpServlet {
                 int day = Integer.parseInt(dayStr);
                 int month = Integer.parseInt(monthStr);
                 int year = Integer.parseInt(yearStr);
-                
+
                 LocalDateTime dateFrom = LocalDateTime.of(year, Month.of(month), day, 0, 0);
                 LocalDateTime dateTo = LocalDateTime.of(year, Month.of(month), day, 23, 59);
-                
-                Connection con = DbConnection.getConnection();                
+
+                Connection con = DbConnection.getConnection();
                 authors = EventDbQuery.selectAllAuthors(con);
-                events = EventDbQuery.selectEventsByParam(con, dateFrom, dateTo, 0, "");
+                statuses = EventDbQuery.selecAllStatuses(con);
+                //events = EventDbQuery.selectEventsByParam(con, dateFrom, dateTo, 0, "", new ArrayList<EventStatus>());
+                events = EventDbQuery.selectEventsByParam(con, dateFrom, dateTo, 0, "", null);
                 con.close();
-                
+
                 request.setAttribute("dateFrom", LocalDate.of(year, Month.of(month), day));
                 request.setAttribute("dateTo", LocalDate.of(year, Month.of(month), day));
             } else {
                 Connection con = DbConnection.getConnection();
                 authors = EventDbQuery.selectAllAuthors(con);
+                statuses = EventDbQuery.selecAllStatuses(con);
                 events = EventDbQuery.selectEventsFromDateExceptStatus(con, ZonedDateTime.now(ZoneId.of("UTC")), new EventStatus(3, "Отменено"));
                 con.close();
             }
-            
 
             if (events != null) {
                 for (Event event : events) {
@@ -79,6 +83,7 @@ public class HomeServlet extends HttpServlet {
             }
             request.setAttribute("events", events);
             request.setAttribute("authors", authors);
+            request.setAttribute("statuses", statuses);
 
             //генерируем календарь на прошлый, текущий и будущий месяц для вывода на странице
             prevDate = LocalDate.now(timeZone).minusMonths(1);
@@ -122,6 +127,28 @@ public class HomeServlet extends HttpServlet {
         int author_id = 0;
 
         try {
+
+            String[] statusesStr = request.getParameterValues("statuses");
+            for (EventStatus status : statuses) {
+                status.setNotChecked();
+
+                if (statusesStr != null) {
+                    for (int i = 0; i < statusesStr.length; i++) {
+                        if (Integer.parseInt(statusesStr[i]) == status.getId_eventStatus()) {
+                            status.setChecked();
+                        }
+                    }
+                }
+            }
+
+            List<EventStatus> selectedStatuses = new ArrayList<>();
+
+            for (EventStatus status : statuses) {
+                if (status.getChecked().compareTo("checked") == 0) {
+                    selectedStatuses.add(status);
+                }
+            }
+
             String dateFromStr = (String) request.getParameter("dateFrom");
             request.setAttribute("dateFrom", dateFromStr);
             LocalDate dateFrom = null;
@@ -170,7 +197,8 @@ public class HomeServlet extends HttpServlet {
                     dateTimeFrom,
                     dateTimeTo,
                     author_id,
-                    searchDesc); //sql-запрос
+                    searchDesc,
+                    selectedStatuses); //sql-запрос
             con.close();
 
             resultString = "Найдено " + searchedEvents.size() + " записей"; //TODO: специфицировать
@@ -183,6 +211,7 @@ public class HomeServlet extends HttpServlet {
         } finally {
             request.setAttribute("resultString", resultString);
             request.setAttribute("authors", authors);
+            request.setAttribute("statuses", statuses);
             request.setAttribute("yearPrevMonth", prevDate.getYear());
             request.setAttribute("namePrevMonth", prevDate.getMonth().getDisplayName(TextStyle.FULL_STANDALONE, loc));
             request.setAttribute("weeksPrevMonth", weeksPrevMonth);

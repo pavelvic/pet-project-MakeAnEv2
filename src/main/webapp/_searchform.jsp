@@ -18,6 +18,16 @@
                     </c:forEach> 
         </select>
     </h4>
+    
+    <p>
+
+            <c:forEach items = "${statuses}" var = "statuses">
+                <p><input type="checkbox" name="statuses" value="${statuses.id_eventStatus}" ${statuses.checked}>${statuses.name}</p>
+            </c:forEach>
+                      
+    </p>
+    
+    
     <h4>Описание <input type="search" size ="31" name="searchDesc" value="${searchDesc}"></h4>
     <h4><input type="submit" value="Найти"></h4>
     </form>

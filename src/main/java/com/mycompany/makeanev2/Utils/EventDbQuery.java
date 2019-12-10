@@ -323,7 +323,7 @@ public class EventDbQuery {
     }
 
     //реализация поиска сербокса
-    public static List<Event> selectEventsByParam(Connection con, LocalDateTime dateFrom, LocalDateTime dateTo, int id_author, String searchDesc) throws SQLException, SearchException {
+    public static List<Event> selectEventsByParam(Connection con, LocalDateTime dateFrom, LocalDateTime dateTo, int id_author, String searchDesc, List<EventStatus> statuses) throws SQLException, SearchException {
 
         //признак для формирования параметров запроса: d - ищем запрос сожержит даты, a - автора, t - текст из текстовых полей события
         //базовый запрос
@@ -352,6 +352,14 @@ public class EventDbQuery {
                     + "OR e.place LIKE ?)";
         }
 
+        //
+        if (!statuses.isEmpty() & statuses != null) {
+            sql = sql + " AND (";
+            for (EventStatus status : statuses) {
+                sql = sql + "es.id_eventstatus = ? OR ";
+            }
+            sql = sql.substring(0, sql.length() - 4) + ")";
+        }
         PreparedStatement pstm = con.prepareStatement(sql);
 
         //формирование параметров запроса
@@ -368,12 +376,10 @@ public class EventDbQuery {
             par++;
         }
 
-        
-        
         if (!searchDesc.isEmpty()) {
-            
+
             searchDesc = searchDesc.replace("*", "%");
-            
+
             pstm.setString(par, searchDesc);
             par++;
             pstm.setString(par, searchDesc);
@@ -381,10 +387,21 @@ public class EventDbQuery {
             pstm.setString(par, searchDesc);
             par++;
             pstm.setString(par, searchDesc);
+            par++;
+
+        }
+
+        if (!statuses.isEmpty() & statuses != null) {
+
+            for (EventStatus status : statuses) {
+
+                pstm.setInt(par, status.getId_eventStatus());
+                par++;
+            }
         }
 
         if (pstm.getParameterMetaData().getParameterCount() == 0) {
-            throw new SearchException("Поиск не выполнен. Не заполнен хотя бы один параметр (обе даты, автор, текст)");
+            throw new SearchException("Поиск не выполнен. Не заполнен хотя бы один параметр");
         }
 
         ResultSet rs = pstm.executeQuery();
@@ -402,21 +419,36 @@ public class EventDbQuery {
 
     public static void deleteParticipantsOfEvent(Connection con, Event ev) throws SQLException {
         String sql = "DELETE FROM participant WHERE event_id=?";
-        
+
         PreparedStatement ptsm = con.prepareStatement(sql);
 
         ptsm.setInt(1, ev.getId_event());
 
         ptsm.executeUpdate();
     }
-    
+
     public static void deleteEvent(Connection con, Event ev) throws SQLException {
         String sql = "DELETE FROM event WHERE id_event=?";
-        
+
         PreparedStatement ptsm = con.prepareStatement(sql);
 
         ptsm.setInt(1, ev.getId_event());
 
         ptsm.executeUpdate();
+    }
+
+    public static List<EventStatus> selecAllStatuses(Connection con) throws SQLException {
+        String sql = "SELECT id_eventstatus, name FROM eventstatus ORDER BY id_eventstatus";
+
+        //план такой:сделать запрос, собрать из него все необходимые объекты, собрать целевой объект, записать в коллекцию
+        PreparedStatement pstm = con.prepareStatement(sql);
+
+        ResultSet rs = pstm.executeQuery();
+        List<EventStatus> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new EventStatus(rs.getInt(1), rs.getString(2)));
+        }
+        return list;
     }
 }
