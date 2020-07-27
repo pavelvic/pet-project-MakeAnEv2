@@ -2,16 +2,16 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
         <jsp:include page="/_bootstrapCSS.jsp"></jsp:include>
             <title>Информация</title>
         </head>
         <body>
         <jsp:include page="/_menu.jsp"></jsp:include>
             <div class = "container-fluid">
-                <h1>${resultString}</h1>
-            <h3><a href = "${pageContext.request.contextPath}${redirect}">Ok</a></h3>
-            <jsp:include page="/_bootstrapJS.jsp"></jsp:include>
+                <p class = "text-info h3">${resultString}</p>
+            <a href = "${pageContext.request.contextPath}${redirect}" class = "btn btn-success btn-lg">Хорошо</a>  
         </div>
+        <jsp:include page="/_bootstrapJS.jsp"></jsp:include>
     </body>
 </html>

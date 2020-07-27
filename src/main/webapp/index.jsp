@@ -11,8 +11,8 @@
     <head>
         <jsp:include page="/_bootstrapCSS.jsp"></jsp:include>
             <title>Главная @ Make events</title>
-        </head>
-        <body>
+    </head>
+    <body>
         <jsp:include page="/_menu.jsp"></jsp:include>
 
         <jsp:include page="/_bootstrapJS.jsp"></jsp:include>

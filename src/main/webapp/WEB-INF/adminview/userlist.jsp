@@ -3,7 +3,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <jsp:include page="/_bootstrapCSS.jsp"></jsp:include>
             <title>Список пользователей</title>
         </head>
@@ -18,7 +17,6 @@
                             <th>Логин</th>
                             <th>E-mail</th>
                             <th>Группа польз.</th>
-
                             <th>Подробно</th>
                         </tr>
                     <c:forEach items = "${userList}" var = "user">
@@ -27,14 +25,13 @@
                             <td>${user.username}</td>
                             <td>${user.email}</td>
                             <td>${user.groupname}</td>
-
                             <td><a href = "viewuser?id_user=${user.id_user}" 
-                                   class = "btn btn-info">Подробно...</a></td>
+                                   class = "btn btn-info">Подробно</a></td>
                         </tr>
                     </c:forEach>
                 </table>
             </div>
-            <jsp:include page="/_bootstrapJS.jsp"></jsp:include> 
         </div>
+    <jsp:include page="/_bootstrapJS.jsp"></jsp:include>
     </body>
 </html>

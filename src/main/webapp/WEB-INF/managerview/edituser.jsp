@@ -9,54 +9,49 @@
         </head>
         <body>
         <jsp:include page="/_menu.jsp"></jsp:include>
-            <div class = "container-fluid">
-                <h1>Изменить</h1>
-                <h4>${resultString}</h4>
-            <form method="POST" action="">
-                <table border="0">
-                    <tr>
-                        <td>ID</td>
-                        <td>${user.id_user}</td>
-                    </tr>
-                    <tr>
-                        <td>Имя пользователя*</td>
-                        <td>${user.username}</td>
-                    </tr>
-                    <tr>
-                        <td>E-mail*</td>
-                        <td>${user.email}</td>
-                    </tr>
-
-                    <tr>
-                        <td>Группа*</td>
-                        <td>${user.groupname}</td>
-                    </tr>
-                    <tr>
-                        <td>Телефон</td>
-                        <td><input type="tel" name="phone" value=${user.phone}></td>
-                    </tr>
-                    <tr>
-                        <td>Имя</td>
-                        <td><input type="text" name="name" value=${user.name}></td>
-                    </tr>
-                    <tr>
-                        <td>Фамилия</td>
-                        <td><input type="text" name="surname" value=${user.surname}></td>
-                    </tr>
-                    <tr>
-                        <td>Комментарий</td>
-                        <td><input type="text" name="comment" value=${user.comment}></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><input type="submit" value="Сохранить">
-                        </td>
-                    </tr>
-                </table>
-            </form>
-            <h3> <a href="viewuser?id_user=${user.id_user}">Отмена</a></h3>
-            <h3><a href = "editpass?id_user=${user.id_user}">Изменить пароль</a></h3>
-            <h3><a href = "deleteuser?id_user=${user.id_user}">Удалить пользователя</a></h3>
-            <jsp:include page="/_bootstrapJS.jsp"></jsp:include> 
+        <div class = "container-fluid">
+                <div class = "row">
+                    <div class = "col-md-4">
+                        <form method="POST" action="">
+                            <div class="form-group" data-toggle="tooltip" title="Только для админов" data-placement="right">
+                                <label>Имя пользователя*</label>
+                                <input type="text" disabled name="username" class="form-control" value=${user.username}>
+                        </div>
+                        <div class="form-group" data-toggle="tooltip" title="Только для админов" data-placement="right">
+                            <label>E-mail*</label>
+                            <input type="email" disabled name="email" class="form-control" value=${user.email}>
+                        </div>
+                        <div class="form-group" data-toggle="tooltip" title="Только для админов" data-placement="right">
+                            <label>Группа*</label>
+                            <input type="text" disabled name="groupname" class="form-control" value=${user.groupname}>
+                        </div>
+                        <div class="form-group">
+                            <label>Телефон</label>
+                            <input type="tel" name="phone" class="form-control" value=${user.phone}>
+                        </div>
+                        <div class="form-group">
+                            <label>Имя</label>
+                            <input type="text" name="name" class="form-control" value=${user.name}>
+                        </div>
+                        <div class="form-group">
+                            <label>Фамилия</label>
+                            <input type="text" name="surname"  class="form-control" value=${user.surname}>
+                        </div>
+                        <div class="form-group">
+                            <label>Комментарий</label>
+                            <input type="text" name="comment"  class="form-control" value=${user.comment}>
+                        </div>
+                        <input type="submit" value="Сохранить" class = "btn btn-info">
+                        <a class = "btn btn-info" href="viewuser?id_user=${user.id_user}">Отмена</a>
+                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Действия</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href = "editpass?id_user=${user.id_user}">Изменить пароль</a>
+                        </div>
+                    </form>
+                    <p class = "text-danger">${resultString}</p>  
+                </div>
+            </div>
         </div>
+            <jsp:include page="/_bootstrapJS.jsp"></jsp:include> 
     </body>
 </html>

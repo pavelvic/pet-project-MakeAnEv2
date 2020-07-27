@@ -2,8 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <!-- Required meta tags -->
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">      
+        
         <jsp:include page="/_bootstrapCSS.jsp"></jsp:include>
             <title>Войти</title>
         </head>
