@@ -18,8 +18,8 @@ public class User {
     private String passwordStr; //парлоль в текстовом виде, не хранится в БД
     private String email; //почта
     private String phone; //телефон
-    private String name; //имя по паспорту
-    private String surname; //фамилия по паспорту
+    private String name; //имя 
+    private String surname; //фамилия
     private String comment; //комментарий
 
     //конструктуор по параметрам (общий)
