@@ -3,10 +3,12 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <jsp:include page="/_bootstrapCSS.jsp"></jsp:include>
         <title>Профиль</title>
     </head>
     <body>
         <jsp:include page="/_menu.jsp"></jsp:include>
+        
             <div class = "container-fluid">
                 <h1>Профиль</h1>
                 <table border="0">

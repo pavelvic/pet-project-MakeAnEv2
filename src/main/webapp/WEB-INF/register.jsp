@@ -14,42 +14,48 @@
         </head>
         <body>
         <jsp:include page="/_menu.jsp"></jsp:include>
-            <h2 class = "text-info">Регистрация</h1>
-            <p class = "text-danger">${resultString}</p>
-        <form method="POST" action="">
-            <table border="0">
-                <tr>
-                    <td>Имя пользователя*</td>
-                    <td><input type="text" name="username" value=${user.username}></td>
-                </tr>
-                <tr>
-                    <td>Пароль*</td>
-                    <td><input type="password" name="password" value=${user.passwordStr}></td>
-                </tr>           
-                <tr>
-                    <td>E-mail*</td>
-                    <td><input type="email" name="email" value=${user.email}></td>
-                </tr>
-                <tr>
-                    <td>Телефон</td>
-                    <td><input type="tel" name="phone" value=${user.phone}></td>
-                </tr>
-                <tr>
-                    <td>Имя</td>
-                    <td><input type="text" name="name" value=${user.name}></td>
-                </tr>
-                <tr>
-                    <td>Фамилия</td>
-                    <td><input type="text" name="surname" value=${user.surname}></td>
-                </tr>
-                <tr>
-                    <td>Комментарий</td>
-                    <td><input type="text" name="comment" value=${user.comment}></td>
-                </tr>
-            </table>
-            <input type="submit" value="Сохранить" class = "btn btn-info">
-            <input type="reset" value="Очистить" class = "btn btn-info">
-        </form>
-        <jsp:include page="/_bootstrapJS.jsp"></jsp:include>
-</body>
+            <div class = "container-fluid">
+                <div class = "row">
+                    <div class = "col-md-4">
+                        <h2 class = "text-info">Регистрация</h1>
+                            <p class = "text-danger">${resultString}</p>
+                        <form method="POST" action="">
+
+                            <div class="form-group">
+                                <label>Имя пользователя*</label>
+                                <input type="text" name="username" class="form-control" placeholder="username" value=${user.username}>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Пароль*</label>
+                                <input type="password" name="password" class="form-control" placeholder="password" value=${user.passwordStr}>
+                            </div>
+
+                            <div class="form-group">
+                                <label>E-mail*</label>
+                                <input type="email" name="email" class="form-control" placeholder="example@example.com" value=${user.email}>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Телефон</label>
+                                <input type="tel" name="phone"  class="form-control" placeholder="+7(123) 456-78-90" value=${user.phone}>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Имя</label>
+                                <input type="text" name="name"  class="form-control" placeholder="Иван" value=${user.name}>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Фамилия</label>
+                                <input type="text" name="surname"  class="form-control" placeholder="Иванов" value=${user.surname}>
+                            </div>
+                            <input type="submit" value="Подтвердить" class = "btn btn-info">
+                            <input type="reset" value="Очистить" class = "btn btn-info">
+                        </form>
+                        <jsp:include page="/_bootstrapJS.jsp"></jsp:include>
+                </div>
+            </div>
+        </div>
+    </body>
 </html>
