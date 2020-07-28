@@ -14,6 +14,5 @@ public class DbConnection {
     public static Connection getConnection () throws SQLException, NamingException {
     return (new MySQLConnectionUtil().getConnection());
     
-    }
-    
+    }  
 }

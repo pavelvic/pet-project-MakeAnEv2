@@ -30,4 +30,24 @@ public class UserGroup {
     public String getName() {
         return name;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        UserGroup us = (UserGroup) obj;
+        return id_group == us.id_group && name.equals(us.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 11 * hash + this.id_group;
+        return hash;
+    }
 }
