@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        
+
         <jsp:include page="/_bootstrapCSS.jsp"></jsp:include>
             <title>Войти</title>
         </head>

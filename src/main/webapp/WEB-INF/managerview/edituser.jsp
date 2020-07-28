@@ -9,7 +9,7 @@
         </head>
         <body>
         <jsp:include page="/_menu.jsp"></jsp:include>
-        <div class = "container-fluid">
+            <div class = "container-fluid">
                 <div class = "row">
                     <div class = "col-md-4">
                         <form method="POST" action="">
@@ -52,6 +52,6 @@
                 </div>
             </div>
         </div>
-            <jsp:include page="/_bootstrapJS.jsp"></jsp:include> 
+        <jsp:include page="/_bootstrapJS.jsp"></jsp:include> 
     </body>
 </html>

@@ -17,7 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 /*обработка вывода списка пользователей (все пользователи в БД)
 URL /userlist */
 public class UserListServlet extends HttpServlet {
-private  List<User> list; //контейнер-коллекция для хранения списка пользователей из БД
+
+    private List<User> list; //контейнер-коллекция для хранения списка пользователей из БД
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -28,23 +29,23 @@ private  List<User> list; //контейнер-коллекция для хра�
             list = UserDbQuery.selectUser(con); //получаем список из БД и помещаем в контейнер
             con.close();
             request.setAttribute("userList", list); //передаем коллекцию на страницу для отображения
-            
+
             //берем из http-запроса инфу какую страницу открывать (определяется с фильтре в зависимости от полномочий)
             //для каждой группы пользователей есть своя страница со списком пользователей для обеспечения возможностей кастомизации
             RequestDispatcher dispatcher = (RequestDispatcher) request.getAttribute("dispatcher");
             dispatcher.forward(request, response); //открываем нужную страницу
-        
-        //если что-то пошло не так    
+
+            //если что-то пошло не так    
         } catch (SQLException | NamingException ex) {
-            errorString = "Ошибка соединения с базой данных! "+ex.getMessage(); //информация об ошибке
+            errorString = "Ошибка соединения с базой данных! " + ex.getMessage(); //информация об ошибке
             request.setAttribute("resultString", errorString);
             request.setAttribute("redirect", "/"); //указываем чтобы маршрутизация с resultpage была на главную
             request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response); //идем на страницу с ошибкой
         }
     }
-    
-@Override
-        protected void doPost(HttpServletRequest request, HttpServletResponse response)
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //TODO: Логика поиска и вывода по кнопке
         //один из вариантов реализации поиска

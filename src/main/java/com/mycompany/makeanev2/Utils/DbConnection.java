@@ -1,4 +1,3 @@
-
 package com.mycompany.makeanev2.Utils;
 
 import java.sql.Connection;
@@ -9,10 +8,9 @@ import javax.naming.NamingException;
 это позволяет дальше в программе обращаться только к этому классу, не задумываясь какая СУБД выбрана и какой драйвер использован
 код становится более универсальным*/
 public class DbConnection {
-   
-    
-    public static Connection getConnection () throws SQLException, NamingException {
-    return (new MySQLConnectionUtil().getConnection());
-    
-    }  
+
+    public static Connection getConnection() throws SQLException, NamingException {
+        return (new MySQLConnectionUtil().getConnection());
+
+    }
 }

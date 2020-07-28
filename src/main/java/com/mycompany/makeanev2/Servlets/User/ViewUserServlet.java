@@ -15,7 +15,7 @@ public class ViewUserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        User user = (User)request.getAttribute("user"); //получаем пользователя для просмотра (сформирован на этапе фильтра и проверен можно ли его смотреть)
+        User user = (User) request.getAttribute("user"); //получаем пользователя для просмотра (сформирован на этапе фильтра и проверен можно ли его смотреть)
         RequestDispatcher dispatcher = (RequestDispatcher) request.getAttribute("dispatcher"); //получаем какую страницу открыть (разные группы пользовтеля имею свои страницы со своим интерфейсом и функциями)
         dispatcher.forward(request, response); //открываем страницу  
     }

@@ -32,6 +32,6 @@
                 </table>
             </div>
         </div>
-    <jsp:include page="/_bootstrapJS.jsp"></jsp:include>
+        <jsp:include page="/_bootstrapJS.jsp"></jsp:include>
     </body>
 </html>

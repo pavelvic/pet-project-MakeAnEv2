@@ -39,25 +39,24 @@ public class LoginServlet extends HttpServlet {
         String errorString = null; //для фиксации ошибок
 
         //redirectString = request.getContextPath() + "/login"; //по умолчанию переходим на эту же страницу
-
         try {
             //если пользователь не ввел имя и пароль, фиксируем ошибку
             if (username == null || password == null || username.length() == 0 || password.length() == 0) {
                 errorString = "Не заполнены Имя пользователя и / или пароль";
                 request.setAttribute("errorString", errorString);
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
-            //если ввел
+                //если ввел
             } else {
                 Connection con = DbConnection.getConnection();
                 user = UserDbQuery.findUser(con, username, password); //ищем в БД
                 con.close();
-                
+
                 //если такой пользователь в базе не найден
                 if (user == null) {
                     errorString = "Имя пользователя или пароль не корректны"; //фиксируем ошибку
                     request.setAttribute("errorString", errorString);
                     request.getRequestDispatcher("/login.jsp").forward(request, response);
-                //если найден
+                    //если найден
                 } else {
                     CheckPermission.checkBlockUser(user); //проверим блокирован ли пользователь, который пытается войти
                     HttpSession session = request.getSession(); //получаем сессию
@@ -73,11 +72,11 @@ public class LoginServlet extends HttpServlet {
                     }
                 }
             }
-         response.sendRedirect(request.getContextPath() + "/");
-        //если что-то пошло не так фиксируем ошибку
+            response.sendRedirect(request.getContextPath() + "/");
+            //если что-то пошло не так фиксируем ошибку
         } catch (SQLException | NamingException | UserException ex) {
             errorString = "Ошибка! " + ex.toString();
-        //выводим результат операциии + ошибку если имела место, или идем на домашнюю старницу
-        } 
+            //выводим результат операциии + ошибку если имела место, или идем на домашнюю старницу
+        }
     }
 }

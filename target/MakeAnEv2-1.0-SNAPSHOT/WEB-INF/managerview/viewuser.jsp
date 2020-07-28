@@ -25,6 +25,6 @@
             </div>
             <a href = "edituser?id_user=${user.id_user}" class = "btn btn-info">Изменить</a>
         </div>
-            <jsp:include page="/_bootstrapJS.jsp"></jsp:include>
+        <jsp:include page="/_bootstrapJS.jsp"></jsp:include>
     </body>
 </html>

@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class CheckPermissionTest {
-    
+
     private User userToAccess;
     private User userInSessionNull;
     private User userInSessionSup;
@@ -14,7 +14,7 @@ public class CheckPermissionTest {
     private User userInSessionMng;
     private User userInSessionUser;
     private User userInSessionBlocked;
-   
+
     @Before
     public void setUp() {
         userToAccess = new User(2, 0, null, null, 0, null, null, null, null, null, null);
@@ -26,45 +26,45 @@ public class CheckPermissionTest {
         userInSessionBlocked = new User(1, 5, null, null, 0, null, null, null, null, null, null);
     }
 
-    @Test (expected = UserException.class)
+    @Test(expected = UserException.class)
     public void checkNotLoginTest() throws UserException {
-        CheckPermission.checkNotLogin(userInSessionNull);     
+        CheckPermission.checkNotLogin(userInSessionNull);
     }
-    
-    @Test (expected = UserException.class)
+
+    @Test(expected = UserException.class)
     public void checkBlockUserTest() throws UserException {
-        
-        CheckPermission.checkBlockUser(userInSessionBlocked);     
+
+        CheckPermission.checkBlockUser(userInSessionBlocked);
     }
-    
-    @Test (expected = UserException.class)
+
+    @Test(expected = UserException.class)
     public void checkLoginAccessTest() throws UserException {
-        CheckPermission.checkLoginAccess(userInSessionUser);     
+        CheckPermission.checkLoginAccess(userInSessionUser);
     }
-    
-    @Test (expected = UserException.class)
+
+    @Test(expected = UserException.class)
     public void checkViewUserAccessTest() throws UserException {
         CheckPermission.checkViewUserAccess(userInSessionBlocked, userToAccess); //попытка прочитать данные будучи заблокированным
         CheckPermission.checkViewUserAccess(userInSessionUser, userToAccess); //попытка прочитать данные при отсутсвии прав (группа пользователей = 4)
         CheckPermission.checkViewUserAccess(userInSessionMng, userToAccess); //попытка прочитать данные при отсутсвии прав (группа пользователей = 3)  
     }
-    
-    @Test (expected = UserException.class)
+
+    @Test(expected = UserException.class)
     public void checkEditUserAccessTest() throws UserException {
         CheckPermission.checkEditUserAccess(userInSessionBlocked, userToAccess); //попытка прочитать данные будучи заблокированным
         CheckPermission.checkEditUserAccess(userInSessionUser, userToAccess); //попытка прочитать данные при отсутсвии прав (группа пользователей = 4)
         CheckPermission.checkEditUserAccess(userInSessionMng, userToAccess); //попытка прочитать данные при отсутсвии прав (группа пользователей = 3)  
     }
-    
-    @Test (expected = UserException.class)
+
+    @Test(expected = UserException.class)
     public void checkUserListAccessTest() throws UserException {
         //только суперпользователь и администратор может смотреть списки пользователей
         CheckPermission.checkUserListAccess(userInSessionBlocked); //попытка попытка просмотра списка всех пользователей будучи заблокированным
         CheckPermission.checkUserListAccess(userInSessionUser); //попытка попытка просмотра списка всех пользователей от имени Пользователя (группа пользователей = 4)
         CheckPermission.checkUserListAccess(userInSessionMng); //попытка просмотра списка всех пользователей от лица Менеджера (группа пользователей = 3)  
     }
-    
-    @Test (expected = UserException.class)
+
+    @Test(expected = UserException.class)
     public void checkResetPasswordTest() throws UserException {
         //только суперпользователь может сбрасывать пароли другим пользователям, для остальных - нельзя, что мы тут и проверяем
         CheckPermission.checkUserListAccess(userInSessionBlocked); //попытка сбросить пароль будучи заблокированным
@@ -72,8 +72,8 @@ public class CheckPermissionTest {
         CheckPermission.checkUserListAccess(userInSessionMng); //попытка сбросить пароль от лица Менеджера (группа пользователей = 3)  
         CheckPermission.checkUserListAccess(userInSessionAdm); //попытка сбросить пароль от лица Админа (группа пользователей = 2)
     }
-    
-    @Test (expected = UserException.class)
+
+    @Test(expected = UserException.class)
     public void checkDeleteUserTest() throws UserException {
         //только суперпользователь может удалять других пользователей или пользователь может удалить сам себя. В других случаях - нельзя
         CheckPermission.checkDeleteUser(userInSessionBlocked, userToAccess); //попытка удалить будучи заблокированным
@@ -81,8 +81,8 @@ public class CheckPermissionTest {
         CheckPermission.checkDeleteUser(userInSessionMng, userToAccess); //попытка удалить от лица Менеджера (группа пользователей = 3)
         CheckPermission.checkDeleteUser(userInSessionAdm, userToAccess); //попытка удалить от лица Админа (группа пользователей = 2)
     }
-    
-    @Test (expected = UserException.class)
+
+    @Test(expected = UserException.class)
     public void checkEditPasswordTest() throws UserException {
         /*только супер пользователь может редактировать чужие пароли, либо любой пользователь может редактировать свой пароль
         в остальных кейсах даём исключение*/
@@ -90,5 +90,5 @@ public class CheckPermissionTest {
         CheckPermission.checkEditPassword(userInSessionUser, userToAccess); //попытка изменить пароль от имени Пользователя (группа пользователей = 4)
         CheckPermission.checkEditPassword(userInSessionMng, userToAccess); //попытка изменить пароль от лица Менеджера (группа пользователей = 3)
         CheckPermission.checkEditPassword(userInSessionAdm, userToAccess); //попытка изменить пароль от лица Админа (группа пользователей = 2)
-    }  
+    }
 }

@@ -8,13 +8,14 @@ import javax.servlet.http.HttpSession;
 
 /*класс для работы с аутентификацией пользователя*/
 public class AuthUtils {
+
     private static final String ATT_NAME_USER_NAME_COOKIE = "UserNameCookieAttribute";
-    
+
     //сохранить пользователя в сессию (login)
     public static void storeLoginedUser(HttpSession session, User loginedUser) {
-       session.setAttribute("loginedUser", loginedUser);
+        session.setAttribute("loginedUser", loginedUser);
     }
-    
+
     //удалить из сессии (logout)
     public static void deleteLoginedUser(HttpSession session) {
         session.removeAttribute("loginedUser");
@@ -25,18 +26,18 @@ public class AuthUtils {
         User loginedUser = (User) session.getAttribute("loginedUser");
         return loginedUser;
     }
-    
-    //обновить пользователя в сессии + куках (удаляем сохраненного, добавляем указанного)
-    public static void refreshLoginedUser (HttpServletRequest request, HttpServletResponse response, User userToUpdate) {
-    //сначала обновляем данные куки, если есть
-                if (AuthUtils.getLoginedUserCookie(request) != null) {
-                    AuthUtils.deleteLoginedUserCookie(response, AuthUtils.getLoginedUser(request.getSession()));
-                    AuthUtils.storeLoginedUserCookie(response, userToUpdate);
-                }
 
-                //потом данные самой session    
-                AuthUtils.deleteLoginedUser(request.getSession());
-                AuthUtils.storeLoginedUser(request.getSession(), userToUpdate);
+    //обновить пользователя в сессии + куках (удаляем сохраненного, добавляем указанного)
+    public static void refreshLoginedUser(HttpServletRequest request, HttpServletResponse response, User userToUpdate) {
+        //сначала обновляем данные куки, если есть
+        if (AuthUtils.getLoginedUserCookie(request) != null) {
+            AuthUtils.deleteLoginedUserCookie(response, AuthUtils.getLoginedUser(request.getSession()));
+            AuthUtils.storeLoginedUserCookie(response, userToUpdate);
+        }
+
+        //потом данные самой session    
+        AuthUtils.deleteLoginedUser(request.getSession());
+        AuthUtils.storeLoginedUser(request.getSession(), userToUpdate);
     }
 
     //сохранить пользователя в cookies
@@ -56,9 +57,9 @@ public class AuthUtils {
                 }
             }
         }
-    return null;
+        return null;
     }
-    
+
     //удалить cookies для пользователя
     public static void deleteLoginedUserCookie(HttpServletResponse response, User user) {
         Cookie cookieUserName = new Cookie(ATT_NAME_USER_NAME_COOKIE, user.getUsername());

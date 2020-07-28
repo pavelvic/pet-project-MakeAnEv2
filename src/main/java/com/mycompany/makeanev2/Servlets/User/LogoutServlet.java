@@ -21,14 +21,14 @@ public class LogoutServlet extends HttpServlet {
         //если находится залогиневшийся польз выполняем выход: удаляем из сессии и чистим куки
         if (loginedUser != null) {
             resultString = "Вы вышли";
-            
+
             //обнуляем куки
             AuthUtils.deleteLoginedUserCookie(response, loginedUser);
-            
+
             //обнуляем пользователя в сессии
             AuthUtils.deleteLoginedUser(request.getSession());
             request.setAttribute("redirect", "/"); //устанавливаем маршрутизацию на главную страницу
-        //если пользователь в сесси не найден
+            //если пользователь в сесси не найден
         } else {
             resultString = "Вы еще не вошли"; //фиксируем результат операции
             request.setAttribute("redirect", "/login"); //маршрутизируем на страницу логина

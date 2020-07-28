@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 /*обработка ситуации, когда нужно вывести какую-либо информацию пользователю (ошибка, результат операции и проч)
 URL /resultpage */
 public class ResultServlet extends HttpServlet {
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
