@@ -4,17 +4,15 @@
 <html>
     <head>
         <title>Главная @ Make events</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <jsp:include page="/_bootstrapCSS.jsp"></jsp:include>
     </head>
     <body>
     <jsp:include page="/_menu.jsp"></jsp:include>
-   
-    <h2>События Супер</h2>
     <jsp:include page="/_searchform.jsp"></jsp:include>
     <jsp:include page="/_monthform.jsp"></jsp:include>
     
-            <table border = "1" cellpadding="5" cellspacing="1">
+    ${resultString}      
+    <table border = "1" cellpadding="5" cellspacing="1">
                 <tr>
                     <th>Номер</th>
                     <th>Автор</th>
@@ -48,5 +46,9 @@
                 </tr>
             </c:forEach>
             </table> 
+    
+    
+    
+    <jsp:include page="/_bootstrapJS.jsp"></jsp:include>
     </body>
 </html>
