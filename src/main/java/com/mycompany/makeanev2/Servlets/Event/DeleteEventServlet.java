@@ -20,11 +20,10 @@ public class DeleteEventServlet extends HttpServlet {
 
         String resultString = null;
         Event event = (Event) request.getAttribute("event");
-        
 
         try {
             Connection con = DbConnection.getConnection();
-            con.setAutoCommit(false); 
+            con.setAutoCommit(false);
             EventDbQuery.deleteParticipantsOfEvent(con, event);
             EventDbQuery.deleteEvent(con, event); //запрос в БД для удаления 
             con.commit();

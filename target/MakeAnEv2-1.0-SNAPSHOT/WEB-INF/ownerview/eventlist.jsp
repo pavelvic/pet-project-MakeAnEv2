@@ -9,7 +9,7 @@
     <body>
         <jsp:include page="/_menu.jsp"></jsp:include>
             <h1>События СУПЕР</h1>
-            
+
             <h2>Участвую</h2>
             <table border = "1" cellpadding="5" cellspacing="1">
                 <tr>
@@ -43,23 +43,23 @@
                 </tr>
             </c:forEach>
         </table>
-            
-            <h2>Организую</h2>
-            <table border = "1" cellpadding="5" cellspacing="1">
-                <tr>
-                    <th>Номер</th>
-                    <th>Название</th>
-                    <th>Описание</th>
-                    <th>Место</th>
-                    <th>Дата и время проведения</th>
-                    <th>Макс.чел.</th>
-                    <th>Заявились</th>
-                    <th>Критичная дата</th>
-                    <th>Статус</th>
-                    <th>Регистрация</th>
-                    <th>Создано</th>
-                    <th>Подробно</th>
-                </tr>
+
+        <h2>Организую</h2>
+        <table border = "1" cellpadding="5" cellspacing="1">
+            <tr>
+                <th>Номер</th>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Место</th>
+                <th>Дата и время проведения</th>
+                <th>Макс.чел.</th>
+                <th>Заявились</th>
+                <th>Критичная дата</th>
+                <th>Статус</th>
+                <th>Регистрация</th>
+                <th>Создано</th>
+                <th>Подробно</th>
+            </tr>
             <c:forEach items = "${likeAuthorEvents}" var = "likeAuthorEvents">
                 <tr>
                     <td>${likeAuthorEvents.id_event}</td>
@@ -76,6 +76,6 @@
                     <td><a href = "viewevent?id_event=${likeAuthorEvents.id_event}">Подробно...</a></td>
                 </tr>
             </c:forEach>
-            </table>
+        </table>
     </body>
 </html>

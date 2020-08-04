@@ -34,7 +34,7 @@ public class EventListServlet extends HttpServlet {
 //    ZoneId timeZone = ZoneId.of("Europe/Moscow"); 
         ZoneId timeZone = (ZoneId) request.getServletContext().getAttribute("ZoneId");
         try {
-            
+
             HttpServletRequest req = (HttpServletRequest) request;
             HttpSession session = req.getSession();
             User userInSession = AuthUtils.getLoginedUser(session);
@@ -65,7 +65,7 @@ public class EventListServlet extends HttpServlet {
                     likeAuthorEvent.setZone(timeZone);
                 }
             }
-            
+
             if (likeAuthorEvents != null) {
                 for (Event likeParticipantEvent : likeParticipantEvents) {
                     likeParticipantEvent.setZone(timeZone);
@@ -74,7 +74,7 @@ public class EventListServlet extends HttpServlet {
                     }
                 }
             }
-            
+
             request.setAttribute("likeAuthorEvents", likeAuthorEvents); //передаем коллекцию на страницу для отображения
             request.setAttribute("likeParticipantEvents", likeParticipantEvents);
 
@@ -91,7 +91,7 @@ public class EventListServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response); //идем на страницу с ошибкой
         }
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

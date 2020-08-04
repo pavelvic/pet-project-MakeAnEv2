@@ -3,8 +3,8 @@ package com.mycompany.makeanev2;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
 public class EventRegStatus {
+
     private final int id_eventRegStatus;
     private final String name;
 
@@ -24,5 +24,5 @@ public class EventRegStatus {
 
     public String getName() {
         return name;
-    } 
+    }
 }

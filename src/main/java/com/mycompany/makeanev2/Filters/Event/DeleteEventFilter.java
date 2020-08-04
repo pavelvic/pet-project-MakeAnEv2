@@ -54,7 +54,7 @@ public class DeleteEventFilter implements Filter {
             if (id_event == null) {
                 throw new EventException("Не указан идентификатор мероприятия к удалению");
             }
-            
+
             Connection con = DbConnection.getConnection();
             Event event = EventDbQuery.selectEvent(con, Integer.parseInt(id_event));
             List<Participant> participants = EventDbQuery.selectParticipantsOfEvent(con, event);

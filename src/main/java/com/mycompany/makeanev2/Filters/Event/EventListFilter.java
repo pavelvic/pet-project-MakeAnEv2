@@ -38,7 +38,7 @@ public class EventListFilter implements Filter {
         try {
             //
             //генерируем исключение UserException при непрохождении проверки
-            
+
             CheckPermission.checkEventListAccess(userInSession);
 
             //если все хорошо и исключений мы не получили, устанавливаем диспетчера для перехода в сервлете

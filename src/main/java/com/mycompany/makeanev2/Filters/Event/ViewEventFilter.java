@@ -1,6 +1,4 @@
-
 package com.mycompany.makeanev2.Filters.Event;
-
 
 import com.mycompany.makeanev2.Exceptions.UserException;
 import com.mycompany.makeanev2.User;
@@ -37,9 +35,8 @@ public class ViewEventFilter implements Filter {
             HttpServletRequest req = (HttpServletRequest) request;
             HttpSession session = req.getSession();
             User userInSession = AuthUtils.getLoginedUser(session);
-            
-            CheckPermission.checkNotLogin(userInSession);
 
+            CheckPermission.checkNotLogin(userInSession);
 
             //если все хорошо и исключений мы не получили, устанавливаем диспетчера для перехода в сервлете
             //в зависимости от группы пользователя залогиненного, определяем какая страница будет открыта, маршрут сохраняется в спец объекте dispatcher
@@ -67,7 +64,7 @@ public class ViewEventFilter implements Filter {
             chain.doFilter(request, response);
 
             //блок исключений, если что-то пошло не так прервываем загрузку страницы и выдаем пользователю сообщение о проблеме
-        } catch (UserException | NumberFormatException | NullPointerException  ex) {
+        } catch (UserException | NumberFormatException | NullPointerException ex) {
             String errorString = "Ошибка! " + ex.toString(); //информация об ошибке
             request.setAttribute("resultString", errorString);
             request.setAttribute("redirect", "/"); //указываем чтобы маршрутизация с resultpage была на userlist

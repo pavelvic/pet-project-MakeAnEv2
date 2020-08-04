@@ -170,8 +170,10 @@ public class CheckPermission {
     }
 
     public static void checkDeleteEvent(User userInSession, Event event) throws UserException, EventException {
-
-
+        
+        checkNotLogin(userInSession);
+        checkBlockUser(userInSession);
+        
         switch (userInSession.getGroup_id()) {
             case 2:
                 if (userInSession.getId_user() != event.findAuthor().getPerson().getId_user()) {

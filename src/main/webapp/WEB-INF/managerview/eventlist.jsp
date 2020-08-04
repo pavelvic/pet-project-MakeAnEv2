@@ -9,7 +9,7 @@
     <body>
         <jsp:include page="/_menu.jsp"></jsp:include>
             <h1>События МЕНЕДЖЕР</h1>
-            
+
             <h2>Участвую</h2>
             <table border = "1" cellpadding="5" cellspacing="1">
                 <tr>
@@ -24,7 +24,7 @@
                     <th>Статус</th>
                     <th>Регистрация</th>
                     <th>Создано</th>
-                    
+
                 </tr>
             <c:forEach items = "${likeParticipantEvents}" var = "likeParticipantEvents">
                 <tr>
@@ -39,7 +39,7 @@
                     <td>${likeParticipantEvents.evStatus.name}</td>
                     <td>${likeParticipantEvents.evRegStatus.name}</td>
                     <td>${likeParticipantEvents.createTime}</td>
-                    
+
                 </tr>
             </c:forEach>
         </table>    

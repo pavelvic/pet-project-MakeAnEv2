@@ -30,16 +30,16 @@ public class UnsubscribeEventFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        
-                try {
+
+        try {
             //определяем залогинишвегося
             HttpServletRequest req = (HttpServletRequest) request;
             HttpSession session = req.getSession();
             User userInSession = AuthUtils.getLoginedUser(session);
-            
+
             CheckPermission.checkNotLogin(userInSession);
             CheckPermission.checkBlockUser(userInSession);
-            
+
             request.setAttribute("dispatcher", request.getRequestDispatcher("/WEB-INF/resultpage.jsp"));
 
             chain.doFilter(request, response);

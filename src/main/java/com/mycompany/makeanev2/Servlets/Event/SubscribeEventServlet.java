@@ -34,7 +34,6 @@ public class SubscribeEventServlet extends HttpServlet {
         ZoneId timeZone = (ZoneId) request.getServletContext().getAttribute("ZoneId");
         String resultString = null;
 
-
         HttpServletRequest req = (HttpServletRequest) request;
         HttpSession session = req.getSession();
         User userInSession = AuthUtils.getLoginedUser(session);
@@ -48,16 +47,14 @@ public class SubscribeEventServlet extends HttpServlet {
             Event event = EventDbQuery.selectEvent(con, Integer.parseInt(id_event));
             List<Participant> participants = EventDbQuery.selectParticipantsOfEvent(con, event);
 
-
             event.setZone(timeZone);
 
-                for (Participant participant : participants) {
-                    participant.setZone(timeZone);
-                }
-                
+            for (Participant participant : participants) {
+                participant.setZone(timeZone);
+            }
+
             event.setParticipants(participants);
             Participant author = event.findAuthor();
-
 
             //проверим доступные статусы события: в уже запланированные (статус события "Запланировано") и проведенные ("Проведено") события нельзя региться
             //также нельзя региться в события, регистрация в которые закрыта (статус регистрации "Закрыт")
@@ -76,16 +73,14 @@ public class SubscribeEventServlet extends HttpServlet {
             Participant participant = new Participant(userInSession, ps, userInSession, ZonedDateTime.now(ZoneId.of("UTC")));
 
             //проверяем зареген ли уже на событии участник, если да - выдаем исключение Участника об этом
-
-                for (Participant pc : participants) {
-                    if (pc.getPerson().getId_user() == participant.getPerson().getId_user()) {
-                        throw new ParticipantException("Вы уже участвуете в мероприятии");
-                    }
+            for (Participant pc : participants) {
+                if (pc.getPerson().getId_user() == participant.getPerson().getId_user()) {
+                    throw new ParticipantException("Вы уже участвуете в мероприятии");
                 }
-
+            }
 
             //добавляем участника в событие стандартным запросом, если все проверки пройдены и мы не получили исключений
-            EventDbQuery.insertParticipant(con, participant,event);
+            EventDbQuery.insertParticipant(con, participant, event);
             con.close();
             resultString = "Вы добавлены. Количество мест ограничено (" + event.getMaxParticipants() + "). Ваше место " + (participants.size() + 1)
                     + ". Статус: " + participant.getStatus().getName();

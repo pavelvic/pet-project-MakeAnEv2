@@ -17,7 +17,6 @@ public class Event {
     //переменные
     private final int id_event; //уник идентификатор события, автоинкретемнт в БД
     private final EventStatus evStatus; //код статуса мероприятия, из таблицы статусов
-    //private final int eventregstatus_id; //код статуса регистрации на мероприятие из таблицы статусов
     private final EventRegStatus evRegStatus;
     private final String name; //название события, обязательное
     private final String description; //описание события, не обязательное
@@ -58,7 +57,6 @@ public class Event {
         this.name = rs.getString(6);
         this.description = rs.getString(7);
         this.place = rs.getString(8);
-        //this.eventTime = LocalDateTime.ofEpochSecond(rs.getLong(9), 0, ZoneOffset.UTC);
         this.zone = ZoneId.of("UTC");
         this.eventTime = ZonedDateTime.of(LocalDateTime.ofEpochSecond(rs.getLong(9), 0, ZoneOffset.UTC), zone);
         this.maxParticipants = rs.getInt(10);
@@ -97,7 +95,7 @@ public class Event {
     public String getEventTime() {
         return eventTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
     }
-    
+
     public ZonedDateTime getZonedEventTime() {
         return eventTime;
     }
@@ -109,20 +107,19 @@ public class Event {
     public String getCreateTime() {
         return createTime.withZoneSameInstant(zone).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
     }
-    
+
     public ZonedDateTime getZonedCreateTime() {
         return createTime;
     }
 
-    
     public String getCritTime() {
         return critTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
     }
-    
+
     public ZonedDateTime getZonedCritTime() {
         return critTime;
     }
-    
+
     public ZoneId getZone() {
         return zone;
     }
@@ -133,69 +130,64 @@ public class Event {
 
     public int getCountOfParticipants() {
         countOfParticipants = participantList.size();
-         
+
         return countOfParticipants;
     }
-    
+
     public void setZone(ZoneId zone) {
         this.zone = zone;
     }
-    
+
     public void setParticipants(List<Participant> participantList) {
         this.participantList = (ArrayList<Participant>) participantList;
     }
 
     //другие методы: проверки значений, изменение, equals() и hashCode()
     //проверка: критичная дата время должна быть меньше даты времени события
-        public void checkTimes() throws EventException {
-        
-//        if (eventTime.isBefore(LocalDateTime.now(Clock.systemUTC()))) {
-//            throw new EventException("Дата события не может быть в прошлом");
-//        }
+    public void checkTimes() throws EventException {
 
         if (eventTime.isBefore(ZonedDateTime.now(ZoneId.of("UTC")))) {
             throw new EventException("Дата события не может быть в прошлом");
         }
-        
+
         if (!critTime.isBefore(eventTime)) {
             throw new EventException("Критическая дата должна быть раньше Даты события");
         }
-        
+
         if (critTime.isBefore(ZonedDateTime.now(ZoneId.of("UTC")))) {
             throw new EventException("Критическая дата не может быть в прошлом");
         }
-    }  
+    }
 
     public void checkEventStatus() throws EventException {
         // если статус запланировано или проведено, нельзя региться
         if (evStatus.getId_eventStatus() == 2 | evStatus.getId_eventStatus() == 3) {
-         throw new EventException("Невозможно зарегистрироваться в уже запланированные или проведённые мероприятия");
+            throw new EventException("Невозможно зарегистрироваться в уже запланированные или проведённые мероприятия");
         }
     }
-    
-    
+
     public void checkEventRegStatus() throws EventException {
         // если статус запланировано или проведено, нельзя региться
-        if (evRegStatus.getId_eventRegStatus()==2) {
-         throw new EventException("Невозможно зарегистрироваться в мероприятие. Регистрация закрыта");
+        if (evRegStatus.getId_eventRegStatus() == 2) {
+            throw new EventException("Невозможно зарегистрироваться в мероприятие. Регистрация закрыта");
         }
     }
 
     public Participant findAuthor() {
-       if (!participantList.isEmpty()) {
-           for (Participant participant : participantList) {
-               if (participant.getAuthor()) return participant;
-           }   
-       }
-       return null;
+        if (!participantList.isEmpty()) {
+            for (Participant participant : participantList) {
+                if (participant.getAuthor()) {
+                    return participant;
+                }
+            }
+        }
+        return null;
     }
 
     public Participant getAuthor() {
         author = findAuthor();
         return author;
     }
-    
-    
 
     public Participant getParticipantByPerson(User user) throws ParticipantException {
         if (user != null) {
@@ -204,8 +196,8 @@ public class Event {
                     return participant;
                 }
             }
-        throw new ParticipantException("Пользователь не участвует в событии");
+            throw new ParticipantException("Пользователь не участвует в событии");
         }
-    return null;
+        return null;
     }
 }

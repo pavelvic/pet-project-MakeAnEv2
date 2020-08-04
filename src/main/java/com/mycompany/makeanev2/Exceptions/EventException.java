@@ -1,7 +1,8 @@
 package com.mycompany.makeanev2.Exceptions;
 
 public class EventException extends Exception {
-        //текст исключения для передачи на страницу
+    //текст исключения для передачи на страницу
+
     private final String ExcText;
 
     //конструктор исключения с передачей сообщения

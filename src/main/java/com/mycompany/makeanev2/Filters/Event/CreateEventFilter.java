@@ -45,7 +45,7 @@ public class CreateEventFilter implements Filter {
 
             //проверяем есть ли доступ до данному запросу
             CheckPermission.checkCreateEventAccess(userInSession);
-            
+
             Connection con = DbConnection.getConnection();
             List<EventRegStatus> EventRegStatus = EventDbQuery.selectEventStatuses(con);
             request.setAttribute("EventRegStatus", EventRegStatus);

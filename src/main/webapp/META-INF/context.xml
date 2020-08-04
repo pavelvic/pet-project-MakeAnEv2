@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/MakeAnEv2">
-   <Resource name="jdbc/makeanev" 
-          auth="Container" 
-          type="javax.sql.DataSource" 
-          maxActive="100" 
-          maxIdle="30" 
-          maxWait="10000" 
-          username="root" 
-          password="1234" 
-          driverClassName="com.mysql.cj.jdbc.Driver" 
-          url="jdbc:mysql://localhost/makeanevents?serverTimezone=UTC"/>  
+    <Resource name="jdbc/makeanev" 
+              auth="Container" 
+              type="javax.sql.DataSource" 
+              maxActive="100" 
+              maxIdle="30" 
+              maxWait="10000" 
+              username="root" 
+              password="1234" 
+              driverClassName="com.mysql.cj.jdbc.Driver" 
+              url="jdbc:mysql://localhost/makeanevents?serverTimezone=UTC"/>  
 </Context>

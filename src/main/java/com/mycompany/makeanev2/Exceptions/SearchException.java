@@ -5,10 +5,9 @@
  */
 package com.mycompany.makeanev2.Exceptions;
 
-
 public class SearchException extends Exception {
-    
-        //текст исключения для передачи на страницу
+
+    //текст исключения для передачи на страницу
     private final String ExcText;
 
     //конструктор исключения с передачей сообщения
@@ -21,6 +20,5 @@ public class SearchException extends Exception {
     public String toString() {
         return ExcText;
     }
-    
-    
+
 }

@@ -2,8 +2,8 @@ package com.mycompany.makeanev2;
 
 import java.sql.SQLException;
 
-
 public class EventStatus {
+
     private final int id_eventStatus;
     private final String name;
     private String checked;
@@ -36,7 +36,7 @@ public class EventStatus {
     public void setChecked() {
         this.checked = "checked";
     }
-    
+
     public void setNotChecked() {
         this.checked = "";
     }

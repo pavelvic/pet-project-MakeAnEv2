@@ -353,7 +353,7 @@ public class EventDbQuery {
         }
 
         //
-        if ( statuses != null && !statuses.isEmpty()) {
+        if (statuses != null && !statuses.isEmpty()) {
             sql = sql + " AND (";
             for (EventStatus status : statuses) {
                 sql = sql + "es.id_eventstatus = ? OR ";

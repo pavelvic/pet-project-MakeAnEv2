@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Month;
 
 public class WeekOfMonth {
+
     private final LocalDate mon;
     private final LocalDate tue;
     private final LocalDate wed;
@@ -30,57 +31,55 @@ public class WeekOfMonth {
         if (mon == null) {
             return "";
         } else {
-        return String.valueOf(mon.getDayOfMonth());
+            return String.valueOf(mon.getDayOfMonth());
         }
     }
-    
-    
-    
+
     public String getTue() {
         if (tue == null) {
             return "";
         } else {
-        return String.valueOf(tue.getDayOfMonth());
+            return String.valueOf(tue.getDayOfMonth());
         }
     }
-    
+
     public String getWed() {
         if (wed == null) {
             return "";
         } else {
-        return String.valueOf(wed.getDayOfMonth());
+            return String.valueOf(wed.getDayOfMonth());
         }
     }
-    
+
     public String getThu() {
         if (thu == null) {
             return "";
         } else {
-        return String.valueOf(thu.getDayOfMonth());
+            return String.valueOf(thu.getDayOfMonth());
         }
     }
-    
+
     public String getFri() {
         if (fri == null) {
             return "";
         } else {
-        return String.valueOf(fri.getDayOfMonth());
+            return String.valueOf(fri.getDayOfMonth());
         }
     }
-    
+
     public String getSat() {
         if (sat == null) {
             return "";
         } else {
-        return String.valueOf(sat.getDayOfMonth());
+            return String.valueOf(sat.getDayOfMonth());
         }
     }
-    
+
     public String getSun() {
         if (sun == null) {
             return "";
         } else {
-        return String.valueOf(sun.getDayOfMonth());
+            return String.valueOf(sun.getDayOfMonth());
         }
     }
 
@@ -91,5 +90,29 @@ public class WeekOfMonth {
     public int getMonth() {
         return month.getValue();
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        WeekOfMonth w = (WeekOfMonth) obj;
+        return 
+                getMon().equals(w.getMon()) && 
+                getTue().equals(w.getTue()) && 
+                getWed().equals(w.getWed()) && 
+                getThu().equals(w.getThu()) && 
+                getFri().equals(w.getFri()) && 
+                getSat().equals(w.getSat()) && 
+                getSun().equals(w.getSun()) && 
+                year==w.year && month.equals(w.month);
+        
+
+    }
+
 
 }

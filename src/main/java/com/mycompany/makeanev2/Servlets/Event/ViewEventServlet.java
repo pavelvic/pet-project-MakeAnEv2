@@ -31,11 +31,11 @@ public class ViewEventServlet extends HttpServlet {
         ZoneId timeZone = (ZoneId) request.getServletContext().getAttribute("ZoneId");
         String errorString;
         boolean regFlag = true;
-        
+
         HttpServletRequest req = (HttpServletRequest) request;
         HttpSession session = req.getSession();
         User userInSession = AuthUtils.getLoginedUser(session);
-        
+
         try {
             //получаем мероприятие к которому хотим получить доступ
             Connection con = DbConnection.getConnection();
@@ -51,10 +51,12 @@ public class ViewEventServlet extends HttpServlet {
             if (participants != null) {
                 for (Participant participant : participants) {
                     participant.setZone(timeZone);
-                    if (participant.getPerson().getId_user() == userInSession.getId_user()) regFlag = false;
+                    if (participant.getPerson().getId_user() == userInSession.getId_user()) {
+                        regFlag = false;
+                    }
                 }
             }
-            
+
             event.setParticipants(participants);
             Participant author = event.findAuthor();
 
@@ -62,9 +64,7 @@ public class ViewEventServlet extends HttpServlet {
             request.setAttribute("regFlag", regFlag); //для организации отображения кнопки "Участвую" / "Отказаться", в зависимости от нахождения в списке участников
             request.setAttribute("author", author);
             request.setAttribute("participants", participants);
-            
 
-            
             RequestDispatcher dispatcher = (RequestDispatcher) request.getAttribute("dispatcher");
             dispatcher.forward(request, response); //открываем нужную страницу
 

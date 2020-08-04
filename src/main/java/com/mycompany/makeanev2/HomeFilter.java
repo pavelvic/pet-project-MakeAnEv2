@@ -2,13 +2,7 @@ package com.mycompany.makeanev2;
 
 import com.mycompany.makeanev2.Exceptions.UserException;
 import com.mycompany.makeanev2.Utils.AuthUtils;
-import com.mycompany.makeanev2.Utils.DbConnection;
-import com.mycompany.makeanev2.Utils.EventDbQuery;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
-import javax.naming.NamingException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -41,7 +35,7 @@ public class HomeFilter implements Filter {
         int userGroup;
 
         try {
-            
+
             if (userInSession == null) {
                 userGroup = 0;
             } else {

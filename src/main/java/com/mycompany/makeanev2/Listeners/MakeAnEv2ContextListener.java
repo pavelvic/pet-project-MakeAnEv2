@@ -4,7 +4,6 @@ import java.time.ZoneId;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-
 public class MakeAnEv2ContextListener implements ServletContextListener {
 
     @Override
@@ -18,6 +17,6 @@ public class MakeAnEv2ContextListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-         //nothing
+        //nothing
     }
 }

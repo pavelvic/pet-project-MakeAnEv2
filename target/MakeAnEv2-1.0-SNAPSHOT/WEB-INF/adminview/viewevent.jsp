@@ -59,51 +59,51 @@
                 <td>Создано</td>
                 <td>${event.createTime}</td>
             </tr>
-                <td>Автор</td>
-                <td><a href="viewuser?id_user=${author.person.id_user}">${author.person.username}</a></td>
+            <td>Автор</td>
+            <td><a href="viewuser?id_user=${author.person.id_user}">${author.person.username}</a></td>
+        </tr>
+
+    </table>
+
+    <h2>Участники</h2>
+    <table border = "1" cellpadding="5" cellspacing="1">
+        <tr>
+            <th>Логин</th>
+            <th>Статус</th>
+            <th>e-mail</th>
+            <th>Тел</th>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Добавил</th>
+            <th>От</th>
+        </tr>
+        <c:forEach items = "${participants}" var = "participants">
+            <tr>
+                <td><a href = "viewuser?id_user=${participants.person.id_user}">${participants.person.username}</a></td>
+                <td>${participants.status.name}</td>
+                <td>${participants.person.email}</td>
+                <td>${participants.person.phone}</td>
+                <td>${participants.person.name}</td>
+                <td>${participants.person.surname}</td>
+                <td><a href="viewuser?id_user=${participants.whoAdd.id_user}">${participants.whoAdd.username}</a></td>
+                <td>${participants.regDatetime}</td>
             </tr>
-            
-        </table>
-            
-            <h2>Участники</h2>
-            <table border = "1" cellpadding="5" cellspacing="1">
-                <tr>
-                    <th>Логин</th>
-                    <th>Статус</th>
-                    <th>e-mail</th>
-                    <th>Тел</th>
-                    <th>Имя</th>
-                    <th>Фамилия</th>
-                    <th>Добавил</th>
-                    <th>От</th>
-                </tr>
-            <c:forEach items = "${participants}" var = "participants">
-                <tr>
-                    <td><a href = "viewuser?id_user=${participants.person.id_user}">${participants.person.username}</a></td>
-                    <td>${participants.status.name}</td>
-                    <td>${participants.person.email}</td>
-                    <td>${participants.person.phone}</td>
-                    <td>${participants.person.name}</td>
-                    <td>${participants.person.surname}</td>
-                    <td><a href="viewuser?id_user=${participants.whoAdd.id_user}">${participants.whoAdd.username}</a></td>
-                    <td>${participants.regDatetime}</td>
-                </tr>
-            </c:forEach>
-            </table>
-        <c:if test="${author.person.id_user != loginedUser.id_user}">
-   
+        </c:forEach>
+    </table>
+    <c:if test="${author.person.id_user != loginedUser.id_user}">
+
         <c:if test="${regFlag == true}">
-        <h4><a href="subscribe?id_event=${event.id_event}">Участвовать</a></h4>
+            <h4><a href="subscribe?id_event=${event.id_event}">Участвовать</a></h4>
         </c:if>
-        
+
         <c:if test="${regFlag == false}">
-        <h4><a href="unsubscribe?id_event=${event.id_event}">Отказаться от участия</a></h4>
+            <h4><a href="unsubscribe?id_event=${event.id_event}">Отказаться от участия</a></h4>
         </c:if>
-        
-        </c:if>
-        
-        <c:if test="${author.person.id_user == loginedUser.id_user}">
-            <h5><a href="deleteevent?id_event=${event.id_event}">Удалить</a></h5>
-        </c:if>      
-    </body>
+
+    </c:if>
+
+    <c:if test="${author.person.id_user == loginedUser.id_user}">
+        <h5><a href="deleteevent?id_event=${event.id_event}">Удалить</a></h5>
+    </c:if>      
+</body>
 </html>
