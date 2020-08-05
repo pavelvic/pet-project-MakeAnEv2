@@ -10,6 +10,12 @@ import java.util.List;
 public class CalendarUtils {
 
     public static List<WeekOfMonth> getWeeksOfMonth(int year, Month month) {
+        if (year > LocalDate.now().getYear() + 100 || year < LocalDate.now().getYear() - 99) {
+            throw new IllegalArgumentException("Некорретный год. Доступный диапазон +/- 100 лет от текущей даты");
+        }
+        if (month == null) {
+            throw new IllegalArgumentException("Месяц не может быть null");
+        }
         List<WeekOfMonth> weeks = new ArrayList<>();
 
         LocalDate date;

@@ -35,4 +35,24 @@ public class ParticipantStatus {
         this.id_participantStatus = 2;
         this.name = "Запасной";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        ParticipantStatus pobj = (ParticipantStatus) obj;
+        return id_participantStatus == pobj.id_participantStatus && name.equals(pobj.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 11 * hash + this.id_participantStatus + this.name.hashCode();
+        return hash;
+    }
 }

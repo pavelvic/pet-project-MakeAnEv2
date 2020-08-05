@@ -47,7 +47,7 @@ public class UserGroup {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 11 * hash + this.id_group;
+        hash = 11 * hash + this.id_group + this.name.hashCode() * 13;
         return hash;
     }
 }

@@ -2,6 +2,7 @@ package com.mycompany.makeanev2;
 
 import com.mycompany.makeanev2.Exceptions.UserException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,14 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class UserTest {
+
+    private final User userToAddOrChange = new User(1, 0, null, "username", 0, null, "example@example.com", "+7123456789", null, null, null);
+    private final List<User> exceptUsers = Arrays.asList(userToAddOrChange);
+
+    @Test(expected = IllegalArgumentException.class)
+    public void applyChangesNullTest() {
+        userToAddOrChange.applyChanges(null);
+    }
 
     @Test
     public void applyChangesToUserTest() {
@@ -44,93 +53,77 @@ public class UserTest {
 
     }
 
-    @Test(expected = UserException.class)
-    public void checkUserNameTest() throws UserException {
-        User user;
-
-        //пустое имя
-        user = new User(0, 0, null, "", 0, null, null, null, null, null, null);
-        user.checkUsernamePattern();
-
-        //короткое имя до 2х символов
-        user = new User(0, 0, null, "ab", 0, null, null, null, null, null, null);
-        user.checkUsernamePattern();
-
-        //слишком длинное
-        user = new User(0, 0, null, "abcdefghijklmnopqrstuvwxyz", 0, null, null, null, null, null, null);
-        user.checkUsernamePattern();
-
-        //первый символ - буква
-        user = new User(0, 0, null, "_bcdefg", 0, null, null, null, null, null, null);
-        user.checkUsernamePattern();
-
-        //русские буквы
-        user = new User(0, 0, null, "abсdуеg", 0, null, null, null, null, null, null);
-        user.checkUsernamePattern();
-    }
-
-    @Test(expected = UserException.class)
-    public void checkPasswordPatternTest() throws UserException {
-        User user;
-
-        //короткий или пустой (менее 8 симв)
-        String pw = "";
-        for (int i = 0; i < 8; i++) {
-            pw = "" + pw;
-            user = new User(0, 0, null, null, 0, pw, null, null, null, null, null);
-            user.checkPasswordPattern();
-        }
-
-        //нет букв в верхнем регистре
-        user = new User(0, 0, null, "pass@wordq1", 0, null, null, null, null, null, null);
-        user.checkPasswordPattern();
-
-        //нет букв в нижнем регистре
-        user = new User(0, 0, null, "PASS@WORDQ1", 0, null, null, null, null, null, null);
-        user.checkPasswordPattern();
-
-        //нет цифр
-        user = new User(0, 0, null, "Pass@wordq", 0, null, null, null, null, null, null);
-        user.checkPasswordPattern();
-
-        //нет спецсимвола
-        user = new User(0, 0, null, "Passwordq1", 0, null, null, null, null, null, null);
-        user.checkPasswordPattern();
-
-        //есть пробелы
-        user = new User(0, 0, null, "Pass worDq1", 0, null, null, null, null, null, null);
-        user.checkPasswordPattern();
-
-        //есть кириллица
-        user = new User(0, 0, null, "PаsswoЖDq1", 0, null, null, null, null, null, null);
-        user.checkPasswordPattern();
-    }
-
-    @Test(expected = UserException.class)
-    public void checkUserUniqueTest() throws UserException {
-
-        /*метод checkUniqueUser(usersInBase, exceptUsers); используется для проверки уникальности при регистрации пользователя или его редактировании
+    /*метод checkUniqueUser(usersInBase, exceptUsers); используется для проверки уникальности при регистрации пользователя или его редактировании
         при регистрации - проверяем наличие пользователя в базе с такими же параметрами
-        при редактировании - проверяем всех пользователей в базе на такие же параметры ИСКЛЮЧАЯ проверяемого (н исключая его, мы никогда не пройдем проверку корректно)
+        при редактировании - проверяем всех пользователей в базе на такие же параметры ИСКЛЮЧАЯ проверяемого (не исключая его, мы никогда не пройдем проверку корректно)
         checkUniqueUser(usersInBase, exceptUsers);
         usersInBase - все пользователи в базе
         exceptUsers - исключаемые из рассмотрения при проверке уникальности
-         */
-        final User userToAddOrChange = new User(1, 0, null, "username", 0, null, "example@example.com", "+7123456789", null, null, null);
+     */
+    @Test
+    public void checkUserUniqueSelfTest() throws UserException {
+        List<User> usersInBase = new ArrayList<>();
+        usersInBase.add(userToAddOrChange);
+
+        userToAddOrChange.checkUniqueUser(usersInBase, exceptUsers);
+    }
+
+    @Test(expected = UserException.class)
+    public void checkUserUniqueUsernameTest() throws UserException {
         final User userInBase1 = new User(2, 0, null, "username", 0, null, null, null, null, null, null);
-        final User userInBase2 = new User(3, 0, null, null, 0, null, "example@example.com", null, null, null, null);
-        final User userInBase3 = new User(4, 0, null, null, 0, null, null, "+7123456789", null, null, null);
-        final User userInBase4 = new User(1, 0, null, "username", 0, null, "example@example.com", "+7123456789", null, null, null);
 
         List<User> usersInBase = new ArrayList<>();
         usersInBase.add(userInBase1);
-        usersInBase.add(userInBase2);
-        usersInBase.add(userInBase3);
-        usersInBase.add(userInBase4);
-
-        List<User> exceptUsers = new ArrayList<>();
-        exceptUsers.add(userToAddOrChange);
 
         userToAddOrChange.checkUniqueUser(usersInBase, exceptUsers);
+    }
+
+    @Test(expected = UserException.class)
+    public void checkUserUniqueEmailTest() throws UserException {
+        final User userInBase1 = new User(3, 0, null, null, 0, null, "example@example.com", null, null, null, null);
+
+        List<User> usersInBase = new ArrayList<>();
+        usersInBase.add(userInBase1);
+
+        userToAddOrChange.checkUniqueUser(usersInBase, exceptUsers);
+    }
+
+    @Test(expected = UserException.class)
+    public void checkUserUniqueTelTest() throws UserException {
+        final User userInBase1 = new User(4, 0, null, null, 0, null, null, "+7123456789", null, null, null);
+
+        List<User> usersInBase = new ArrayList<>();
+        usersInBase.add(userInBase1);
+
+        userToAddOrChange.checkUniqueUser(usersInBase, exceptUsers);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void checkUserUniqueNull1stTest() throws UserException {
+        userToAddOrChange.checkUniqueUser(null, exceptUsers);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void checkUserUniqueNull2stTest() throws UserException {
+        userToAddOrChange.checkUniqueUser(exceptUsers, null);
+    }
+
+    @Test
+    public void equalsAndHashCodeTest() {
+        User us1 = new User(1, 0, null, null, 0, null, null, null, null, null, null);
+        User us2 = new User(1, 2, null, null, 3, null, null, null, null, null, null);
+        User us3 = new User(2, 5, null, null, 4, null, null, null, null, null, null);
+
+        Assert.assertTrue(us1.equals(us1));
+        Assert.assertTrue(us1.equals(us2));
+        Assert.assertTrue(us2.equals(us1));
+        Assert.assertFalse(us1.equals(us3));
+        Assert.assertFalse(us3.equals(us1));
+
+        Assert.assertEquals(us1.hashCode(), us1.hashCode());
+        Assert.assertEquals(us1.hashCode(), us2.hashCode());
+        Assert.assertEquals(us2.hashCode(), us1.hashCode());
+        Assert.assertNotEquals(us1.hashCode(), us3.hashCode());
+        Assert.assertNotEquals(us3.hashCode(), us1.hashCode());
     }
 }

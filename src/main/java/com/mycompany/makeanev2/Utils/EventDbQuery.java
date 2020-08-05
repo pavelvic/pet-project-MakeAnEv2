@@ -451,4 +451,19 @@ public class EventDbQuery {
         }
         return list;
     }
+
+    public static List<ParticipantStatus> selecAllParticipantStatuses(Connection con) throws SQLException {
+        String sql = "SELECT id_participantStatus, name FROM participantstatus ORDER BY id_participantStatus";
+
+        //план такой:сделать запрос, собрать из него все необходимые объекты, собрать целевой объект, записать в коллекцию
+        PreparedStatement pstm = con.prepareStatement(sql);
+
+        ResultSet rs = pstm.executeQuery();
+        List<ParticipantStatus> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new ParticipantStatus(rs.getInt(1), rs.getString(2)));
+        }
+        return list;
+    }
 }

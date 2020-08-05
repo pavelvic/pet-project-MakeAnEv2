@@ -25,6 +25,12 @@ public class Participant {
     }
 
     public Participant(int id_participant, User person, ParticipantStatus status, User whoAdd, int isAuthor, ZonedDateTime regDatetime) {
+        if (id_participant < 0) {
+            throw new IllegalArgumentException("Недопустимое значение id (<0)");
+        }
+        if (isAuthor != 1 || isAuthor != 0) {
+            throw new IllegalArgumentException("Недопустимое значение isAuthor (должно быть 1 или 0)");
+        }
         this.id_participant = id_participant;
         this.person = person;
         this.status = status; //основной или запасной участник
@@ -40,6 +46,10 @@ public class Participant {
 
     public void setAsAuthor() {
         this.isAuthor = true;
+    }
+
+    public ZoneId getZone() {
+        return zone;
     }
 
     public int getId_participant() {

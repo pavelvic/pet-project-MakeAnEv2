@@ -25,4 +25,24 @@ public class EventRegStatus {
     public String getName() {
         return name;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        EventRegStatus pobj = (EventRegStatus) obj;
+        return id_eventRegStatus == pobj.id_eventRegStatus && name.equals(pobj.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 11 * hash + this.id_eventRegStatus + this.name.hashCode() * 3;
+        return hash;
+    }
 }

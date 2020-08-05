@@ -105,6 +105,10 @@ public class User {
     //механизм "пакетного" внесения изменений по коллекции данных (позволяет указывать произвольное количество полей для изменений)
     public void applyChanges(Map updateMap) {
 
+        if (updateMap == null) {
+            throw new IllegalArgumentException("Недопустимый аргумент: пустой объект (null)");
+        }
+
         //проверяем в коллекции наличие параметра, если находим - меняем в объекте, к которому данный метод применяется
         if (updateMap.get("id_user") != null) {
             id_user = Integer.parseInt((String) updateMap.get("id_user"));
@@ -172,7 +176,7 @@ public class User {
         String passPattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
         if (!passwordStr.matches(passPattern)) {
             throw new UserException("Пароль не удовлетовряет условиям: не менее 8 символов, cодержит хотя бы одну цифру, "
-                    + "содерижт хотя бы одну букву в верхнеи и нижнем регистре, "
+                    + "содерижт хотя бы одну букву в верхнем и нижнем регистре, "
                     + "содержит хотя бы один спецсимвол(@#%$^ и т.д.), "
                     + "не содержит пробелов");
         }
@@ -188,6 +192,9 @@ public class User {
 
     //метод проверки на уникальность пользователя (с возможностью исключения из проверки перечней пользователей)
     public void checkUniqueUser(List<User> allUsers, List<User> remUsers) throws UserException {
+        if (allUsers == null || remUsers == null) {
+            throw new IllegalArgumentException("Недопустимые аргументы (null)");
+        }
         allUsers.removeAll(remUsers);
 
         for (User oneUser : allUsers) {

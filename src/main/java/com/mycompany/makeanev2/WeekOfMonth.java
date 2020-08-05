@@ -16,6 +16,13 @@ public class WeekOfMonth {
     private final Month month;
 
     public WeekOfMonth(LocalDate mon, LocalDate tue, LocalDate wed, LocalDate thu, LocalDate fri, LocalDate sat, LocalDate sun, int year, Month month) {
+        if (year > LocalDate.now().getYear() + 100 || year < LocalDate.now().getYear() - 99) {
+            throw new IllegalArgumentException("Некорретный год. Доступный диапазон +/- 100 лет от текущей даты");
+        }
+        if (month == null) {
+            throw new IllegalArgumentException("Параметр month не может быть null");
+        }
+
         this.mon = mon;
         this.tue = tue;
         this.wed = wed;
@@ -90,7 +97,7 @@ public class WeekOfMonth {
     public int getMonth() {
         return month.getValue();
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
@@ -101,18 +108,27 @@ public class WeekOfMonth {
         }
 
         WeekOfMonth w = (WeekOfMonth) obj;
-        return 
-                getMon().equals(w.getMon()) && 
-                getTue().equals(w.getTue()) && 
-                getWed().equals(w.getWed()) && 
-                getThu().equals(w.getThu()) && 
-                getFri().equals(w.getFri()) && 
-                getSat().equals(w.getSat()) && 
-                getSun().equals(w.getSun()) && 
-                year==w.year && month.equals(w.month);
-        
-
+        return getMon().equals(w.getMon())
+                && getTue().equals(w.getTue())
+                && getWed().equals(w.getWed())
+                && getThu().equals(w.getThu())
+                && getFri().equals(w.getFri())
+                && getSat().equals(w.getSat())
+                && getSun().equals(w.getSun())
+                && year == w.year && month.equals(w.month);
     }
 
-
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 11 * hash + this.mon.hashCode()
+                + this.tue.hashCode()
+                + this.wed.hashCode()
+                + this.thu.hashCode()
+                + this.fri.hashCode()
+                + this.sat.hashCode()
+                + this.sun.hashCode()
+                + year + month.hashCode();
+        return hash;
+    }
 }
