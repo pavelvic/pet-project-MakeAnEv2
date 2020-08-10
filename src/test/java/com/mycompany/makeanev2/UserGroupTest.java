@@ -38,6 +38,11 @@ public class UserGroupTest {
         Assert.assertEquals(expected, actual);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void rsNullTest() throws SQLException {
+        new UserGroup(null);
+    }
+
     @Test
     public void equalsAndHashCodeTest() {
         String name = "Пользователь";

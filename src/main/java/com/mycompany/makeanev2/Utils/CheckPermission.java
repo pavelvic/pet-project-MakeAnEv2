@@ -65,8 +65,8 @@ public class CheckPermission {
                 throw new UserException("Доступ запрещён.");
             case 4:
                 throw new UserException("Доступ запрещён.");
-            case 5:
-                throw new UserException("Доступ запрещён.");
+            //case 5:
+            //    throw new UserException("Доступ запрещён.");
         }
 
     }

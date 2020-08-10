@@ -2,26 +2,29 @@ package com.mycompany.makeanev2;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Random;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class ParticipantTest {
 
+    private final Random random = new Random();
+
     final private Participant pc = new Participant(null, null, null, null);
 
     @Test(expected = IllegalArgumentException.class)
     public void idTest() {
-        new Participant(-1, null, null, null, 0, null);
+        new Participant(random.nextInt(Integer.MAX_VALUE) * (-1), null, null, null, 0, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void isAuthorTest() {
-        new Participant(0, null, null, null, -1, null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void isAuthor2Test() {
-        new Participant(0, null, null, null, 2, null);
+        int n = random.nextInt();
+        while (n == 0 || n == 1) {
+            n = random.nextInt();
+        }
+        new Participant(0, null, null, null, n, null);
     }
 
     @Test
@@ -43,5 +46,11 @@ public class ParticipantTest {
         String actual = p.getRegDatetime();
 
         Assert.assertEquals(expected, actual);
+    }
+
+    //контракт euqals и hashcode
+    @Test
+    public void equalsAndHashCodeTest() {
+        EqualsVerifier.simple().forClass(Participant.class).verify();
     }
 }

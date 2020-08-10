@@ -9,11 +9,17 @@ public class EventRegStatus {
     private final String name;
 
     public EventRegStatus(int id_eventRegStatus, String name) {
+        if (id_eventRegStatus > 2 || id_eventRegStatus < 1) {
+            throw new IllegalArgumentException("Недопустимый id статуса (должен быть 1,2)");
+        }
         this.id_eventRegStatus = id_eventRegStatus;
         this.name = name;
     }
 
     public EventRegStatus(ResultSet rs) throws SQLException {
+        if (rs == null) {
+            throw new IllegalArgumentException("Недопустимый аргумент (null)");
+        }
         this.id_eventRegStatus = rs.getInt(1);
         this.name = rs.getString(2);
     }
@@ -25,7 +31,7 @@ public class EventRegStatus {
     public String getName() {
         return name;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {

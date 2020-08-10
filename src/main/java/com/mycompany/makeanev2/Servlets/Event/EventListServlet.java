@@ -1,6 +1,7 @@
 package com.mycompany.makeanev2.Servlets.Event;
 
 import com.mycompany.makeanev2.Event;
+import com.mycompany.makeanev2.Exceptions.EventException;
 import com.mycompany.makeanev2.Participant;
 import com.mycompany.makeanev2.User;
 import com.mycompany.makeanev2.Utils.AuthUtils;
@@ -84,7 +85,7 @@ public class EventListServlet extends HttpServlet {
             dispatcher.forward(request, response); //открываем нужную страницу
 
             //если что-то пошло не так    
-        } catch (SQLException | NamingException ex) {
+        } catch (SQLException | NamingException | EventException ex) {
             errorString = "Ошибка соединения с базой данных! " + ex.getMessage(); //информация об ошибке
             request.setAttribute("resultString", errorString);
             request.setAttribute("redirect", "/"); //указываем чтобы маршрутизация с resultpage была на главную

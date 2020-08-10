@@ -5,10 +5,13 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
+import org.junit.Assert;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class CalendarUtilsTest {
+
+    private final Random random = new Random();
 
     @Test(expected = IllegalArgumentException.class)
     public void nullMonthTest() {
@@ -16,18 +19,17 @@ public class CalendarUtilsTest {
         CalendarUtils.getWeeksOfMonth(2020, month);
     }
 
+    //допустимые границы работы метода - 100 лет
     @Test(expected = IllegalArgumentException.class)
     public void yearMinBorderTest() {
-        LocalDate.now().getYear();
-        int year = LocalDate.now().getYear() - 101;
+        int year = LocalDate.now().getYear() - 101 - random.nextInt(Integer.MAX_VALUE);
         Month month = Month.FEBRUARY;
         CalendarUtils.getWeeksOfMonth(year, month);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void yearMaxBorderTest() {
-        LocalDate.now().getYear();
-        int year = LocalDate.now().getYear() + 101;
+        int year = LocalDate.now().getYear() + 101 + random.nextInt(Integer.MAX_VALUE - LocalDate.now().getYear() - 101);
         Month month = Month.FEBRUARY;
         CalendarUtils.getWeeksOfMonth(year, month);
     }
@@ -50,7 +52,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -70,7 +72,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -90,7 +92,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -110,7 +112,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -130,7 +132,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -150,7 +152,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -170,7 +172,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -190,7 +192,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -210,7 +212,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -230,7 +232,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -250,7 +252,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -270,7 +272,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -290,7 +292,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -310,7 +312,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -330,7 +332,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -350,7 +352,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -370,7 +372,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -390,7 +392,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -410,7 +412,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -430,7 +432,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -451,7 +453,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5, w6);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -471,7 +473,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -491,7 +493,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -511,7 +513,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -531,7 +533,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -551,7 +553,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -573,7 +575,7 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5, w6);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -594,6 +596,6 @@ public class CalendarUtilsTest {
         List<WeekOfMonth> expected = Arrays.asList(w1, w2, w3, w4, w5, w6);
         List<WeekOfMonth> actual = CalendarUtils.getWeeksOfMonth(year, month);
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 }

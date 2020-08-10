@@ -14,6 +14,9 @@ public class ParticipantStatus {
     }
 
     public ParticipantStatus(ResultSet rs) throws SQLException {
+        if (rs == null) {
+            throw new IllegalArgumentException("Недопустимый аргумент (null)");
+        }
         this.id_participantStatus = rs.getInt(1);
         this.name = rs.getString(2);
     }

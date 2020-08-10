@@ -39,6 +39,9 @@ public class User {
 
     //конструктор для формирования пользователя по результату SQL-запроса (на вход подаем результат sql запроса в виде ResultSet)
     public User(ResultSet rs) throws SQLException {
+        if (rs == null) {
+            throw new IllegalArgumentException("Недопустимый аргумент (null)");
+        }
         this.id_user = rs.getInt(1);
         this.group_id = rs.getInt(2);
         this.groupname = rs.getString(3);

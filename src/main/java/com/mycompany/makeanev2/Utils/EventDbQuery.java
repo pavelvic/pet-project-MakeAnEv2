@@ -140,7 +140,7 @@ public class EventDbQuery {
         ps.executeUpdate();
     }
 
-    public static List<Event> selectEventsByUserLikeAuthor(Connection con, int id_user) throws SQLException {
+    public static List<Event> selectEventsByUserLikeAuthor(Connection con, int id_user) throws SQLException, EventException {
 
         String sql = "SELECT e.id_event, es.id_eventstatus, es.name, ers.id_eventregstatus, ers.name, e.name, e.description, e.place, e.eventTime, e.maxParticipants, e.createTime, e.critTime "
                 + "FROM `event` e, `eventregstatus` ers, `eventstatus` es, `participant` p "
@@ -166,7 +166,7 @@ public class EventDbQuery {
         return list;
     }
 
-    public static List<Event> selectEventsByUserLikeParticipant(Connection con, int id_user) throws SQLException {
+    public static List<Event> selectEventsByUserLikeParticipant(Connection con, int id_user) throws SQLException, EventException {
 
         String sql = "SELECT e.id_event, es.id_eventstatus, es.name, ers.id_eventregstatus, ers.name, e.name, e.description, e.place, e.eventTime, e.maxParticipants, e.createTime, e.critTime "
                 + "FROM `event` e, `eventregstatus` ers, `eventstatus` es, `participant` p "
@@ -192,7 +192,7 @@ public class EventDbQuery {
         return list;
     }
 
-    public static List<Event> selectAllEvents(Connection con) throws SQLException {
+    public static List<Event> selectAllEvents(Connection con) throws SQLException, EventException {
 
         String sql = "SELECT e.id_event, es.id_eventstatus, es.name, ers.id_eventregstatus, ers.name, e.name, e.description, e.place, e.eventTime, e.maxParticipants, e.createTime, e.critTime "
                 + "FROM `event` e, `eventregstatus` ers, `eventstatus` es "
@@ -214,7 +214,7 @@ public class EventDbQuery {
         return list;
     }
 
-    public static List<Event> selectEventsFromDateExceptStatus(Connection con, ZonedDateTime fromDate, EventStatus es) throws SQLException {
+    public static List<Event> selectEventsFromDateExceptStatus(Connection con, ZonedDateTime fromDate, EventStatus es) throws SQLException, EventException {
 
         String sql = "SELECT e.id_event, es.id_eventstatus, es.name, ers.id_eventregstatus, ers.name, e.name, e.description, e.place, e.eventTime, e.maxParticipants, e.createTime, e.critTime "
                 + "FROM `event` e, `eventregstatus` ers, `eventstatus` es "
@@ -323,7 +323,7 @@ public class EventDbQuery {
     }
 
     //реализация поиска сербокса
-    public static List<Event> selectEventsByParam(Connection con, LocalDateTime dateFrom, LocalDateTime dateTo, int id_author, String searchDesc, List<EventStatus> statuses) throws SQLException, SearchException {
+    public static List<Event> selectEventsByParam(Connection con, LocalDateTime dateFrom, LocalDateTime dateTo, int id_author, String searchDesc, List<EventStatus> statuses) throws SQLException, SearchException, EventException {
 
         //признак для формирования параметров запроса: d - ищем запрос сожержит даты, a - автора, t - текст из текстовых полей события
         //базовый запрос

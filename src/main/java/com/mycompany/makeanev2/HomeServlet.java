@@ -1,5 +1,6 @@
 package com.mycompany.makeanev2;
 
+import com.mycompany.makeanev2.Exceptions.EventException;
 import com.mycompany.makeanev2.Exceptions.SearchException;
 import com.mycompany.makeanev2.Utils.CalendarUtils;
 import com.mycompany.makeanev2.Utils.DbConnection;
@@ -111,7 +112,7 @@ public class HomeServlet extends HttpServlet {
             RequestDispatcher dispatcher = (RequestDispatcher) request.getAttribute("dispatcher");
             dispatcher.forward(request, response); //открываем нужную страницу
 
-        } catch (SearchException | SQLException | NamingException ex) {
+        } catch (SearchException | SQLException | NamingException | EventException ex) {
             errorString = "Ошибка соединения с базой данных! " + ex.getMessage(); //информация об ошибке
             request.setAttribute("resultString", errorString);
             request.setAttribute("redirect", "/"); //указываем чтобы маршрутизация с resultpage была на главную
@@ -204,7 +205,7 @@ public class HomeServlet extends HttpServlet {
             resultString = "Найдено " + searchedEvents.size() + " записей"; //TODO: специфицировать
 
             request.setAttribute("events", searchedEvents);
-        } catch (SearchException | SQLException | NamingException ex) {
+        } catch (SearchException | SQLException | NamingException | EventException ex) {
             resultString = "Ошибка! " + ex.toString();
             //request.setAttribute("events", futureEvents);
 

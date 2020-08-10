@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Event {
+public final class Event {
 
     //переменные
     private final int id_event; //уник идентификатор события, автоинкретемнт в БД
@@ -32,6 +32,12 @@ public class Event {
 
     //общий конструктор
     public Event(int id_event, EventStatus evStatus, EventRegStatus evRegStatus, String name, String description, String place, ZonedDateTime eventTime, int maxParticipants, ZonedDateTime createTime, ZonedDateTime critTime, ZoneId zone) {
+        if (id_event < 0) {
+            throw new IllegalArgumentException("Недопустимый аргумент id_event <0");
+        }
+        if (maxParticipants < 0) {
+            throw new IllegalArgumentException("Недопустимый аргумент maxParticipants <0");
+        }
         this.id_event = id_event;
         this.evStatus = evStatus;
         this.evRegStatus = evRegStatus;
@@ -51,6 +57,9 @@ public class Event {
     //конструктор по ResultSet для работы с БД
     //TODO: отладить после создания реализации метода запроса БД
     public Event(ResultSet rs) throws SQLException {
+        if (rs == null) {
+            throw new IllegalArgumentException("Недопустимый аргумент null");
+        }
         this.id_event = rs.getInt(1);
         this.evStatus = new EventStatus(rs.getInt(2), rs.getString(3));
         this.evRegStatus = new EventRegStatus(rs.getInt(4), rs.getString(5));
@@ -105,6 +114,9 @@ public class Event {
     }
 
     public String getCreateTime() {
+        if (zone == null) {
+            throw new IllegalArgumentException("Недопустимый параметр zone (null)");
+        }
         return createTime.withZoneSameInstant(zone).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
     }
 
@@ -129,16 +141,34 @@ public class Event {
     }
 
     public int getCountOfParticipants() {
-        countOfParticipants = participantList.size();
-
-        return countOfParticipants;
+        if (participantList == null) {
+            return 0;
+        } else {
+            countOfParticipants = participantList.size();
+            return countOfParticipants;
+        }
     }
 
     public void setZone(ZoneId zone) {
         this.zone = zone;
     }
 
-    public void setParticipants(List<Participant> participantList) {
+    public void setParticipants(List<Participant> participantList) throws EventException {
+        if (participantList == null) {
+            throw new IllegalArgumentException("Недопустимый аргумент (null)");
+        }
+        int authors = 0;
+        for (Participant participant : participantList) {
+            if (participant.getAuthor()) {
+                authors++;
+            }
+            if (authors > 1) {
+                throw new EventException("Невозможно установить текущий список участниоков, поскольку в нём более одного автора.");
+            }
+        }
+        if (authors == 0) {
+            throw new EventException("Невозможно установить текущий список участниоков, поскольку в нём нет автора.");
+        }
         this.participantList = (ArrayList<Participant>) participantList;
     }
 
@@ -174,7 +204,7 @@ public class Event {
     }
 
     public Participant findAuthor() {
-        if (!participantList.isEmpty()) {
+        if (participantList != null && !participantList.isEmpty()) {
             for (Participant participant : participantList) {
                 if (participant.getAuthor()) {
                     return participant;
@@ -190,14 +220,14 @@ public class Event {
     }
 
     public Participant getParticipantByPerson(User user) throws ParticipantException {
-        if (user != null) {
-            for (Participant participant : participantList) {
-                if (participant.getPerson().getId_user() == user.getId_user()) {
-                    return participant;
-                }
-            }
-            throw new ParticipantException("Пользователь не участвует в событии");
+        if (user == null || participantList == null) {
+            throw new IllegalArgumentException("Недопустимый аргумент null");
         }
-        return null;
+        for (Participant participant : participantList) {
+            if (participant.getPerson().getId_user() == user.getId_user()) {
+                return participant;
+            }
+        }
+        throw new ParticipantException("Пользователь не участвует в событии");
     }
 }

@@ -18,6 +18,9 @@ public class UserGroup {
 
     //конструктор на основе sql-запроса
     public UserGroup(ResultSet rs) throws SQLException {
+        if (rs == null) {
+            throw new IllegalArgumentException("Недопустимый аргумент (null)");
+        }
         this.id_group = rs.getInt(1);
         this.name = rs.getString(2);
     }

@@ -2,56 +2,38 @@ package com.mycompany.makeanev2;
 
 import java.time.LocalDate;
 import java.time.Month;
-import org.junit.After;
-import org.junit.AfterClass;
+import java.util.Random;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class WeekOfMonthTest {
 
-    public WeekOfMonthTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
+    private final Random random = new Random();
 
     @Test(expected = IllegalArgumentException.class)
     public void nullMonthTest() {
         new WeekOfMonth(LocalDate.MIN, LocalDate.MIN, LocalDate.MIN, LocalDate.MIN, LocalDate.MIN, LocalDate.MIN, LocalDate.MIN, 0, null);
     }
 
+    //допустимые границы работы метода - 100 лет
     @Test(expected = IllegalArgumentException.class)
     public void yearMinBorderTest() {
         LocalDate.now().getYear();
-        int year = LocalDate.now().getYear() - 101;
+        int year = LocalDate.now().getYear() - 101 - random.nextInt(Integer.MAX_VALUE);
         new WeekOfMonth(LocalDate.MIN, LocalDate.MIN, LocalDate.MIN, LocalDate.MIN, LocalDate.MIN, LocalDate.MIN, LocalDate.MIN, year, Month.FEBRUARY);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void yearMaxBorderTest() {
         LocalDate.now().getYear();
-        int year = LocalDate.now().getYear() + 101;
+        int year = LocalDate.now().getYear() + 101 + random.nextInt(Integer.MAX_VALUE);
         new WeekOfMonth(LocalDate.MIN, LocalDate.MIN, LocalDate.MIN, LocalDate.MIN, LocalDate.MIN, LocalDate.MIN, LocalDate.MIN, year, Month.FEBRUARY);
     }
 
+    //для корректного вывода, null должен выводится как ""
     @Test
     public void getNullDayTest() {
-        //гет методы при null должны возвращать пустую строку, поскольку она печатается на старнице
         WeekOfMonth wof = new WeekOfMonth(null, null, null, null, null, null, null, 2020, Month.FEBRUARY);
 
         String Mon = wof.getMon();
@@ -69,5 +51,11 @@ public class WeekOfMonthTest {
         Assert.assertEquals("", Fri);
         Assert.assertEquals("", Sat);
         Assert.assertEquals("", Sun);
+    }
+
+    //контракт euqals и hashcode
+    @Test
+    public void equalsAndHashCodeTest() {
+        EqualsVerifier.forClass(WeekOfMonth.class).verify();
     }
 }

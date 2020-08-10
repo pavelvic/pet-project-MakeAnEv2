@@ -6,42 +6,22 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
+import java.util.Random;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class EventStatusTest {
 
-    public EventStatusTest() {
-    }
+    private final Random random = new Random();
 
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
+    //id !=1 !=2 !=3 недопустимы
     @Test(expected = IllegalArgumentException.class)
     public void id1Test() {
-        new EventStatus(-1, null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void id2Test() {
-        new EventStatus(4, null);
+        int n = random.nextInt();
+        while (n == 1 || n == 2 || n == 3) {
+            n = random.nextInt();
+        }
+        new EventStatus(n, null);
     }
 
     @Test
@@ -67,6 +47,7 @@ public class EventStatusTest {
         Assert.assertEquals(expected, actual);
     }
 
+    //проверка значений по умолчанию в дефолтном конструкторе
     @Test
     public void constructorsTest() throws SQLException {
         EventStatus expected = new EventStatus(1, "Планируется");
@@ -75,6 +56,7 @@ public class EventStatusTest {
         Assert.assertEquals(expected, actual);
     }
 
+    //проверка значений по умолчанию в дефолтном конструкторе
     @Test
     public void defaultValuesTest() throws SQLException {
         EventStatus constr1 = new EventStatus(1, "Планируется");
@@ -84,6 +66,7 @@ public class EventStatusTest {
         Assert.assertEquals("", constr2.getChecked());
     }
 
+    //проверка установки значения "checked" (используется для html)
     @Test
     public void setCheckedTest() throws SQLException {
         EventStatus evs = new EventStatus();
@@ -95,6 +78,7 @@ public class EventStatusTest {
         Assert.assertEquals("", evs.getChecked());
     }
 
+    //проверка контракта equals и hashcode
     @Test
     public void equalsAndHashCodeTest() {
         String name = "Статус";

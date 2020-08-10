@@ -38,6 +38,11 @@ public class ParticipantStatusTest {
         Assert.assertEquals(1, ps.getId_participantStatus());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void rsNullTest() throws SQLException {
+        new ParticipantStatus(null);
+    }
+
     @Test
     public void setReserveStatusTest() {
         ParticipantStatus expected = new ParticipantStatus(2, "Запасной");

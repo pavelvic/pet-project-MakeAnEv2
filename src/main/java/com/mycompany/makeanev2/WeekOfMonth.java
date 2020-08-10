@@ -2,8 +2,9 @@ package com.mycompany.makeanev2;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Objects;
 
-public class WeekOfMonth {
+public final class WeekOfMonth {
 
     private final LocalDate mon;
     private final LocalDate tue;
@@ -108,27 +109,28 @@ public class WeekOfMonth {
         }
 
         WeekOfMonth w = (WeekOfMonth) obj;
-        return getMon().equals(w.getMon())
-                && getTue().equals(w.getTue())
-                && getWed().equals(w.getWed())
-                && getThu().equals(w.getThu())
-                && getFri().equals(w.getFri())
-                && getSat().equals(w.getSat())
-                && getSun().equals(w.getSun())
-                && year == w.year && month.equals(w.month);
+        return Objects.equals(getMon(), w.getMon())
+                && Objects.equals(getTue(), w.getTue())
+                && Objects.equals(getWed(), w.getWed())
+                && Objects.equals(getThu(), w.getThu())
+                && Objects.equals(getFri(), w.getFri())
+                && Objects.equals(getSat(), w.getSat())
+                && Objects.equals(getSun(), w.getSun())
+                && year == w.year
+                && Objects.equals(month, w.month);
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 11 * hash + this.mon.hashCode()
-                + this.tue.hashCode()
-                + this.wed.hashCode()
-                + this.thu.hashCode()
-                + this.fri.hashCode()
-                + this.sat.hashCode()
-                + this.sun.hashCode()
-                + year + month.hashCode();
+        hash = 11 * hash + Objects.hashCode(this.mon)
+                + Objects.hashCode(this.tue)
+                + Objects.hashCode(this.wed)
+                + Objects.hashCode(this.thu)
+                + Objects.hashCode(this.fri)
+                + Objects.hashCode(this.sat)
+                + Objects.hashCode(this.sun)
+                + year + Objects.hashCode(this.month);
         return hash;
     }
 }

@@ -6,13 +6,33 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class EventRegStatusTest {
+
+    private final Random random = new Random();
+
+    //id !=1 !=2 недопустимы
+    @Test(expected = IllegalArgumentException.class)
+    public void idTest() {
+        int n = random.nextInt();
+        while (n == 1 || n == 2) {
+            n = random.nextInt();
+        }
+        new EventRegStatus(n, null);
+    }
+
+    //проверкан а null конструктора с ResultSet
+    @Test(expected = IllegalArgumentException.class)
+    public void rsNullTest() throws SQLException {
+        new EventRegStatus(null);
+    }
+
     @Test
     public void eventRegStatusesInDBTest() {
-    /*для текущей реализации приложения критично, чтобы в базе данных находилось ровно два статуса регистрации события
+        /*для текущей реализации приложения критично, чтобы в базе данных находилось ровно два статуса регистрации события
         1 - Открыта;
         2 - Закрыта
         перед сборкой мы убедимся, что необходмые статусы есть в базе*/
@@ -30,7 +50,8 @@ public class EventRegStatusTest {
 
         Assert.assertEquals(expected, actual);
     }
-    
+
+    //соблюдение контракта equals-hashcode
     @Test
     public void equalsAndHashCodeTest() {
         String name = "Открыта";
