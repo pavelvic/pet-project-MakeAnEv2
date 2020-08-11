@@ -46,9 +46,6 @@
                 </tr>
             </c:forEach>
         </table> 
-
-
-
         <jsp:include page="/_bootstrapJS.jsp"></jsp:include>
     </body>
 </html>

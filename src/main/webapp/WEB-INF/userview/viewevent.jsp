@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <jsp:include page="/_bootstrapCSS.jsp"></jsp:include>
         <title>Мероприятие</title>
     </head>
     <body>
@@ -128,6 +128,6 @@
 
         <c:if test="${author.person.id_user == loginedUser.id_user}">
         </c:if>
-
+<jsp:include page="/_bootstrapJS.jsp"></jsp:include>
     </body>
 </html>
