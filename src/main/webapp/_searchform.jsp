@@ -34,6 +34,9 @@
 
         <br><small class="form-text text-muted">Быстрый поиск</small>
         <input class="form-control" type="search" name="searchDesc" value="${searchDesc}" placeholder="Я ищу..."><br>
-        <input class="btn btn-info" type="submit" value="Найти">
+        <div class = "form-group">
+            <input class="btn btn-info" type="submit" value="Найти">
+            <a href = "${pageContext.request.contextPath}" class = "btn btn-info">Сброс</a>
+        </div>
     </div>
 </form>

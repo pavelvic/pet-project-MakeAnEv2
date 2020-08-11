@@ -20,7 +20,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <p class="text-danger">${resultString}</p>
+            <p class="text-info">${resultString}</p>
             <table class="table table-striped table-bordered">
                 <tr>
                     <th>Номер</th>

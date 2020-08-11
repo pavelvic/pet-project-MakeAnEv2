@@ -85,6 +85,7 @@ public class HomeServlet extends HttpServlet {
             request.setAttribute("events", events);
             request.setAttribute("authors", authors);
             request.setAttribute("statuses", statuses);
+            request.setAttribute("resultString", "Найдено cобытий: "+events.size());
 
             //генерируем календарь на прошлый, текущий и будущий месяц для вывода на странице
             prevDate = LocalDate.now(timeZone).minusMonths(1);
