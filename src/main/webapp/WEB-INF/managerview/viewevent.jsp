@@ -1,132 +1,103 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!DOCTYPE html>
+
 <html>
-    <head>
-        <jsp:include page="/_bootstrapCSS.jsp"></jsp:include>
-        <title>Мероприятие</title>
-    </head>
-    <body>
-        <jsp:include page="/_menu.jsp"></jsp:include>
-            <h1>Мероприятие</h1>
-            <table border="0">
-                <tr>
-                    <td>Рег. номер события</td>
-                    <td>${event.id_event}</td>
-            </tr>
+<head>
+    <jsp:include page="/_bootstrapCSS.jsp"></jsp:include>
+    <title>Мероприятие</title>
+</head>
+<body>
+<jsp:include page="/_menu.jsp"></jsp:include>
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-3">
+            <div class="card border-info mb-3">
+                <div class="card-header bg-transparent border-info text-primary">ID:
+                    ${event.id_event}
+                </div>
+                <div class="card-body text-primary">
+                    <h5 class="card-title">${event.name}</h5>
+                    <p class="card-text"><small class="form-text text-muted">Статус</small> ${event.evStatus.name}</p>
+                    <p class="card-text"><small class="form-text text-muted">Регистрация</small>
+                        ${event.evRegStatus.name}</p>
+                    <p class="card-text"><small class="form-text text-muted">Что:</small> ${event.description}</p>
+                    <p class="card-text"><small class="form-text text-muted">Где:</small> ${event.place}</p>
+                    <p class="card-text"><small class="form-text text-muted">Когда:</small> ${event.eventTime}</p>
+                    <p class="card-text"><small class="form-text text-muted">Регистрация до</small> ${event.critTime}
+                    </p>
+                    <p class="card-text"><small class="form-text text-muted">Макс. чел:</small> ${event.maxParticipants}
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-info text-muted">Создал
 
-            <tr>
-                <td>Статус</td>
-                <td>${event.evStatus.name}</td>
-            </tr>
-
-            <tr>
-                <td>Регистрация</td>
-                <td>${event.evRegStatus.name}</td>
-            </tr>
-
-            <tr>
-                <td>Название</td>
-                <td>${event.name}</td>
-            </tr>
-
-            <tr>
-                <td>Описание</td>
-                <td>${event.description}</td>
-            </tr>
-
-            <tr>
-                <td>Место</td>
-                <td>${event.place}</td>
-            </tr>
-
-            <tr>
-                <td>Дата и время (местн.)</td>
-                <td>${event.eventTime}</td>
-            </tr>
-
-            <tr>
-                <td>Макс. участников</td>
-                <td>${event.maxParticipants}</td>
-            </tr>
-
-            <tr>
-                <td>Критичная дата (местн.)</td>
-                <td>${event.critTime}</td>
-            </tr>
-
-            <tr>
-                <td>Создано</td>
-                <td>${event.createTime}</td>
-            </tr>
-
-            <tr>
-                <td>Автор</td>
-                <c:if test="${loginedUser.id_user == author.person.id_user}">
-                    <td><a href="viewuser?id_user=${author.person.id_user}">${author.person.username}</a></td>
+                    <c:if test="${loginedUser.id_user == author.person.id_user}">
+                        <a href="viewuser?id_user=${author.person.id_user}">${author.person.username}</a>
                     </c:if>
                     <c:if test="${loginedUser.id_user != author.person.id_user}">
-                    <td>${author.person.username}</td>
+                        ${author.person.username}
+                    </c:if>
+                    от ${event.createTime}
+
+                </div>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="container-fluid">
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <th>Логин</th>
+                        <th>Статус</th>
+                        <th>e-mail</th>
+                        <th>Тел</th>
+                        <th>Имя</th>
+                        <th>Фамилия</th>
+                        <th>Добавил</th>
+                        <th>От</th>
+                    </tr>
+                    <c:forEach items="${participants}" var="participants">
+                        <tr>
+                            <c:if test="${loginedUser.id_user == participants.person.id_user}">
+                                <td><a href="viewuser?id_user=${participants.person.id_user}">${participants.person.username}</a>
+                                </td>
+                            </c:if>
+
+                            <c:if test="${loginedUser.id_user != participants.person.id_user}">
+                                <td>${participants.person.username}</td>
+                            </c:if>
+                            <td>${participants.status.name}</td>
+                            <td>${participants.person.email}</td>
+                            <td>${participants.person.phone}</td>
+                            <td>${participants.person.name}</td>
+                            <td>${participants.person.surname}</td>
+                            <c:if test="${loginedUser.id_user == participants.whoAdd.id_user}">
+                                <td><a href="viewuser?id_user=${participants.whoAdd.id_user}">${participants.whoAdd.username}</a>
+                                </td>
+                            </c:if>
+
+                            <c:if test="${loginedUser.id_user != participants.whoAdd.id_user}">
+                                <td>${participants.whoAdd.username}</td>
+                            </c:if>
+                            <td>${participants.regDatetime}</td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </div>
+            <div class="container-fluid">
+                <c:if test="${author.person.id_user != loginedUser.id_user}">
+                    <c:if test="${regFlag == true}">
+                        <a class="btn btn-info" href="subscribe?id_event=${event.id_event}">Участвовать</a>
+                    </c:if>
+                    <c:if test="${regFlag == false}">
+                        <a class="btn btn-info" href="unsubscribe?id_event=${event.id_event}">Отказаться от участия</a>
+                    </c:if>
                 </c:if>
-            </tr>
-        </table>
-
-        <h2>Участники</h2>
-        <table border = "1" cellpadding="5" cellspacing="1">
-            <tr>
-                <th>Логин</th>
-                <th>Статус</th>
-                <th>e-mail</th>
-                <th>Тел</th>
-                <th>Имя</th>
-                <th>Фамилия</th>
-                <th>Добавил</th>
-                <th>От</th>
-            </tr>
-            <c:forEach items = "${participants}" var = "participants">
-                <tr>
-
-                    <c:if test="${loginedUser.id_user == author.person.id_user}">
-                        <td><a href="viewuser?id_user=${participants.person.id_user}">${participants.person.username}</a></td>
-                        </c:if>
-
-                    <c:if test="${loginedUser.id_user != author.person.id_user}">
-                        <td>${participants.person.username}</td>
-                    </c:if>
-
-                    <td>${participants.status.name}</td>
-                    <td>${participants.person.email}</td>
-                    <td>${participants.person.phone}</td>
-                    <td>${participants.person.name}</td>
-                    <td>${participants.person.surname}</td>
-
-
-                    <c:if test="${loginedUser.id_user == author.person.id_user}">
-                        <td><a href="viewuser?id_user=${participants.whoAdd.id_user}">${participants.whoAdd.username}</a></td>
-                        </c:if>
-
-                    <c:if test="${loginedUser.id_user != author.person.id_user}">
-                        <td>${participants.whoAdd.username}</td>
-                    </c:if>
-
-                    <td>${participants.regDatetime}</td>
-                </tr>
-            </c:forEach>
-        </table>
-        <c:if test="${author.person.id_user != loginedUser.id_user}">
-
-            <c:if test="${regFlag == true}">
-                <h4><a href="subscribe?id_event=${event.id_event}">Участвовать</a></h4>
-            </c:if>
-
-            <c:if test="${regFlag == false}">
-                <h4><a href="unsubscribe?id_event=${event.id_event}">Отказаться от участия</a></h4>
-            </c:if>
-
-        </c:if>
-
-        <c:if test="${author.person.id_user == loginedUser.id_user}">
-        </c:if>
-    <jsp:include page="/_bootstrapJS.jsp"></jsp:include>
-    </body>
+                <c:if test="${author.person.id_user == loginedUser.id_user}">
+                </c:if>
+            </div>
+        </div>
+    </div>
+</div>
+<jsp:include page="/_bootstrapJS.jsp"></jsp:include>
+</body>
 </html>
