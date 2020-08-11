@@ -69,7 +69,6 @@ public class SubscribeEventServlet extends HttpServlet {
                 ps.setReserveStatus();
             }
 
-            //Participant participant = new Participant(event, userInSession, ps, userInSession, ZonedDateTime.now(ZoneId.of("UTC")));
             Participant participant = new Participant(userInSession, ps, userInSession, ZonedDateTime.now(ZoneId.of("UTC")));
 
             //проверяем зареген ли уже на событии участник, если да - выдаем исключение Участника об этом
@@ -93,7 +92,6 @@ public class SubscribeEventServlet extends HttpServlet {
 
             request.setAttribute("resultString", resultString);
             request.setAttribute("redirect", "/viewevent?id_event=" + request.getParameter("id_event")); //указываем чтобы маршрутизация с resultpage была на это же событие
-            //request.getRequestDispatcher("/WEB-INF/resultpage.jsp").forward(request, response); //идем на страницу с ошибкой          
             RequestDispatcher dispatcher = (RequestDispatcher) request.getAttribute("dispatcher");
             dispatcher.forward(request, response); //открываем нужную страницу
 

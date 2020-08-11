@@ -26,7 +26,6 @@
         </ul>
         </c:if>
 
-
         <c:if test="${loginedUser.group_id == 1}">
 
             <li class="nav-item">
@@ -37,7 +36,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/events">События</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/events">Мои события</a>
             </li>
 
             <li class="nav-item">
@@ -61,7 +60,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/events">События</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/events">Мои события</a>
             </li>
 
             <li class="nav-item">
@@ -82,7 +81,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/events">События</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/events">Мои события</a>
             </li>
 
             <li class="nav-item">
@@ -103,7 +102,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/events">События</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/events">Мои события</a>
             </li>
 
             <li class="nav-item">
@@ -128,7 +127,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/events">События</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/events">Мои события</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/logout">Выйти</a>
