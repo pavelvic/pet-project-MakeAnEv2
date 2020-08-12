@@ -1,12 +1,5 @@
-<%--
-Document   : adduser
-Created on : 02.03.2019, 20:10:01
-Author     : Pavelvic
---%>
-
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+
 <html>
 <head>
     <jsp:include page="/_bootstrapCSS.jsp"></jsp:include>

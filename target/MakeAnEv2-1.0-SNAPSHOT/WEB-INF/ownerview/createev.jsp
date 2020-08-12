@@ -1,67 +1,72 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+
 <html>
-    <head>
-        <jsp:include page="/_bootstrapCSS.jsp"></jsp:include>
-        <title>Создать событие</title>
-    </head>
-    <body>
-        <jsp:include page="/_menu.jsp"></jsp:include>
-            <h1>Создать событие</h1>
-            <h4>${resultString}</h4>
-        <form method="POST" action="">
-            <table border="0">
-                <tr>
-                    <td>Название</td>
-                    <td><input type="text" name="name" required="required" value=${event.name}></td>
-                </tr>
+<head>
+    <jsp:include page="/_bootstrapCSS.jsp"></jsp:include>
+    <title>Создать событие</title>
+</head>
+<body>
+<jsp:include page="/_menu.jsp"></jsp:include>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <h2 class="text-info">Новое событие</h1>
+                <p class="text-danger">${resultString}</p>
+                <form method="POST" action="">
+                    <div class="form-group">
+                        <label>Название</label>
+                        <input type="text" name="name" required="required" class="form-control" placeholder="Что?"
+                               value=${event.name}>
+                    </div>
 
-                <tr>
-                    <td>Описание</td>
-                    <td><input type="text" name="description" required="required" value=${event.description}></td>
-                </tr>
+                    <div class="form-group">
+                        <label>Описание</label>
+                        <input type="text" name="description" required="required" class="form-control"
+                               placeholder="Что именно?"
+                               value=${event.description}>
+                    </div>
 
-                <tr>
-                    <td>Место</td>
-                    <td><input type="text" name="place" required="required" value=${event.place}></td>
-                </tr>
+                    <div class="form-group">
+                        <label>Место</label>
+                        <input type="text" name="place" required="required" class="form-control" placeholder="Где?"
+                               value=${event.place}>
+                    </div>
 
-                <tr>
-                    <td>Дата и время проведения</td>
-                    <td><input type="datetime-local" name="eventTime" required="required" value=${event.eventTime}></td>
-                </tr>
+                    <div class="form-group">
+                        <label>Когда</label>
+                        <input type="datetime-local" name="eventTime" class="form-control" required="required"
+                               value=${event.eventTime}>
+                    </div>
 
-                <tr>
-                    <td>Участников, шт</td>
-                    <td><input type="number" name="maxParticipants" required="required" min ="1" value=${event.maxParticipants}></td>
-                </tr>
+                    <div class="form-group">
+                        <label>Участников, чел.</label>
+                        <input type="number" name="maxParticipants" class="form-control" required="required" min="1"
+                               value=${event.maxParticipants}>
+                    </div>
 
-                <tr>
-                    <td>Критичная дата</td>
-                    <td><input type="datetime-local" name="critTime" required="required" value=${event.critTime}></td>
-                </tr>
+                    <div class="form-group">
+                        <label>Крит. дата</label>
+                        <input type="datetime-local" name="critTime" class="form-control" required="required"
+                               value=${event.critTime}>
+                    </div>
 
-                <tr>
-                    <td>Статус регистрации</td>
-                    <td>
-                        <select name ="id_eventregstatus" size="1" required="required">                   
-                            <c:forEach items = "${EventRegStatus}" var = "EventRegStatus">                   
-                                <option value=${EventRegStatus.id_eventRegStatus}>${EventRegStatus.name}</option>                       
+                    <div class="form-group">
+                        <label>Статус рег.</label>
+                        <select name="id_eventregstatus" size="1" required="required" class="form-control">
+                            <c:forEach items="${EventRegStatus}" var="EventRegStatus">
+                                <option value=${EventRegStatus.id_eventRegStatus}>${EventRegStatus.name}</option>
                             </c:forEach>
                         </select>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td colspan="2">
-                        <input type="submit" value="Сохранить">
-                        <a href=${pageContext.request.contextPath}>Назад</a>
-                        <input type="reset" value="Очистить">
-                    </td>
-                </tr>
-            </table>
-        </form>
-    <jsp:include page="/_bootstrapJS.jsp"></jsp:include>
-    </body>
+                    </div>
+                    <input type="submit" value="Сохранить" class="btn btn-info">
+                    <a class="btn btn-info" href=${pageContext.request.contextPath}>Назад</a>
+                    <input class="btn btn-info" type="reset" value="Очистить">
+                </form>
+                <jsp:include page="/_bootstrapJS.jsp"></jsp:include>
+        </div>
+    </div>
+</div>
+<jsp:include page="/_bootstrapJS.jsp"></jsp:include>
+</body>
 </html>

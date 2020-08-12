@@ -31,17 +31,23 @@
             <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/">Главная</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/userlist">Пользователи</a>
-            </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/events">Мои события</a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="createev">Создать событие</a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="/MakeAnEv2/viewuser?id_user=${loginedUser.id_user}">Мой профиль</a>
             </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/userlist">Пользователи</a>
+            </li>
+            
             <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/logout">Выйти</a>
             </li>
@@ -55,17 +61,23 @@
             <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/">Главная</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/userlist">Пользователи</a>
-            </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/events">Мои события</a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="createev">Создать событие</a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="/MakeAnEv2/viewuser?id_user=${loginedUser.id_user}">Мой профиль</a>
             </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/userlist">Пользователи</a>
+            </li>
+            
             <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/logout">Выйти</a>
             </li>
