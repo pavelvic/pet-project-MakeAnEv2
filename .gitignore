@@ -7,6 +7,7 @@ dist/
 nbdist/
 .nb-gradle/
 !.mvn/wrapper/maven-wrapper.jar
+nb-configuration.xml
 
 ### STS ###
 .apt_generated
